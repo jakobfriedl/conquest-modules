@@ -4,17 +4,24 @@ import os.path
 # Built-in modules (always enabled)
 cmd_exit = (
     conquest.createCommand(name="exit", description="Exit the agent.", example="exit process", message="Tasked agent to exit.")
-            .addArgString("type", "Available options: PROCESS/THREAD.", False, "PROCESS"))
+            .addArgString("type", """Available options: 
+  - PROCESS (default)
+  - THREAD.""", False, "PROCESS"))
 cmd_selfdestruct = conquest.createCommand(name="self-destruct", description="Exit the agent and delete the executable from disk.", example="self-destruct", message="Tasked agent to self-destruct.")
 conquest.registerModule(name="exit", description="Terminate the agent process or thread.", commands=[cmd_exit, cmd_selfdestruct], builtin=True)
 
 cmd_sleep = (
     conquest.createCommand(name="sleep", description="Update sleep delay settings.", example="sleep 5 15", message="Tasked agent to update sleep delay.")
             .addArgInt("delay", "Delay in seconds.", True)
-            .addArgInt("jitter", "Jitter in % (0-100)"))
+            .addFlagInt("--jitter", "percent", "Jitter in % (0-100)"))
 cmd_sleepmask = (
-    conquest.createCommand(name="sleepmask", description="Update sleepmask settings.", example="sleepmask ekko --spoof", message="Tasked agent to update sleepmask settings.")
-            .addArgString("technique", "Sleep obfuscation technique (NONE, EKKO, ZILEAN, FOLIAGE). Executing without arguments retrieves current sleepmask settings.")
+    conquest.createCommand(name="sleepmask", description="Retrieve or update sleepmask settings. Executing without arguments retrieves the current sleepmask settings.", example="sleepmask --technique ekko --spoof", message="Tasked agent to update sleepmask settings.")
+            .addFlagString("--technique", "technique", """Sleep obfuscation technique.
+Available options:
+  - NONE
+  - EKKO
+  - ZILEAN
+  - FOLIAGE""")
             .addFlagBool("--spoof", "spoof", "Enable stack spoofing to obfuscate the call stack."))
 conquest.registerModule(name="sleep", description="Change sleep configuration", commands=[cmd_sleep, cmd_sleepmask], builtin=True)
 
@@ -94,7 +101,7 @@ cmd_cat = (
             .setHandler(lambda agentId, cmdline, args: (
                 directory := conquest.get_string(args, 0),
                 
-                bof := conquest.root_dir() + "/data/modules/cat.x64.o",
+                bof := conquest.modules_root() + "/cat.x64.o",
                 params := conquest.bof_pack("Z", [
                     directory
                 ]),
@@ -107,8 +114,9 @@ conquest.registerModule(name="filesystem", description="Conduct simple filesyste
 cmd_whoami = (
     conquest.createCommand(name="whoami", description="Get user and group information.", example="whoami", message="Tasked agent to retrieve user and group information.")
             .setHandler(lambda agentId, cmdline, args: (
-                bof := conquest.root_dir() + "/data/modules/whoami.x64.o",
-                conquest.execute_alias(agentId, cmdline, f"bof {bof}")
+                bof := conquest.modules_root() + "/whoami.x64.o",
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}")
             )))
 cmd_ps = conquest.createCommand(name="ps", description="Display running processes.", example="ps", message="Tasked agent to display running processes.")
 cmd_env = conquest.createCommand(name="env", description="Display environment variables.", example="env", message="Tasked agent to display environment variables.")
@@ -119,7 +127,14 @@ cmd_maketoken = (
     conquest.createCommand(name="make-token", description="Create an access token from username and password.", example="make-token LAB\\john Password123!", message="Tasked agent to create an access token from username and password.")
             .addArgString("domain\\username", "Account domain and username. For impersonating local users, use .\\username.", True)
             .addArgString("password", "Account password.", True)
-            .addArgInt("logonType", "Logon type (https://learn.microsoft.com/en-us/windows-server/identity/securing-privileged-access/reference-tools-logon-types).", False, 9))
+            .addFlagInt("--type", "logonType", """Logon type (https://learn.microsoft.com/en-us/windows-server/identity/securing-privileged-access/reference-tools-logon-types).
+  - 2: LOGON_INTERACTIVE
+  - 3: LOGON_NETWORK
+  - 4: LOGON_BATCH
+  - 5: LOGON_SERVICE
+  - 8: LOGON_NETWORK_CLEARTEXT 
+  - 9: LOGON_NEW_CREDENTIALS (default)                        
+""", False, 9))
 cmd_stealtoken = (
     conquest.createCommand(name="steal-token", description="Steal the primary access token of a remote process.", example="steal-token 1234", message="Tasked agent to steal an access token.")
             .addArgInt("pid", "Process ID of the target process.", True))
