@@ -96,7 +96,7 @@ cmd_copy = (
             .addArgString("source", "Source file path.", True)
             .addArgString("destination", "Destination file path.", True))
 cmd_cat = (
-    conquest.createCommand(name="cat", description="Retrieve the content of a file.", example="cat C:\\Users\\Desktop\\Administrator\\passwords.txt", message="Tasked agent to retrieve the content of a file.")
+    conquest.createCommand(name="cat", description="Retrieve the contents of a file.", example="cat C:\\Users\\Desktop\\Administrator\\passwords.txt", message="Tasked agent to retrieve the contents of a file.")
             .addArgString("file", "Relative or absolute path to the file.", True)
             .setHandler(lambda agentId, cmdline, args: (
                 directory := conquest.get_string(args, 0),
