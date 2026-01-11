@@ -11,9 +11,11 @@ cmd_selfdestruct = conquest.createCommand(name="self-destruct", description="Exi
 conquest.registerModule(name="exit", description="Terminate the agent process or thread.", commands=[cmd_exit, cmd_selfdestruct], builtin=True)
 
 cmd_sleep = (
-    conquest.createCommand(name="sleep", description="Update sleep delay settings.", example="sleep 5 15", message="Tasked agent to update sleep delay.")
-            .addArgInt("delay", "Delay in seconds.", True)
-            .addFlagInt("--jitter", "percent", "Jitter in % (0-100)"))
+    conquest.createCommand(name="sleep", description="Update sleep delay settings.", example="sleep 5", message="Tasked agent to update sleep delay.")
+            .addArgInt("delay", "Delay in seconds.", True))
+cmd_jitter = (
+    conquest.createCommand(name="jitter", description="Update jitter settings.", example="jitter 15", message="Tasked agent to update jitter.")
+            .addArgInt("jitter", "Jitter in % (0-100).", True))
 cmd_sleepmask = (
     conquest.createCommand(name="sleepmask", description="Retrieve or update sleepmask settings. Executing without arguments retrieves the current sleepmask settings.", example="sleepmask --technique ekko --spoof", message="Tasked agent to update sleepmask settings.")
             .addFlagString("--technique", "technique", """Sleep obfuscation technique.
@@ -23,7 +25,7 @@ Available options:
   - ZILEAN
   - FOLIAGE""")
             .addFlagBool("--spoof", "spoof", "Enable stack spoofing to obfuscate the call stack."))
-conquest.registerModule(name="sleep", description="Change sleep configuration", commands=[cmd_sleep, cmd_sleepmask], builtin=True)
+conquest.registerModule(name="sleep", description="Change sleep configuration", commands=[cmd_sleep, cmd_jitter, cmd_sleepmask], builtin=True)
 
 cmd_link = (
     conquest.createCommand(name="link", description="Create a link to a SMB agent.", example="link DC01 msagent_1234", message="Tasked agent to link to SMB agent.")
@@ -73,10 +75,10 @@ cmd_cd = (
             .addArgString("directory", "Relative or absolute path of the directory to change to.", True))
 cmd_ls = (
     conquest.createCommand(name="ls", description="List files and directories.", example="ls C:\\Users\\Administrator\\Desktop", message="Tasked agent to list files and directories.")
-            .addArgString("directory", "Relative or absolute path. Default: current working directory."))
+            .addArgString("directory", "Relative or absolute path. Default: current working directory.", False, "."))
 cmd_dir = (
     conquest.createCommand(name="dir", description="List files and directories (Alias).", example="ls C:\\Users\\Administrator\\Desktop", message="Tasked agent to list files and directories.")
-            .addArgString("directory", "Relative or absolute path. Default: current working directory.")
+            .addArgString("directory", "Relative or absolute path. Default: current working directory.", False, ".")
             .setHandler(lambda agentId, cmdline, args: (
                 directory := conquest.get_string(args, 0),
                 conquest.execute_alias(agentId, cmdline, f"ls {directory}")
