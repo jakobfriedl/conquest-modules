@@ -1,0 +1,9 @@
+[submodule "situational-awareness/cat"]
+	path = situational-awareness/cat
+	url = https://github.com/tvgdb/cobaltstrike-cat-bof.git
+[submodule "situational-awareness/sa"]
+	path = situational-awareness/sa
+	url = https://github.com/trustedsec/CS-Situational-Awareness-BOF.git
+[submodule "situational-awareness/operators-kit"]
+	path = situational-awareness/operators-kit
+	url = https://github.com/REDMED-X/OperatorsKit.git
