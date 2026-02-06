@@ -128,11 +128,11 @@ cmd_cd = (
 cmd_ls = (
     conquest.createCommand(name="ls", description="List files and directories.", example="ls C:\\Users\\Administrator\\Desktop", 
                            message="Tasked agent to list files and directories.", mitre=["T1083"])
-            .addArgString("directory", "Relative or absolute path. Default: current working directory.", False, "."))
+            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, "."))
 cmd_dir = (
     conquest.createCommand(name="dir", description="List files and directories (Alias for 'ls').", example="ls C:\\Users\\Administrator\\Desktop", 
                            message="Tasked agent to list files and directories.", mitre=["T1083"])
-            .addArgString("directory", "Relative or absolute path. Default: current working directory.", False, ".")
+            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, ".")
             .setHandler(lambda agentId, cmdline, args: (
                 directory := conquest.get_string(args, 0),
                 conquest.execute_alias(agentId, cmdline, f"ls {directory}")

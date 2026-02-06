@@ -1,9 +1,12 @@
 [submodule "situational-awareness/cat"]
-	path = situational-awareness/cat
+	path = cobaltstrike-cat-bof
 	url = https://github.com/tvgdb/cobaltstrike-cat-bof.git
 [submodule "situational-awareness/sa"]
-	path = situational-awareness/sa
+	path = CS-Situational-Awareness-BOF
 	url = https://github.com/trustedsec/CS-Situational-Awareness-BOF.git
-[submodule "situational-awareness/operators-kit"]
-	path = situational-awareness/operators-kit
-	url = https://github.com/REDMED-X/OperatorsKit.git
+[submodule "Kerbeus-BOF"]
+	path = Kerbeus-BOF
+	url = https://github.com/RalfHacker/Kerbeus-BOF
+[submodule "OperatorsKit"]
+	path = OperatorsKit
+	url = https://github.com/fyxme/OperatorsKit.git
