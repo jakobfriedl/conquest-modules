@@ -10,3 +10,6 @@
 [submodule "OperatorsKit"]
 	path = OperatorsKit
 	url = https://github.com/fyxme/OperatorsKit.git
+[submodule "portscanbof"]
+	path = portscanbof
+	url = https://github.com/fyxme/portscanbof/
