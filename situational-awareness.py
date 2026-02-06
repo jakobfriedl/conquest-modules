@@ -152,7 +152,7 @@ cmd_checkport = (
             )))
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 cmd_pingsweep = (
-    conquest.createCommand(name="pingsweep", description="Scan a IP range for live hosts.", example="pingsweep 10.10.15.0/24",
+    conquest.createCommand(name="pingsweep", description="Scan an IP range for live hosts.", example="pingsweep 10.10.15.0/24",
                            message="Tasked agent to perform a pingscan.")
             .addArgString("targets", "Comma separated list of hosts to scan. Hostnames, IPs and IP ranges supported (eg. 192.168.1.128-192.168.2.240,192.168.1.0/24).", True)
             .setHandler(lambda agentId, cmdline, args: (
@@ -290,7 +290,7 @@ def ldapsearch_handler(agentId, cmdline, args):
         conquest.error(agentId, f"Failed to open object file: {bof}")
 
 cmd_ldapsearch = (
-    conquest.createCommand(name="ldapsearch", description="Execute a LDAP query.", example='ldapsearch "(objectClass=user)" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local',
+    conquest.createCommand(name="ldapsearch", description="Execute a LDAP query.", example="ldapsearch \"(objectClass=user)\" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local",
                            message="Tasked agent to execute a LDAP query.")
             .addArgString("query", "LDAP filter query.", True)
             .addFlagString("--attributes", "attributes", "Attributes to retrieve, comma-separated (default: *).")
@@ -305,7 +305,133 @@ Available options:
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
             .setHandler(ldapsearch_handler))
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+def handler_scEnum(agentId, cmdline, args): 
+    service = conquest.get_string(args, 0)
+    server = conquest.get_string(args, 1)
 
+    if service != "": 
+        # Get information about a specific service (sc_qc)
+        bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/sc_qc/sc_qc.x64.o"
+        params = conquest.bof_pack("zz", [
+            server,         # z: Target server 
+            service,        # z: Target service
+        ])
+    else: 
+        # List all services (sc_enum)
+        bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/sc_enum/sc_enum.x64.o"
+        params = conquest.bof_pack("z", [
+            server          # z: Target server 
+        ])
+
+    if os.path.exists(bof):
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+    else:
+        conquest.error(agentId, f"Failed to open object file: {bof}")
+
+cmd_scEnum = (
+    conquest.createCommand(name="sc-enum", description="Get service information.", example="sc-enum --server dc01",
+                           message="Tasked agent to enumerate services.")
+            .addArgString("service", "Name of the target service. If not is provided, this command will list all services on the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .setHandler(handler_scEnum))
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+cmd_scQuery = (
+    conquest.createCommand(name="sc-query", description="Query service status status.", example="sc-qc UpdaterSvc",
+                           message="Tasked agent to query service status.")
+            .addArgString("service", "Name of the target service. If not provided, this command will list the status of all services running on the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .setHandler(lambda agentId, cmdline, args: (
+                service := conquest.get_string(args, 0),
+                server := conquest.get_string(args, 1),
+
+                bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/sc_query/sc_query.x64.o",
+                params := conquest.bof_pack("zz", [
+                    server,         # z: Target server 
+                    service,        # z: Target service
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}")
+            )))
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+def handler_schtasksEnum(agentId, cmdline, args): 
+    task = conquest.get_string(args, 0)
+    server = conquest.get_string(args, 1)
+
+    if task != "": 
+        # Get information about a specific scheduled task
+        bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/schtasksquery/schtasksquery.x64.o"
+        params = conquest.bof_pack("ZZ", [
+            server,         # Z: Target server 
+            task,           # Z: Target scheduled task
+        ])
+    else: 
+        # List all scheduled tasks
+        bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/schtasksenum/schtasksenum.x64.o"
+        params = conquest.bof_pack("Z", [
+            server          # Z: Target server 
+        ])
+
+    if os.path.exists(bof):
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+    else:
+        conquest.error(agentId, f"Failed to open object file: {bof}")
+
+cmd_schtasksEnum = (
+    conquest.createCommand(name="schtasks-enum", description="Get information about scheduled task.", example="schtasks-enum \"\\Microsoft\\Office\\Office Background Push Maintenance\"",
+                           message="Tasked agent to enumerate scheduled tasks.")
+            .addArgString("path", "Path to the target scheduled task. If not provided, this command will list all scheduled tasks on the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .setHandler(handler_schtasksEnum))
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+REGISTRY_HIVES = {
+    "HKCR": 0,  # HKEY_CLASSES_ROOT
+    "HKCU": 1,  # HKEY_CURRENT_USER
+    "HKLM": 2,  # HKEY_LOCAL_MACHINE
+    "HKU": 3    # HKEY_USERS
+}
+def handler_regQuery(agentId, cmdline, args): 
+    hive = conquest.get_string(args, 0).upper()
+    path = conquest.get_string(args, 1)
+    key = conquest.get_string(args, 2)
+    hostname = conquest.get_string(args, 3)
+    recursive = conquest.get_bool(args, 4)
+    
+    regHive = REGISTRY_HIVES.get(hive)
+    if regHive is None:
+        conquest.log_command(agentId, cmdline)
+        conquest.error(agentId, f"Invalid registry hive: {hive}.")
+        return
+    
+    bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/reg_query/reg_query.x64.o"
+    params = conquest.bof_pack("zizzi", [
+        hostname,                   # z: Hostname 
+        regHive,                    # i: Hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
+        path,                       # z: Registry path
+        key,                        # z: Key 
+        1 if recursive else 0       # i: Recursive enumeration
+    ])
+    
+    if os.path.exists(bof):
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+    else:
+        conquest.error(agentId, f"Failed to open object file: {bof}")
+
+cmd_regQuery = (
+    conquest.createCommand(name="reg-query", description="Query the registry.", example="reg-query HKLM \"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\" ProgramFilesDir",
+                           message="Tasked agent to query the registry.")
+            .addArgString("hive", """Registry hive.
+Available options:
+  - HKCR
+  - HKCU
+  - HKLM
+  - HKC""", True)
+            .addArgString("path", "Registry path.", True)
+            .addArgString("key", "Specific key/value name to query. If not provided, enumerates all subkeys and values.")
+            .addFlagString("--hostname", "hostname", "Target hostname for remote registry (default: local computer).")
+            .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
+            .setHandler(handler_regQuery))
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 conquest.registerModule(
     name="situational-awareness", 
@@ -315,5 +441,6 @@ conquest.registerModule(
               cmd_cat, cmd_cacls, cmd_enumdrives,
               cmd_arp, cmd_ipconfig, cmd_nslookup, cmd_listdns, cmd_checkport, cmd_pingsweep,
               cmd_netDomainGroup, cmd_netLocalGroup, cmd_netUser, cmd_netShares,
+              cmd_scEnum, cmd_scQuery, cmd_schtasksEnum, cmd_regQuery,
               cmd_ldapsearch
     ])
