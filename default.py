@@ -59,7 +59,7 @@ conquest.registerModule(
 
 cmd_bof = (
     conquest.createCommand(name="bof", description="Execute an object file in memory and retrieve the output.", example="bof /path/to/dir.x64.o C:\\Users", 
-                           message="Tasked agent to execute an object-file in-memory and retrieve the output.", mitre=["T1055", "T1620"])
+                           message="Tasked agent to execute an object-file in memory and retrieve the output.", mitre=["T1055", "T1620"])
             .addArgFile("object-file", "Path to the object file to execute.", True)
             .addArgString("arguments", "Arguments to be passed to the object file, packed as a HEX string according to beacon_generate.py."))
 
@@ -108,7 +108,7 @@ cmd_env = conquest.createCommand(name="env", description="Display environment va
 #     conquest.createCommand(name="env", description="List environment variables.", example="env", 
 #                            message="Tasked agent to list environment variables.")
 #             .setHandler(lambda agentId, cmdline, args: (
-#                 bof := conquest.modules_root() + "situational-awareness/sa/SA/env/env.x64.o",
+#                 bof := conquest.modules_root() + "CS-Situational-Awareness-BOF/SA/env/env.x64.o",
 #                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
 #                 else conquest.error(agentId, f"Failed to open object file: {bof}")
 #             )))

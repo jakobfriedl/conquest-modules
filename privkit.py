@@ -1,0 +1,64 @@
+import conquest
+import os.path 
+
+# Windows Privilege Escalation checks using PrivKit BOFs by @merterpreter & @nickvourd
+
+PRIVESC_CHECKS = {
+    "always-install-elevated": "/PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
+    "autologon": "/PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
+    "cred-manager": "/PrivKit/CredentialManagerCheck/CredentialManagerCheck.x64.o",
+    "hijack-path": "/PrivKit/HijackablePathCheck/HijackablePathCheck.x64.o",
+    "modify-autorun": "/PrivKit/ModifiableAutorunCheck/ModifiableAutorunCheck.x64.o",
+    "modify-svc": "/PrivKit/ModifiableSVCCheck/ModifiableSVCCheck.x64.o",
+    "token-privs": "/PrivKit/TokenPrivilegesCheck/TokenPrivilegesCheck.x64.o",
+    "unquoted-svc-path": "/PrivKit/UnquotedSVCPathCheck/UnquotedSVCPathCheck.x64.o",
+    "ps-history": "/PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
+    "uac-status": "/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
+}
+def handler_privkit(agentId, cmdline, args): 
+    check = conquest.get_string(args, 0, "all").lower()
+        
+    if check == "all":
+        # Execute all checks
+        for name, path in PRIVESC_CHECKS.items():
+            bof = conquest.modules_root() + path
+            if os.path.exists(bof):
+                conquest.execute_alias(agentId, f"privkit {name}", f"bof {bof}")
+            else:
+                conquest.error(agentId, "cmdline", f"Failed to open object file: {bof}")
+    else:
+        # Execute specific check
+        path = PRIVESC_CHECKS.get(check)
+        if path is None:
+            conquest.error(agentId, cmdline, f"Invalid privilege escalation check: {check}")
+            return
+        
+        bof = conquest.modules_root() + path
+        if os.path.exists(bof):
+            conquest.execute_alias(agentId, cmdline, f"bof {bof}")
+        else:
+            conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+
+cmd_privkit = (
+    conquest.createCommand(name="privkit", description="Run Windows privilege escalation checks.", example="privkit unquoted-svc-path",
+                           message="Tasked agent to run privilege escalation check.", mitre=[])
+            .addArgString("check", """Privilege escalation check to run.
+Available options:
+  - all
+  - always-install-elevated
+  - autologon
+  - cred-manager
+  - hijack-path
+  - modify-autorun
+  - modify-svc
+  - token-privs
+  - unquoted-svc-path
+  - ps-history
+  - uac-status""", True)
+            .setHandler(handler_privkit))
+
+conquest.registerModule(
+    name="privkit", 
+    description="Run Windows privilege escalation checks.", 
+    group="privilege-escalation", 
+    commands=[cmd_privkit])

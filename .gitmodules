@@ -13,3 +13,12 @@
 [submodule "portscanbof"]
 	path = portscanbof
 	url = https://github.com/fyxme/portscanbof/
+[submodule "PrivKit"]
+	path = PrivKit
+	url = https://github.com/mertdas/PrivKit
+[submodule "No-Consolation"]
+	path = No-Consolation
+	url = https://github.com/fortra/No-Consolation
+[submodule "CS-Remote-OPs-BOF"]
+	path = CS-Remote-OPs-BOF
+	url = https://github.com/trustedsec/CS-Remote-OPs-BOF

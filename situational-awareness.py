@@ -1,17 +1,6 @@
 import conquest
 import os.path
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-#                                          Situational Awareness                                          #
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-cmd_whoami = (
-    conquest.createCommand(name="whoami", description="Get user and group information.", example="whoami", 
-                           message="Tasked agent to retrieve user and group information.", mitre=["T1033"])
-            .setHandler(lambda agentId, cmdline, args: (
-                bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/whoami/whoami.x64.o",
-                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
-            )))
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_cat = (
     conquest.createCommand(name="cat", description="Retrieve the contents of a file.", example="cat C:\\Users\\Desktop\\Administrator\\passwords.txt", 
                            message="Tasked agent to retrieve the contents of a file.", mitre=["T1083"])
@@ -19,18 +8,42 @@ cmd_cat = (
             .setHandler(lambda agentId, cmdline, args: (
                 file := conquest.get_string(args, 0),
 
-                bof := conquest.modules_root() + "/cobaltstrike-cat-bof/cat.x64.o",
+                bof := conquest.modules_root() + "/cobaltstrike-cat-bof/caat.x64.o",
                 params := conquest.bof_pack("Z", [
                     file    # Z: File name
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_enumdrives = (
+    conquest.createCommand(name="enum-drives", description="List local drive letters and types.", example="enum-drives",
+                           message="Tasked agent to list local drives.", mitre=["T1082", "T1083"])
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := conquest.modules_root() + "/OperatorsKit/KIT/EnumDrives/enumdrives.o",
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_whoami = (
+    conquest.createCommand(name="whoami", description="Get user and group information.", example="whoami", 
+                           message="Tasked agent to retrieve user and group information.", mitre=["T1033"])
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/whoami/whoami.x64.o",
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_cacls = (
     conquest.createCommand(name="cacls", description="List user permissions for the specified file, wildcards supported.", example="cacls C:\\Services\\service.exe",
-                           message="Tasked agent to list file permissions.")
+                           message="Tasked agent to list file permissions.", mitre=["T1222"])
             .addArgString("file", "Relative or absolute path to the file.", True)
             .setHandler(lambda agentId, cmdline, args: (
                 file := conquest.get_string(args, 0),
@@ -41,36 +54,33 @@ cmd_cacls = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-cmd_enumdrives = (
-    conquest.createCommand(name="enum-drives", description="List local drive letters and types.", example="enum-drives",
-                           message="Tasked agent to list local drives.")
-            .setHandler(lambda agentId, cmdline, args: (
-                bof := conquest.modules_root() + "/OperatorsKit/KIT/EnumDrives/enumdrives.o",
-                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
-            )))
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_arp = (
     conquest.createCommand(name="arp", description="List ARP table.", example="arp", 
-                           message="Tasked agent to retrieve ARP table.")
+                           message="Tasked agent to retrieve ARP table.", mitre=["T1018", "T1049"])
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/arp/arp.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_ipconfig = ( 
     conquest.createCommand(name="ipconfig", description="List IPv4 address, hostname, and DNS server.", example="ipconfig", 
-                           message="Tasked agent to list network configuration.")
+                           message="Tasked agent to list network configuration.", mitre=["T1016"])
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/ipconfig/ipconfig.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 DNS_RECORD_TYPES = {
     "A": 0x1,           # IPv4 address
     "NS": 0x2,          # Name server
@@ -100,7 +110,7 @@ DNS_RECORD_TYPES = {
 }
 cmd_nslookup = (
     conquest.createCommand(name="nslookup", description="Perform a DNS query.", example="nslookup jump01 --server 10.0.0.10 --type A",
-                           message="Tasked agent to perform a DNS query.")
+                           message="Tasked agent to perform a DNS query.", mitre=["T1018", "T1590.002"])
             .addArgString("hostname", "Hostname to look up.", True)
             .addFlagString("--server", "server", "DNS server.")
             .addFlagString("--type", "type", """DNS Record type (default: ANY).
@@ -120,21 +130,56 @@ Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HI
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_listdns = (
-    conquest.createCommand(name="listdns", description="List DNS cache entries.", example="listdns", 
-                        message="Tasked agent to list DNS cache entries.")
+    conquest.createCommand(name="list-dns", description="List DNS cache entries.", example="list-dns", 
+                        message="Tasked agent to list DNS cache entries.", mitre=["T1016", "T1049"])
         .setHandler(lambda agentId, cmdline, args: (
             bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/listdns/listdns.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-            else conquest.error(agentId, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
         )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_netstat = (
+    conquest.createCommand(name="netstat", description="List network connections.", example="netstat", 
+                        message="Tasked agent to list network connections.", mitre=["T1049"])
+        .setHandler(lambda agentId, cmdline, args: (
+            bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/netstat/netstat.x64.o",
+            conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_listroute = (
+    conquest.createCommand(name="list-route", description="List IPv4 routing table.", example="list-route", 
+                        message="Tasked agent to list routing table.", mitre=["T1016"])
+        .setHandler(lambda agentId, cmdline, args: (
+            bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/routeprint/routeprint.x64.o",
+            conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_listpipes = (
+    conquest.createCommand(name="list-pipes", description="List named pipes.", example="list-pipes", 
+                        message="Tasked agent to list named pipes.", mitre=["T1135"])
+        .setHandler(lambda agentId, cmdline, args: (
+            conquest.execute_alias(agentId, cmdline, f"ls //./pipe/")
+        )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_checkport = (
     conquest.createCommand(name="check-port", description="Check if a specific port is open on a remote machine.", example="check-port web01 80",
-                           message="Tasked agent to check if a port is open on a remote machine.")
+                           message="Tasked agent to check if a port is open on a remote machine.", mitre=["T1046"])
             .addArgString("target", "Hostname/IP address of the target system.", True)
             .addArgInt("port", "Port to check.", True)
             .setHandler(lambda agentId, cmdline, args: (
@@ -148,12 +193,14 @@ cmd_checkport = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_pingsweep = (
     conquest.createCommand(name="pingsweep", description="Scan an IP range for live hosts.", example="pingsweep 10.10.15.0/24",
-                           message="Tasked agent to perform a pingscan.")
+                           message="Tasked agent to perform a pingscan.", mitre=["T1018", "T1046"])
             .addArgString("targets", "Comma separated list of hosts to scan. Hostnames, IPs and IP ranges supported (eg. 192.168.1.128-192.168.2.240,192.168.1.0/24).", True)
             .setHandler(lambda agentId, cmdline, args: (
                 targets := conquest.get_string(args, 0),
@@ -164,12 +211,14 @@ cmd_pingsweep = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_netDomainGroup = (
     conquest.createCommand(name="net-group", description="List domain groups or members of a specified domain group.", example="net-group \"Domain Admins\" --domain domain.local",
-                           message="Tasked agent to enumerate domain groups / domain group-memberships.")
+                           message="Tasked agent to enumerate domain groups / domain group-memberships.", mitre=["T1069.002"])
             .addArgString("group", "Specify domain group name to view group memberships.")
             .addFlagString("--domain", "domain", "Domain (default: current domain).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -178,18 +227,20 @@ cmd_netDomainGroup = (
 
                 bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/netgroup/netgroup.x64.o",
                 params := conquest.bof_pack("sZZ", [
-                    1 if group != "" else 0,        # s: Type (0: list groups, 1: list group-memberships)
+                    int(group != ""),               # s: Type (0: list groups, 1: list group-memberships)
                     domain,                         # Z: Domain name
                     group                           # Z: Group name
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_netLocalGroup = (
     conquest.createCommand(name="net-localgroup", description="List local groups or members of a specified local group.", example="net-localgroup \"Administrators\" --domain domain.local",
-                           message="Tasked agent to enumerate local groups / local group-memberships.")
+                           message="Tasked agent to enumerate local groups / local group-memberships.", mitre=["T1069.001"])
             .addArgString("group", "Specify local group name to view group memberships.")
             .addFlagString("--server", "server", "Server (default: local machine).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -198,15 +249,17 @@ cmd_netLocalGroup = (
 
                 bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/netlocalgroup/netlocalgroup.x64.o",
                 params := conquest.bof_pack("sZZ", [
-                    1 if group != "" else 0,        # s: Type (0: list groups, 1: list group-memberships)
+                    int(group != ""),               # s: Type (0: list groups, 1: list group-memberships)
                     server,                         # Z: Server
                     group                           # Z: Group name
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 def handler_netUser(agentId, cmdline, args): 
     user = conquest.get_string(args, 0)
     domain = conquest.get_string(args, 1)
@@ -222,41 +275,45 @@ def handler_netUser(agentId, cmdline, args):
         # List users
         bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/netuserenum/netuserenum.x64.o"
         params = conquest.bof_pack("ii", [
-            1 if domain != "" else 0,   # i: Use domain (0: local users, 1: domain users)
+            int(domain != ""),          # i: Use domain (0: local users, 1: domain users)
             1                           # i: Filter (1: all users, 2: locked-out users, 3: disabled users, 4: neither disabled and not locked-out users)
         ])
 
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, f"Failed to open object file: {bof}")
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_netUser = (
     conquest.createCommand(name="net-user", description="List user information.", example="net-user svc_sql --domain domain.local",
-                           message="Tasked agent to list user information.")
+                           message="Tasked agent to list user information.", mitre=["T1087.001", "T1087.002"])
             .addArgString("user", "Specify username to retrieve user information. If no username is provided, this command enumerates and lists all users instead.")
             .addFlagString("--domain", "domain", "Specify domain to list domain users rather than local users.")
             .setHandler(handler_netUser))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_netShares = (
     conquest.createCommand(name="net-shares", description="List shares on a target system.", example="net-shares dc01 --admin",
-                        message="Tasked agent to list shares.")
+                        message="Tasked agent to list shares.", mitre=["T1135"])
         .addArgString("host", "Hostname of the target system (default: local computer).")
         .addFlagBool("--admin", "admin", "List shares as admin (requires admin privileges).")
         .setHandler(lambda agentId, cmdline, args: (
             host := conquest.get_string(args, 0),
-            admin := 1 if conquest.get_bool(args, 1) else 0,
+            admin := conquest.get_bool(args, 1),
 
             bof := conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/netshares/netshares.x64.o",
             params := conquest.bof_pack("Zi", [
-                host,       # Z: Host 
-                admin,      # i: List shares as admin
+                host,           # Z: Host 
+                int(admin)      # i: List shares as admin
             ]),
 
             conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-            else conquest.error(agentId, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
         )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 LDAP_SCOPE = {
     "base": 1,
     "level": 2,
@@ -281,17 +338,17 @@ def ldapsearch_handler(agentId, cmdline, args):
         ldapScope,                  # i: Scope (1=base, 2=level, 3=subtree)
         hostname,                   # z: DC hostname (auto-discover if empty)
         dn,                         # z: Domain DN (auto-detect if empty)
-        1 if ldaps else 0           # i: Use LDAPS
+        int(ldaps)                  # i: Use LDAPS
     ])
     
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, f"Failed to open object file: {bof}")
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_ldapsearch = (
     conquest.createCommand(name="ldapsearch", description="Execute a LDAP query.", example="ldapsearch \"(objectClass=user)\" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local",
-                           message="Tasked agent to execute a LDAP query.")
+                           message="Tasked agent to execute a LDAP query.", mitre=["T1087.002", "T1069.002", "T1482", "T1018"])
             .addArgString("query", "LDAP filter query.", True)
             .addFlagString("--attributes", "attributes", "Attributes to retrieve, comma-separated (default: *).")
             .addFlagInt("--count", "count", "Maximum number of results (default: 0 = unlimited).")
@@ -304,7 +361,9 @@ Available options:
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
             .setHandler(ldapsearch_handler))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 def handler_scEnum(agentId, cmdline, args): 
     service = conquest.get_string(args, 0)
     server = conquest.get_string(args, 1)
@@ -326,18 +385,20 @@ def handler_scEnum(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, f"Failed to open object file: {bof}")
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_scEnum = (
     conquest.createCommand(name="sc-enum", description="Get service information.", example="sc-enum --server dc01",
-                           message="Tasked agent to enumerate services.")
+                           message="Tasked agent to enumerate services.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not is provided, this command will list all services on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system.")
             .setHandler(handler_scEnum))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 cmd_scQuery = (
     conquest.createCommand(name="sc-query", description="Query service status status.", example="sc-qc UpdaterSvc",
-                           message="Tasked agent to query service status.")
+                           message="Tasked agent to query service status.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not provided, this command will list the status of all services running on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system.")
             .setHandler(lambda agentId, cmdline, args: (
@@ -351,9 +412,11 @@ cmd_scQuery = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
             )))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 def handler_schtasksEnum(agentId, cmdline, args): 
     task = conquest.get_string(args, 0)
     server = conquest.get_string(args, 1)
@@ -375,15 +438,17 @@ def handler_schtasksEnum(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, f"Failed to open object file: {bof}")
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_schtasksEnum = (
     conquest.createCommand(name="schtasks-enum", description="Get information about scheduled task.", example="schtasks-enum \"\\Microsoft\\Office\\Office Background Push Maintenance\"",
-                           message="Tasked agent to enumerate scheduled tasks.")
+                           message="Tasked agent to enumerate scheduled tasks.", mitre=["T1053.005"])
             .addArgString("path", "Path to the target scheduled task. If not provided, this command will list all scheduled tasks on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system.")
             .setHandler(handler_schtasksEnum))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 REGISTRY_HIVES = {
     "HKCR": 0,  # HKEY_CLASSES_ROOT
     "HKCU": 1,  # HKEY_CURRENT_USER
@@ -399,8 +464,7 @@ def handler_regQuery(agentId, cmdline, args):
     
     regHive = REGISTRY_HIVES.get(hive)
     if regHive is None:
-        conquest.log_command(agentId, cmdline)
-        conquest.error(agentId, f"Invalid registry hive: {hive}.")
+        conquest.error(agentId, cmdline, f"Invalid registry hive: {hive}.")
         return
     
     bof = conquest.modules_root() + "/CS-Situational-Awareness-BOF/SA/reg_query/reg_query.x64.o"
@@ -409,17 +473,17 @@ def handler_regQuery(agentId, cmdline, args):
         regHive,                    # i: Hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
         path,                       # z: Registry path
         key,                        # z: Key 
-        1 if recursive else 0       # i: Recursive enumeration
+        int(recursive)              # i: Recursive enumeration
     ])
     
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, f"Failed to open object file: {bof}")
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_regQuery = (
     conquest.createCommand(name="reg-query", description="Query the registry.", example="reg-query HKLM \"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\" ProgramFilesDir",
-                           message="Tasked agent to query the registry.")
+                           message="Tasked agent to query the registry.", mitre=["T1012"])
             .addArgString("hive", """Registry hive.
 Available options:
   - HKCR
@@ -431,6 +495,7 @@ Available options:
             .addFlagString("--hostname", "hostname", "Target hostname for remote registry (default: local computer).")
             .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
             .setHandler(handler_regQuery))
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 conquest.registerModule(
@@ -439,7 +504,7 @@ conquest.registerModule(
     group="situational-awareness", 
     commands=[cmd_whoami, 
               cmd_cat, cmd_cacls, cmd_enumdrives,
-              cmd_arp, cmd_ipconfig, cmd_nslookup, cmd_listdns, cmd_checkport, cmd_pingsweep,
+              cmd_arp, cmd_ipconfig, cmd_nslookup, cmd_listdns, cmd_netstat, cmd_listroute, cmd_listpipes, cmd_checkport, cmd_pingsweep,
               cmd_netDomainGroup, cmd_netLocalGroup, cmd_netUser, cmd_netShares,
               cmd_scEnum, cmd_scQuery, cmd_schtasksEnum, cmd_regQuery,
               cmd_ldapsearch
