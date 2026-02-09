@@ -16,7 +16,7 @@ PRIVESC_CHECKS = {
     "uac-status": "/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
 }
 def handler_privkit(agentId, cmdline, args): 
-    check = conquest.get_string(args, 0, "all").lower()
+    check = conquest.get_string(args, 0).lower()
         
     if check == "all":
         # Execute all checks

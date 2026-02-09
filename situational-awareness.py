@@ -114,11 +114,11 @@ cmd_nslookup = (
             .addArgString("hostname", "Hostname to look up.", True)
             .addFlagString("--server", "server", "DNS server.")
             .addFlagString("--type", "type", """DNS Record type (default: ANY).
-Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, AAAA, SRV, DNSKEY, NBSTAT""")
+Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HINFO, MINFO, MX, TXT, RP, AFSDB, X25, ISDN, RT, AAAA, SRV, DNSKEY, NBSTAT""", False, "ANY")
             .setHandler(lambda agentId, cmdline, args: (
                 hostname := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
-                type := conquest.get_string(args, 2, "ANY").upper(),
+                type := conquest.get_string(args, 2).upper(),
 
                 recordType := DNS_RECORD_TYPES.get(type, DNS_RECORD_TYPES["ANY"]),
 
@@ -321,9 +321,9 @@ LDAP_SCOPE = {
 }
 def ldapsearch_handler(agentId, cmdline, args):
     query = conquest.get_string(args, 0)
-    attributes = conquest.get_string(args, 1, "*")
+    attributes = conquest.get_string(args, 1)
     count = conquest.get_int(args, 2)
-    scope = conquest.get_string(args, 3, "subtree").lower()
+    scope = conquest.get_string(args, 3)
     hostname = conquest.get_string(args, 4)
     dn = conquest.get_string(args, 5)
     ldaps = conquest.get_bool(args, 6)
@@ -350,13 +350,13 @@ cmd_ldapsearch = (
     conquest.createCommand(name="ldapsearch", description="Execute a LDAP query.", example="ldapsearch \"(objectClass=user)\" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local",
                            message="Tasked agent to execute a LDAP query.", mitre=["T1087.002", "T1069.002", "T1482", "T1018"])
             .addArgString("query", "LDAP filter query.", True)
-            .addFlagString("--attributes", "attributes", "Attributes to retrieve, comma-separated (default: *).")
+            .addFlagString("--attributes", "attributes", "Attributes to retrieve, comma-separated (default: *).", False, "*")
             .addFlagInt("--count", "count", "Maximum number of results (default: 0 = unlimited).")
             .addFlagString("--scope", "scope", """Search scope.
 Available options:
   - base 
   - level 
-  - subtree (default)""")
+  - subtree (default)""", False, "subtree")
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
