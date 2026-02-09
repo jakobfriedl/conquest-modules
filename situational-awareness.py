@@ -260,7 +260,7 @@ cmd_netLocalGroup = (
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-def handler_netUser(agentId, cmdline, args): 
+def _netUser(agentId, cmdline, args): 
     user = conquest.get_string(args, 0)
     domain = conquest.get_string(args, 1)
 
@@ -289,7 +289,7 @@ cmd_netUser = (
                            message="Tasked agent to list user information.", mitre=["T1087.001", "T1087.002"])
             .addArgString("user", "Specify username to retrieve user information. If no username is provided, this command enumerates and lists all users instead.")
             .addFlagString("--domain", "domain", "Specify domain to list domain users rather than local users.")
-            .setHandler(handler_netUser))
+            .setHandler(_netUser))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -319,7 +319,7 @@ LDAP_SCOPE = {
     "level": 2,
     "subtree": 3
 }
-def ldapsearch_handler(agentId, cmdline, args):
+def ldapsearch_(agentId, cmdline, args):
     query = conquest.get_string(args, 0)
     attributes = conquest.get_string(args, 1)
     count = conquest.get_int(args, 2)
@@ -360,11 +360,11 @@ Available options:
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
-            .setHandler(ldapsearch_handler))
+            .setHandler(ldapsearch_))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-def handler_scEnum(agentId, cmdline, args): 
+def _scEnum(agentId, cmdline, args): 
     service = conquest.get_string(args, 0)
     server = conquest.get_string(args, 1)
 
@@ -392,7 +392,7 @@ cmd_scEnum = (
                            message="Tasked agent to enumerate services.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not is provided, this command will list all services on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system.")
-            .setHandler(handler_scEnum))
+            .setHandler(_scEnum))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -417,7 +417,7 @@ cmd_scQuery = (
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-def handler_schtasksEnum(agentId, cmdline, args): 
+def _schtasksEnum(agentId, cmdline, args): 
     task = conquest.get_string(args, 0)
     server = conquest.get_string(args, 1)
 
@@ -445,7 +445,7 @@ cmd_schtasksEnum = (
                            message="Tasked agent to enumerate scheduled tasks.", mitre=["T1053.005"])
             .addArgString("path", "Path to the target scheduled task. If not provided, this command will list all scheduled tasks on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system.")
-            .setHandler(handler_schtasksEnum))
+            .setHandler(_schtasksEnum))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -455,7 +455,7 @@ REGISTRY_HIVES = {
     "HKLM": 2,  # HKEY_LOCAL_MACHINE
     "HKU": 3    # HKEY_USERS
 }
-def handler_regQuery(agentId, cmdline, args): 
+def _regQuery(agentId, cmdline, args): 
     hive = conquest.get_string(args, 0).upper()
     path = conquest.get_string(args, 1)
     key = conquest.get_string(args, 2)
@@ -494,7 +494,7 @@ Available options:
             .addArgString("key", "Specific key/value name to query. If not provided, enumerates all subkeys and values.")
             .addFlagString("--hostname", "hostname", "Target hostname for remote registry (default: local computer).")
             .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
-            .setHandler(handler_regQuery))
+            .setHandler(_regQuery))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 

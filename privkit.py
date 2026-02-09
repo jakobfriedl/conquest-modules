@@ -15,7 +15,7 @@ PRIVESC_CHECKS = {
     "ps-history": "/PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
     "uac-status": "/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
 }
-def handler_privkit(agentId, cmdline, args): 
+def _privkit(agentId, cmdline, args): 
     check = conquest.get_string(args, 0).lower()
         
     if check == "all":
@@ -55,7 +55,7 @@ Available options:
   - unquoted-svc-path
   - ps-history
   - uac-status""", True)
-            .setHandler(handler_privkit))
+            .setHandler(_privkit))
 
 conquest.registerModule(
     name="privkit", 

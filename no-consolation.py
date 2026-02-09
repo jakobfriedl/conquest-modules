@@ -1,7 +1,7 @@
 import conquest
 import os.path 
 
-def handler_noconsolation(agentId, cmdline, args): 
+def _noconsolation(agentId, cmdline, args): 
     path = conquest.get_string(args, 0)
     arguments = conquest.get_string(args, 1)
     local = conquest.get_bool(args, 2)
@@ -161,7 +161,7 @@ cmd_noconsolation = (
             .addFlagString("--load-all-deps-but", "LADB_DLLS", "Custom load all dependencies except those specified (comma-separated).")
             .addFlagString("--load-deps", "LD_DLLS", "Custom load specified dependencies (comma-separated).")
             .addFlagString("--search-paths", "PATHS", "Custom search paths for DLLs (comma-separated).")
-            .setHandler(handler_noconsolation))
+            .setHandler(_noconsolation))
 
 conquest.registerModule(
     name="no-consolation", 
