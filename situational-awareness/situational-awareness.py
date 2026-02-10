@@ -498,14 +498,57 @@ Available options:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
+cmd_windowList = (
+    conquest.createCommand(name="list-windows", description="List visible windows in the current user session.", example="list-windows --all",
+                           message="Tasked agent to list windows.", mitre=["T1010"])
+            .addFlagBool("--all", "all", "Include hidden windows in window list.")
+            .setHandler(lambda agentId, cmdline, args: (
+                all := conquest.get_bool(args, 0),
+
+                bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/windowlist/windowlist.x64.o",
+                params := conquest.bof_pack("i", [
+                    int(all),         # i: List all windows 
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_wmiQuery = ( 
+    conquest.createCommand(name="wmi-query", description="Run a WMI query on a local or remote system.", example="wmi-query \"Select * From Win32_Process Where ProcessId = 33380\"",
+                           message="Tasked agent to run a WMI query.", mitre=["T1047"])
+            .addArgString("query", "Query to run (WQL format).", True)
+            .addFlagString("--server", "server", "Specify remote target system (default: local computer).", False, ".")
+            .addFlagString("--namespace", "namespace", "Specify namespace to connect to (default: root\\cimv2).", False, "root\\cimv2")
+            .setHandler(lambda agentId, cmdline, args: (
+                query := conquest.get_string(args, 0),
+                server := conquest.get_string(args, 1),
+                namespace := conquest.get_string(args, 2),
+
+                bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/wmi_query/wmi_query.x64.o",
+                params := conquest.bof_pack("ZZZZ", [
+                    server,                             # Z: Target system
+                    namespace,                          # Z: Target namespace
+                    query,                              # Z: WMI Query
+                    f"\\\\{server}\\{namespace}"        # Z: Resource
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            )))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 conquest.registerModule(
     name="situational-awareness", 
     description="Local and remote reconnaissance capabilities.", 
     group="situational-awareness", 
     commands=[cmd_whoami, 
-              cmd_cat, cmd_cacls, cmd_enumdrives,
+              cmd_cat, cmd_cacls, cmd_enumdrives, cmd_windowList,
               cmd_arp, cmd_ipconfig, cmd_nslookup, cmd_listdns, cmd_netstat, cmd_listroute, cmd_listpipes, cmd_checkport, cmd_pingsweep,
               cmd_netDomainGroup, cmd_netLocalGroup, cmd_netUser, cmd_netShares,
               cmd_scEnum, cmd_scQuery, cmd_schtasksEnum, cmd_regQuery,
-              cmd_ldapsearch
+              cmd_ldapsearch, cmd_wmiQuery
     ])
