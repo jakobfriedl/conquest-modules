@@ -100,7 +100,7 @@ def _noconsolation(agentId, cmdline, args):
     import datetime
     timestamp = datetime.datetime.now().strftime('%d/%m %H:%M')
     
-    bof = conquest.modules_root() + "/No-Consolation/dist/NoConsolation.x64.o"    
+    bof = conquest.modules_root() + "/execution/No-Consolation/dist/NoConsolation.x64.o"    
     params = conquest.bof_pack("ZzZbziiiZzziiiiziizzziiizzzi", [
         pename,                         # Z: PE name (wide)
         pename,                         # z: PE name

@@ -5,7 +5,7 @@ def _kerbeus(command):
     def handler(agentId, cmdline, args):
         args = conquest.get_string(args, 0)
         
-        bof = conquest.modules_root() + f"/Kerbeus-BOF/_bin/{command}.x64.o"
+        bof = conquest.modules_root() + f"/kerbeus/dist/{command}.x64.o"
         params = conquest.bof_pack("z", [
             args    # z: Command arguments
         ])
@@ -311,7 +311,7 @@ Flags:
 
 conquest.registerModule(
     name="kerbeus", 
-    description="Kerberos abuse toolkit (https://github.com/RalfHacker/Kerbeus-BOF).", 
+    description="Kerberos abuse toolkit.", 
     group="kerberos", 
     commands=[
         cmd_asktgt,

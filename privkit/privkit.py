@@ -4,16 +4,16 @@ import os.path
 # Windows Privilege Escalation checks using PrivKit BOFs by @merterpreter & @nickvourd
 
 PRIVESC_CHECKS = {
-    "always-install-elevated": "/PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
-    "autologon": "/PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
-    "cred-manager": "/PrivKit/CredentialManagerCheck/CredentialManagerCheck.x64.o",
-    "hijack-path": "/PrivKit/HijackablePathCheck/HijackablePathCheck.x64.o",
-    "modify-autorun": "/PrivKit/ModifiableAutorunCheck/ModifiableAutorunCheck.x64.o",
-    "modify-svc": "/PrivKit/ModifiableSVCCheck/ModifiableSVCCheck.x64.o",
-    "token-privs": "/PrivKit/TokenPrivilegesCheck/TokenPrivilegesCheck.x64.o",
-    "unquoted-svc-path": "/PrivKit/UnquotedSVCPathCheck/UnquotedSVCPathCheck.x64.o",
-    "ps-history": "/PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
-    "uac-status": "/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
+    "always-install-elevated": "/privkit/PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
+    "autologon": "/privkit/PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
+    "cred-manager": "/privkit/PrivKit/CredentialManagerCheck/CredentialManagerCheck.x64.o",
+    "hijack-path": "/privkit/PrivKit/HijackablePathCheck/HijackablePathCheck.x64.o",
+    "modify-autorun": "/privkit/PrivKit/ModifiableAutorunCheck/ModifiableAutorunCheck.x64.o",
+    "modify-svc": "/privkit/PrivKit/ModifiableSVCCheck/ModifiableSVCCheck.x64.o",
+    "token-privs": "/privkit/PrivKit/TokenPrivilegesCheck/TokenPrivilegesCheck.x64.o",
+    "unquoted-svc-path": "/privkit/PrivKit/UnquotedSVCPathCheck/UnquotedSVCPathCheck.x64.o",
+    "ps-history": "/privkit/PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
+    "uac-status": "/privkit/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
 }
 def _privkit(agentId, cmdline, args): 
     check = conquest.get_string(args, 0).lower()

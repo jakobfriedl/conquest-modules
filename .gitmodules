@@ -1,24 +1,24 @@
 [submodule "situational-awareness/cat"]
-	path = cobaltstrike-cat-bof
+	path = situational-awareness/cobaltstrike-cat-bof
 	url = https://github.com/tvgdb/cobaltstrike-cat-bof.git
 [submodule "situational-awareness/sa"]
-	path = CS-Situational-Awareness-BOF
+	path = situational-awareness/CS-Situational-Awareness-BOF
 	url = https://github.com/trustedsec/CS-Situational-Awareness-BOF.git
-[submodule "Kerbeus-BOF"]
-	path = Kerbeus-BOF
-	url = https://github.com/RalfHacker/Kerbeus-BOF
 [submodule "OperatorsKit"]
-	path = OperatorsKit
+	path = situational-awareness/OperatorsKit
 	url = https://github.com/fyxme/OperatorsKit.git
 [submodule "portscanbof"]
-	path = portscanbof
+	path = situational-awareness/portscanbof
 	url = https://github.com/fyxme/portscanbof/
 [submodule "PrivKit"]
-	path = PrivKit
+	path = privkit/PrivKit
 	url = https://github.com/mertdas/PrivKit
 [submodule "No-Consolation"]
-	path = No-Consolation
+	path = execution/No-Consolation
 	url = https://github.com/fortra/No-Consolation
 [submodule "CS-Remote-OPs-BOF"]
-	path = CS-Remote-OPs-BOF
+	path = remote-operations/CS-Remote-OPs-BOF
 	url = https://github.com/trustedsec/CS-Remote-OPs-BOF
+[submodule "kerbeus/Kerbeus-BOF"]
+	path = kerbeus/Kerbeus-BOF
+	url = https://github.com/RalfHacker/Kerbeus-BOF
