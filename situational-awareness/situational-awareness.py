@@ -179,7 +179,7 @@ cmd_netstat = (
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 cmd_listroute = (
-    conquest.createCommand(name="list-route", description="List IPv4 routing table.", example="list-route", 
+    conquest.createCommand(name="list-routes", description="List IPv4 routing table.", example="list-routes", 
                         message="Tasked agent to list routing table.", mitre=["T1016"])
         .setHandler(lambda agentId, cmdline, args: (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/routeprint/routeprint.x64.o",
