@@ -102,22 +102,12 @@ conquest.registerModule(
 # Situational awareness
 cmd_ps = conquest.createCommand(name="ps", description="Display running processes.", example="ps", 
                                 message="Tasked agent to display running processes.", mitre=["T1424"])
-cmd_env = conquest.createCommand(name="env", description="Display environment variables.", example="env", 
-                                 message="Tasked agent to display environment variables.", mitre=["T1082"])
-# cmd_env = ( # Already implemented in default module  
-#     conquest.createCommand(name="env", description="List environment variables.", example="env", 
-#                            message="Tasked agent to list environment variables.")
-#             .setHandler(lambda agentId, cmdline, args: (
-#                 bof := conquest.modules_root() + "CS-Situational-Awareness-BOF/SA/env/env.x64.o",
-#                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-#                 else conquest.error(agentId, f"Failed to open object file: {bof}")
-#             )))
 
 conquest.registerModule(
     name="systeminfo", 
     description="Retrieve information about the target system and environment.", 
-    group="situational-awareness", 
-    commands=[cmd_ps, cmd_env])
+    group="situational awareness", 
+    commands=[cmd_ps])
 
 cmd_pwd = conquest.createCommand(name="pwd", description="Retrieve current working directory.", example="pwd", 
                                  message="Tasked agent to retrieve current working directory.", mitre=["T1083"])
@@ -155,7 +145,7 @@ cmd_copy = (
 conquest.registerModule(
     name="filesystem", 
     description="Conduct simple filesystem operations via Windows API.", 
-    group="situational-awareness", 
+    group="situational awareness", 
     commands=[cmd_pwd, cmd_cd, cmd_ls, cmd_dir, cmd_rm, cmd_rmdir, cmd_move, cmd_copy])
 
 cmd_screenshot = conquest.createCommand(name="screenshot", description="Take and retrieve a screenshot of the target desktop.", example="screenshot", 
@@ -164,7 +154,7 @@ cmd_screenshot = conquest.createCommand(name="screenshot", description="Take and
 conquest.registerModule(
     name="screenshot", 
     description="Take and retrieve a screenshot of the target desktop.", 
-    group="situational-awareness",
+    group="situational awareness",
     commands=[cmd_screenshot])
 
 # Token manipulation
@@ -199,5 +189,5 @@ cmd_disablepriv = (
 conquest.registerModule(
     name="token", 
     description="Manipulate Windows access tokens.", 
-    group="user-impersonation", 
+    group="user impersonation", 
     commands=[cmd_maketoken, cmd_stealtoken, cmd_rev2self, cmd_tokeninfo, cmd_enablepriv, cmd_disablepriv])

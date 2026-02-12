@@ -15,7 +15,8 @@ cmd_cat = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -26,7 +27,8 @@ cmd_enumdrives = (
                 bof := conquest.modules_root() + "/situational-awareness/OperatorsKit/KIT/EnumDrives/enumdrives.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -37,7 +39,20 @@ cmd_whoami = (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/whoami/whoami.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_env = ( 
+    conquest.createCommand(name="env", description="List environment variables.", example="env", 
+                           message="Tasked agent to list environment variables.")
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/env/env.x64.o",
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}")
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -55,7 +70,8 @@ cmd_cacls = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -66,7 +82,8 @@ cmd_arp = (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/arp/arp.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -77,7 +94,8 @@ cmd_ipconfig = (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/ipconfig/ipconfig.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -131,7 +149,8 @@ Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HI
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -142,7 +161,8 @@ cmd_listdns = (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/listdns/listdns.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-        )))
+        ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -153,7 +173,8 @@ cmd_netstat = (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/netstat/netstat.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-        )))
+        ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -164,7 +185,8 @@ cmd_listroute = (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/routeprint/routeprint.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-        )))
+        ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -173,7 +195,8 @@ cmd_listpipes = (
                         message="Tasked agent to list named pipes.", mitre=["T1135"])
         .setHandler(lambda agentId, cmdline, args: (
             conquest.execute_alias(agentId, cmdline, f"ls //./pipe/")
-        )))
+        ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -194,7 +217,8 @@ cmd_checkport = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -212,7 +236,8 @@ cmd_pingsweep = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -234,7 +259,8 @@ cmd_netDomainGroup = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -256,7 +282,8 @@ cmd_netLocalGroup = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -289,7 +316,8 @@ cmd_netUser = (
                            message="Tasked agent to list user information.", mitre=["T1087.001", "T1087.002"])
             .addArgString("user", "Specify username to retrieve user information. If no username is provided, this command enumerates and lists all users instead.")
             .addFlagString("--domain", "domain", "Specify domain to list domain users rather than local users.")
-            .setHandler(_netUser))
+            .setHandler(_netUser)
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -310,7 +338,8 @@ cmd_netShares = (
 
             conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
             else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-        )))
+        ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -360,7 +389,8 @@ Available options:
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
-            .setHandler(ldapsearch_))
+            .setHandler(ldapsearch_)
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -392,7 +422,8 @@ cmd_scEnum = (
                            message="Tasked agent to enumerate services.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not is provided, this command will list all services on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
-            .setHandler(_scEnum))
+            .setHandler(_scEnum)
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -413,7 +444,8 @@ cmd_scQuery = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -445,7 +477,8 @@ cmd_schtasksEnum = (
                            message="Tasked agent to enumerate scheduled tasks.", mitre=["T1053.005"])
             .addArgString("path", "Path to the target scheduled task. If not provided, this command will list all scheduled tasks on the target system.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
-            .setHandler(_schtasksEnum))
+            .setHandler(_schtasksEnum)
+).registerToGroup("scheduled tasks")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -494,7 +527,8 @@ Available options:
             .addArgString("key", "Specific key/value name to query. If not provided, enumerates all subkeys and values.")
             .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
             .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
-            .setHandler(_regQuery))
+            .setHandler(_regQuery)
+).registerToGroup("windows registry")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -512,7 +546,8 @@ cmd_windowList = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -537,18 +572,5 @@ cmd_wmiQuery = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
-conquest.registerModule(
-    name="situational-awareness", 
-    description="Local and remote reconnaissance capabilities.", 
-    group="situational-awareness", 
-    commands=[cmd_whoami, 
-              cmd_cat, cmd_cacls, cmd_enumdrives, cmd_windowList,
-              cmd_arp, cmd_ipconfig, cmd_nslookup, cmd_listdns, cmd_netstat, cmd_listroute, cmd_listpipes, cmd_checkport, cmd_pingsweep,
-              cmd_netDomainGroup, cmd_netLocalGroup, cmd_netUser, cmd_netShares,
-              cmd_scEnum, cmd_scQuery, cmd_schtasksEnum, cmd_regQuery,
-              cmd_ldapsearch, cmd_wmiQuery
-    ])
+            ))
+).registerToGroup("situational awareness")

@@ -41,7 +41,7 @@ Flags:
     )
     .addArgString("arguments", "TGT request arguments.")
     .setHandler(_kerbeus("asktgt"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_asktgs = (
     conquest.createCommand(
@@ -66,7 +66,7 @@ Flags:
     )
     .addArgString("arguments", "TGS request arguments.")
     .setHandler(_kerbeus("asktgs"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_renew = (
     conquest.createCommand(
@@ -82,7 +82,7 @@ Flags:
     )
     .addArgString("arguments", "TGT renewal arguments.")
     .setHandler(_kerbeus("renew"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_s4u = (
     conquest.createCommand(
@@ -106,7 +106,7 @@ Flags:
     )
     .addArgString("arguments", "S4U delegation arguments.")
     .setHandler(_kerbeus("s4u"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_cross_s4u = (
     conquest.createCommand(
@@ -130,7 +130,7 @@ Flags:
     )
     .addArgString("arguments", "Cross-domain S4U arguments.")
     .setHandler(_kerbeus("cross_s4u"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_ptt = (
     conquest.createCommand(
@@ -145,7 +145,7 @@ Flags:
     )
     .addArgString("arguments", "PTT arguments.")
     .setHandler(_kerbeus("ptt"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_purge = (
     conquest.createCommand(
@@ -159,7 +159,7 @@ Flags:
     )
     .addArgString("arguments", "Purge arguments.")
     .setHandler(_kerbeus("purge"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_describe = (
     conquest.createCommand(
@@ -173,7 +173,7 @@ Flags:
     )
     .addArgString("arguments", "Ticket to describe.")
     .setHandler(_kerbeus("describe"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_klist = (
     conquest.createCommand(
@@ -190,7 +190,7 @@ Flags:
     )
     .addArgString("arguments", "List filters.")
     .setHandler(_kerbeus("klist"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_dump = (
     conquest.createCommand(
@@ -207,7 +207,7 @@ Flags:
     )
     .addArgString("arguments", "Dump filters.")
     .setHandler(_kerbeus("dump"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_triage = (
     conquest.createCommand(
@@ -224,7 +224,7 @@ Flags:
     )
     .addArgString("arguments", "Triage filters.")
     .setHandler(_kerbeus("triage"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_tgtdeleg = (
     conquest.createCommand(
@@ -238,7 +238,7 @@ Flags:
     )
     .addArgString("arguments", "TGT delegation arguments.")
     .setHandler(_kerbeus("tgtdeleg"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_kerberoast = (
     conquest.createCommand(
@@ -257,7 +257,7 @@ Flags:
     )
     .addArgString("arguments", "Kerberoasting arguments.")
     .setHandler(_kerbeus("kerberoasting"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_asreproast = (
     conquest.createCommand(
@@ -273,7 +273,7 @@ Flags:
     )
     .addArgString("arguments", "AS-REP roasting arguments.")
     .setHandler(_kerbeus("asreproasting"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_hash = (
     conquest.createCommand(
@@ -289,7 +289,7 @@ Flags:
     )
     .addArgString("arguments", "Hash calculation arguments.")
     .setHandler(_kerbeus("hash"))
-)
+).registerToGroup("kerberos abuse")
 
 cmd_changepw = (
     conquest.createCommand(
@@ -307,28 +307,4 @@ Flags:
     )
     .addArgString("arguments", "Password change arguments.")
     .setHandler(_kerbeus("changepw"))
-)
-
-conquest.registerModule(
-    name="kerbeus", 
-    description="Kerberos abuse toolkit.", 
-    group="kerberos", 
-    commands=[
-        cmd_asktgt,
-        cmd_asktgs,
-        cmd_renew,
-        cmd_s4u,
-        cmd_cross_s4u,
-        cmd_ptt,
-        cmd_purge,
-        cmd_describe,
-        cmd_klist,
-        cmd_dump,
-        cmd_triage,
-        cmd_tgtdeleg,
-        cmd_kerberoast,
-        cmd_asreproast,
-        cmd_hash,
-        cmd_changepw
-    ]
-)
+).registerToGroup("kerberos abuse")

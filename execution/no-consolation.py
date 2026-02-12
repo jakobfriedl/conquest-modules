@@ -161,10 +161,5 @@ cmd_noconsolation = (
             .addFlagString("--load-all-deps-but", "LADB_DLLS", "Custom load all dependencies except those specified (comma-separated).")
             .addFlagString("--load-deps", "LD_DLLS", "Custom load specified dependencies (comma-separated).")
             .addFlagString("--search-paths", "PATHS", "Custom search paths for DLLs (comma-separated).")
-            .setHandler(_noconsolation))
-
-conquest.registerModule(
-    name="no-consolation", 
-    description="Execute unmanaged EXE/DLL in memory.", 
-    group="execution", 
-    commands=[cmd_noconsolation])
+            .setHandler(_noconsolation)
+).registerToGroup("execution")

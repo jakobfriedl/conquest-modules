@@ -55,10 +55,5 @@ Available options:
   - unquoted-svc-path
   - ps-history
   - uac-status""", True)
-            .setHandler(_privkit))
-
-conquest.registerModule(
-    name="privkit", 
-    description="Run Windows privilege escalation checks.", 
-    group="privilege-escalation", 
-    commands=[cmd_privkit])
+            .setHandler(_privkit)
+).registerToGroup("privilege escalation")

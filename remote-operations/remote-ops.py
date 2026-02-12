@@ -21,7 +21,8 @@ cmd_addUser = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("remote operations")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -49,7 +50,8 @@ cmd_addGroupmembership = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("remote operations")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -71,7 +73,8 @@ cmd_enableUser = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("remote operations")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -93,7 +96,8 @@ cmd_unexpireUser = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("remote operations")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -118,7 +122,8 @@ cmd_setPassword = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("remote operations")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -246,7 +251,7 @@ Available options:
             .addFlagString("--key", "key", "Name of the registry key (default: \"\").")
             .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
             .setHandler(_regSet)
-)
+).registerToGroup("windows registry")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -295,7 +300,8 @@ Available options:
             .addFlagString("--key", "key", "Name of the registry key to delete (default: \"\").")
             .addFlagBool("--delete-key", "delete-key", "Set this flag to delete the entire registry key.")
             .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
-            .setHandler(_regDelete))
+            .setHandler(_regDelete)
+).registerToGroup("windows registry")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -335,7 +341,8 @@ Available options:
   - HKU     HKEY_USERS""", True)
             .addArgString("path", "Path to the registry key to save.", True)
             .addArgString("output-file", "Output file.", True)
-            .setHandler(_regSave))
+            .setHandler(_regSave)
+).registerToGroup("windows registry")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -374,7 +381,8 @@ Available options:
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -443,7 +451,8 @@ Available options:
 - SERVICE_WIN32_OWN_PROCESS (default)
 - SERVICE_WIN32_SHARE_PROCESS""", False, "SERVICE_WIN32_OWN_PROCESS")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
-            .setHandler(_scCreate))
+            .setHandler(_scCreate)
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -464,7 +473,8 @@ cmd_scDelete = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -485,7 +495,8 @@ cmd_scStart = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -506,7 +517,8 @@ cmd_scStop = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            )))
+            ))
+).registerToGroup("windows services")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -581,7 +593,8 @@ cmd_schtasksCreate = (
             .addFlagString("--password", "password", "Password of the user the task will run as (default: current user).")
             .addFlagBool("--update", "update", "Specify to update a scheduled task if it already exists. If a tasks already exists and this flag is not set, the creation will fail.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
-            .setHandler(_schtasksCreate)) 
+            .setHandler(_schtasksCreate)
+) .registerToGroup("scheduled tasks")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -610,7 +623,8 @@ cmd_schtasksDelete = (
                     conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                     else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
                 )
-            ))) 
+            ))
+).registerToGroup("scheduled tasks") 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -631,7 +645,8 @@ cmd_schtasksStart = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            ))) 
+            ))
+).registerToGroup("scheduled tasks") 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -652,7 +667,8 @@ cmd_schtasksStop = (
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                 else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
-            ))) 
+            ))
+).registerToGroup("scheduled tasks") 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -688,18 +704,5 @@ cmd_shutdown = (
                     conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
                     else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
                 )
-            )))
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
-conquest.registerModule(
-    name="remote-operations", 
-    description="Interact and modify remote Windows systems, services and users.", 
-    group="remote-operations", 
-    commands=[
-        cmd_addUser, cmd_addGroupmembership, cmd_enableUser, cmd_unexpireUser, cmd_setPassword,
-        cmd_regSet, cmd_regDelete, cmd_regSave,
-        cmd_scConfig, cmd_scCreate, cmd_scDelete, cmd_scStart, cmd_scStop,
-        cmd_schtasksCreate, cmd_schtasksDelete, cmd_schtasksStart, cmd_schtasksStop,
-        cmd_shutdown
-    ])
+            ))
+).registerToGroup("remote operations")
