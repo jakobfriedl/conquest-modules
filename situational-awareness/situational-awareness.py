@@ -8,7 +8,7 @@ cmd_cat = (
             .setHandler(lambda agentId, cmdline, args: (
                 file := conquest.get_string(args, 0),
 
-                bof := conquest.modules_root() + "/situational-awareness/cobaltstrike-cat-bof/caat.x64.o",
+                bof := conquest.modules_root() + "/situational-awareness/cobaltstrike-cat-bof/cat.x64.o",
                 params := conquest.bof_pack("Z", [
                     file    # Z: File name
                 ]),
@@ -391,7 +391,7 @@ cmd_scEnum = (
     conquest.createCommand(name="sc-enum", description="Get service information.", example="sc-enum --server dc01",
                            message="Tasked agent to enumerate services.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not is provided, this command will list all services on the target system.")
-            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(_scEnum))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -400,7 +400,7 @@ cmd_scQuery = (
     conquest.createCommand(name="sc-query", description="Query service status status.", example="sc-qc UpdaterSvc",
                            message="Tasked agent to query service status.", mitre=["T1007"])
             .addArgString("service", "Name of the target service. If not provided, this command will list the status of all services running on the target system.")
-            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
                 service := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
@@ -444,7 +444,7 @@ cmd_schtasksEnum = (
     conquest.createCommand(name="schtasks-enum", description="Get information about scheduled task.", example="schtasks-enum \"\\Microsoft\\Office\\Office Background Push Maintenance\"",
                            message="Tasked agent to enumerate scheduled tasks.", mitre=["T1053.005"])
             .addArgString("path", "Path to the target scheduled task. If not provided, this command will list all scheduled tasks on the target system.")
-            .addFlagString("--server", "server", "Hostname or IP address of the target system.")
+            .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(_schtasksEnum))
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -459,7 +459,7 @@ def _regQuery(agentId, cmdline, args):
     hive = conquest.get_string(args, 0).upper()
     path = conquest.get_string(args, 1)
     key = conquest.get_string(args, 2)
-    hostname = conquest.get_string(args, 3)
+    server = conquest.get_string(args, 3)
     recursive = conquest.get_bool(args, 4)
     
     regHive = REGISTRY_HIVES.get(hive)
@@ -469,7 +469,7 @@ def _regQuery(agentId, cmdline, args):
     
     bof = conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/reg_query/reg_query.x64.o"
     params = conquest.bof_pack("zizzi", [
-        hostname,                   # z: Hostname 
+        server,                     # z: Hostname 
         regHive,                    # i: Hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
         path,                       # z: Registry path
         key,                        # z: Key 
@@ -492,7 +492,7 @@ Available options:
   - HKC""", True)
             .addArgString("path", "Registry path.", True)
             .addArgString("key", "Specific key/value name to query. If not provided, enumerates all subkeys and values.")
-            .addFlagString("--hostname", "hostname", "Target hostname for remote registry (default: local computer).")
+            .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
             .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
             .setHandler(_regQuery))
 
