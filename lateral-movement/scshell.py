@@ -38,7 +38,7 @@ def _scshell(agentId, cmdline, args):
 
 cmd_scshell = (
     conquest.createCommand(name="scshell", description="Perform fileless lateral movment by modifying an existing remote service bianry path (SCShell).", example="scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe",
-                           message="Tasked agent to perform fileless lateral movement via SCShell.", mitre=[])
+                           message="Tasked agent to perform fileless lateral movement via SCShell.", mitre=["T1021.002"])
             .addArgString("target", "Target system hostname or IP address.", True)
             .addArgString("payload", "Local path to payload to execute", True)
             .addFlagString("--service", "service", "Target service (default: defragsvc).", False, "defragsvc")
