@@ -41,7 +41,7 @@ def _privkit(agentId, cmdline, args):
 
 cmd_privkit = (
     conquest.createCommand(name="privkit", description="Run Windows privilege escalation checks.", example="privkit unquoted-svc-path",
-                           message="Tasked agent to run privilege escalation check.", mitre=[])
+                           message="Tasked agent to run privilege escalation check.", mitre=["TA0004"])
             .addArgString("check", """Privilege escalation check to run.
 Available options:
   - all
