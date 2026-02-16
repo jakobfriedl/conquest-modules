@@ -22,3 +22,6 @@
 [submodule "kerbeus/Kerbeus-BOF"]
 	path = kerbeus/Kerbeus-BOF
 	url = https://github.com/RalfHacker/Kerbeus-BOF
+[submodule "execution/BOF_RunPe"]
+	path = execution/BOF_RunPe
+	url = https://github.com/NtDallas/BOF_RunPe.git
