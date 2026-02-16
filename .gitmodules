@@ -25,3 +25,9 @@
 [submodule "execution/BOF_RunPe"]
 	path = execution/BOF_RunPe
 	url = https://github.com/NtDallas/BOF_RunPe.git
+[submodule "privilege-escalation/PrivKit"]
+	path = privilege-escalation/PrivKit
+	url = https://github.com/mertdas/PrivKit
+[submodule "privilege-escalation/UAC-BOF-Bonanza"]
+	path = privilege-escalation/UAC-BOF-Bonanza
+	url = https://github.com/icyguider/UAC-BOF-Bonanza

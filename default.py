@@ -131,16 +131,6 @@ cmd_ls = (
             .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, "."))
 cmd_ls.registerToGroup("situational awareness")
 
-cmd_dir = (
-    conquest.createCommand(name="dir", description="List files and directories (Alias for 'ls').", example="ls C:\\Users\\Administrator\\Desktop", 
-                           message="Tasked agent to list files and directories.", mitre=["T1083"])
-            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, ".")
-            .setHandler(lambda agentId, cmdline, args: (
-                directory := conquest.get_string(args, 0),
-                conquest.execute_alias(agentId, cmdline, f"ls {directory}")
-            )))
-cmd_dir.registerToGroup("situational awareness")
-
 cmd_rm = (
     conquest.createCommand(name="rm", description="Remove a file.", example="rm C:\\Windows\\Tasks\\payload.exe", message="Tasked agent to remove file.")
             .addArgString("file", "Relative or absolute path to the file to delete.", True))
@@ -166,7 +156,7 @@ cmd_copy.registerToGroup("situational awareness")
 conquest.registerModule(
     name="filesystem", 
     description="Conduct simple filesystem operations via Windows API.", 
-    commands=[cmd_pwd, cmd_cd, cmd_ls, cmd_dir, cmd_rm, cmd_rmdir, cmd_move, cmd_copy])
+    commands=[cmd_pwd, cmd_cd, cmd_ls, cmd_rm, cmd_rmdir, cmd_move, cmd_copy])
 
 cmd_screenshot = conquest.createCommand(name="screenshot", description="Take and retrieve a screenshot of the target desktop.", example="screenshot", 
                                         message="Tasked agent to take a screenshot of the target desktop.", mitre=["T1113"])

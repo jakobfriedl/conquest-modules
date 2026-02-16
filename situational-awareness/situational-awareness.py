@@ -56,6 +56,29 @@ cmd_env = (
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
+cmd_dir = (
+    conquest.createCommand(name="dir", description="List files and directories using BOF.", example="ls C:\\Users\\Administrator\\Desktop --recursive", 
+                           message="Tasked agent to list files and directories using BOF.", mitre=["T1083"])
+            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, ".")
+            .addFlagBool("--recursive", "recursive", "Search all sub-directories recursively. Use with caution!")
+            .setHandler(lambda agentId, cmdline, args: (
+                directory := conquest.get_string(args, 0),
+                recurse := conquest.get_bool(args, 1),
+
+                bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/dir/dir.x64.o",
+                params := conquest.bof_pack("zs", [
+                    directory,          # z: Directory
+                    int(recurse)        # s: Search sub-directories
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            ))
+).registerToGroup("situational awareness")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+
 cmd_cacls = (
     conquest.createCommand(name="cacls", description="List user permissions for the specified file, wildcards supported.", example="cacls C:\\Services\\service.exe",
                            message="Tasked agent to list file permissions.", mitre=["T1222"])
