@@ -10,9 +10,6 @@
 [submodule "portscanbof"]
 	path = situational-awareness/portscanbof
 	url = https://github.com/fyxme/portscanbof/
-[submodule "PrivKit"]
-	path = privkit/PrivKit
-	url = https://github.com/mertdas/PrivKit
 [submodule "No-Consolation"]
 	path = execution/No-Consolation
 	url = https://github.com/fortra/No-Consolation
