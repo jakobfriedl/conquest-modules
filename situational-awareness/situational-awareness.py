@@ -371,7 +371,7 @@ LDAP_SCOPE = {
     "level": 2,
     "subtree": 3
 }
-def ldapsearch_(agentId, cmdline, args):
+def _ldapSearch(agentId, cmdline, args):
     query = conquest.get_string(args, 0)
     attributes = conquest.get_string(args, 1)
     count = conquest.get_int(args, 2)
@@ -412,7 +412,80 @@ Available options:
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
-            .setHandler(ldapsearch_)
+            .setHandler(_ldapSearch)
+).registerToGroup("situational awareness")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+LDAP_QUERIES = {
+    "unconstrained": (
+        "(&(userAccountControl:1.2.840.113556.1.4.803:=524288)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName,dnshostname"
+    ),
+    "constrained": (
+        "(&(msDS-AllowedToDelegateTo=*)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName,msDS-AllowedToDelegateTo"
+    ),
+    "constrained-protocol-transition": (
+        "(&(userAccountControl:1.2.840.113556.1.4.803:=16777216)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName,msDS-AllowedToDelegateTo"
+    ),
+    "rbcd": (
+        "(&(msDS-AllowedToActOnBehalfOfOtherIdentity=*)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName,msDS-AllowedToActOnBehalfOfOtherIdentity"
+    ),
+    "kerberoast": (
+        "(&(samAccountType=805306368)(!samAccountName=krbtgt)(serviceprincipalname=*)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName,servicePrincipalName"
+    ),
+    "asreproast": (
+        "(&(userAccountControl:1.2.840.113556.1.4.803:=4194304)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))",
+        "samAccountName"
+    )
+}
+def _ldapQuery(agentId, cmdline, args): 
+    type = conquest.get_string(args, 0).lower()
+    dc = conquest.get_string(args, 1)
+    dn = conquest.get_string(args, 2)
+    ldaps = conquest.get_bool(args, 3)
+
+    (query, attributes) = LDAP_QUERIES.get(type)
+    if query is None: 
+        conquest.error(agentId, cmdline, f"Invalid LDAP query: {type}. Use \"help ldapquery\" to list available options.")
+        return
+    
+    bof = conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o"
+    params = conquest.bof_pack("zziizzi", [
+        query,                      # z: LDAP filter query
+        attributes,                 # z: Attributes (comma-separated or "*")
+        0,                          # i: 0 -> Return all results
+        3,                          # i: 3 -> Subtree
+        dc,                         # z: DC hostname (auto-discover if empty)
+        dn,                         # z: Domain DN (auto-detect if empty)
+        int(ldaps)                  # i: Use LDAPS
+    ])
+    
+    if os.path.exists(bof):
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+    else:
+        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+
+
+cmd_ldapQuery = (
+    conquest.createCommand(name="ldapquery", description="Execute a pre-configured LDAP query.", example="ldapquery rbcd",
+                           message="Tasked agent to execute a pre-configured LDAP query.", mitre=[])
+            .addArgString("query", """Pre-configured query to execute.
+Available options:
+- unconstrained: Find AD objects configured for unconstrained delegation.
+- constrained: Find AD objects configured for constrained delegation.
+- constrained-protocol-transition: Find AD objects configured for constrained delegation with protocol transition.
+- rbcd: Find AD objects configured for resource-based constrained delegation.
+- kerberoast: Find accounts that have an SPN set.
+- asreproast: Find ASREP-roastable users.""", True)
+            .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
+            .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
+            .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .setHandler(_ldapQuery)                        
 ).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
