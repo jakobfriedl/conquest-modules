@@ -5,24 +5,24 @@ cmd_exit = (
     conquest.createCommand(name="exit", description="Exit the agent.", example="exit process", message="Tasked agent to exit.")
             .addArgString("type", """Available options: 
   - PROCESS (default)
-  - THREAD.""", False, "PROCESS"))
-cmd_exit.registerToGroup("core")
+  - THREAD.""", False, "PROCESS")
+).registerToGroup("core")
 
 cmd_selfdestruct = conquest.createCommand(name="self-destruct", description="Exit the agent and delete the executable from disk.", example="self-destruct", 
-                                          message="Tasked agent to self-destruct.", mitre=["T1070.004"])
-cmd_selfdestruct.registerToGroup("core")
+                                          message="Tasked agent to self-destruct.", mitre=["T1070.004"]
+).registerToGroup("core")
 
 cmd_sleep = (
     conquest.createCommand(name="sleep", description="Update sleep delay settings.", example="sleep 5", 
                            message="Tasked agent to update sleep delay.", mitre=["T1029"])
-            .addArgInt("delay", "Delay in seconds.", True))
-cmd_sleep.registerToGroup("core")
+            .addArgInt("delay", "Delay in seconds.", True)
+).registerToGroup("core")
 
 cmd_jitter = (
     conquest.createCommand(name="jitter", description="Update jitter settings.", example="jitter 15", 
                            message="Tasked agent to update jitter.", mitre=["T1029"])
-            .addArgInt("jitter", "Jitter in % (0-100).", True))
-cmd_jitter.registerToGroup("core")
+            .addArgInt("jitter", "Jitter in % (0-100).", True)
+).registerToGroup("core")
 
 cmd_sleepmask = (
     conquest.createCommand(name="sleepmask", description="Retrieve or update sleepmask settings. Executing without arguments retrieves the current sleepmask settings.", example="sleepmask --technique ekko --spoof", 
@@ -33,28 +33,28 @@ Available options:
   - EKKO
   - ZILEAN
   - FOLIAGE""")
-            .addFlagBool("--spoof", "spoof", "Enable stack spoofing to obfuscate the call stack."))
-cmd_sleepmask.registerToGroup("core")
+            .addFlagBool("--spoof", "spoof", "Enable stack spoofing to obfuscate the call stack.")
+).registerToGroup("core")
 
 cmd_link = (
     conquest.createCommand(name="link", description="Create a link to a SMB agent.", example="link DC01 msagent_1234", 
                            message="Tasked agent to link to SMB agent.", mitre=["T1021.002", "T1090.001"])
             .addArgString("host", "Host on which the SMB agent is running.", True)
-            .addArgString("pipe", "Name of the named pipe (SMB listener).", True))
-cmd_link.registerToGroup("core")
+            .addArgString("pipe", "Name of the named pipe (SMB listener).", True)
+).registerToGroup("core")
 
 cmd_unlink = (
     conquest.createCommand(name="unlink", description="Remove a link to a SMB agent.", example="unlink C804A284", message="Tasked agent to unlink SMB agent.")
-            .addArgString("agent", "ID of the agent to unlink.", True))
-cmd_unlink.registerToGroup("core")
+            .addArgString("agent", "ID of the agent to unlink.", True)
+).registerToGroup("core")
 
 # Execution modules
 cmd_shell = (
     conquest.createCommand(name="shell", description="Execute a shell command and retrieve the output.", example="shell whoami /all", 
                            message="Tasked agent to execute shell command and retrieve the output.", mitre=["T1059.003"])
             .addArgString("command", "Command to be executed.", True)
-            .addArgString("arguments", "Arguments to be passed to the command."))
-cmd_shell.registerToGroup("execution")
+            .addArgString("arguments", "Arguments to be passed to the command.")
+).registerToGroup("execution")
 
 conquest.registerModule(
     name="shell", 
@@ -65,8 +65,8 @@ cmd_bof = (
     conquest.createCommand(name="bof", description="Execute an object file in memory and retrieve the output.", example="bof /path/to/dir.x64.o C:\\Users", 
                            message="Tasked agent to execute an object-file in memory and retrieve the output.", mitre=["T1055", "T1620"])
             .addArgFile("object-file", "Path to the object file to execute.", True)
-            .addArgString("arguments", "Arguments to be passed to the object file, packed as a HEX string according to beacon_generate.py."))
-cmd_bof.registerToGroup("execution")
+            .addArgString("arguments", "Arguments to be passed to the object file, packed as a HEX string according to beacon_generate.py.")
+).registerToGroup("execution")
 
 conquest.registerModule(
     name="bof", 
@@ -77,8 +77,8 @@ cmd_dotnet = (
     conquest.createCommand(name="dotnet", description="Execute a .NET assembly in memory and retrieve the output.", example="dotnet /path/to/Seatbelt.exe antivirus", 
                            message="Tasked agent to execute a .NET assembly in memory and retrieve the output.", mitre=["T1055", "T1620"])
             .addArgFile("assembly", "Path to the .NET assembly to execute.", True)
-            .addArgString("arguments", "Arguments to be passed to the assembly. Arguments are handled as STRING."))
-cmd_dotnet.registerToGroup("execution")
+            .addArgString("arguments", "Arguments to be passed to the assembly. Arguments are handled as STRING.")
+).registerToGroup("execution")
 
 conquest.registerModule(
     name="dotnet", 
@@ -89,16 +89,16 @@ conquest.registerModule(
 cmd_download = (
     conquest.createCommand(name="download", description="Download a file.", example="download C:\\Users\\john\\Documents\\Database.kdbx", 
                            message="Tasked agent to download file.", mitre=["T1005", "T1041"])
-            .addArgString("file", "Path to file to download from the target machine.", True))
-cmd_download.registerToGroup("post-exploitation")
+            .addArgString("file", "Path to file to download from the target machine.", True)
+).registerToGroup("post-exploitation")
 
 cmd_upload = (
     conquest.createCommand(name="upload", description="Upload a file.", example="upload /path/to/payload.exe", 
                            message="Tasked agent to upload file.",
                            mitre=["T1544"])
             .addArgFile("file", "Path to file to upload to the target machine.", True)
-            .addArgString("destination", "Path to upload the file to. By default, uploads to current directory."))
-cmd_upload.registerToGroup("post-exploitation")
+            .addArgString("destination", "Path to upload the file to. By default, uploads to current directory.")
+).registerToGroup("post-exploitation")
 
 conquest.registerModule(
     name="filetransfer", 
@@ -107,8 +107,8 @@ conquest.registerModule(
 
 # Situational awareness
 cmd_ps = conquest.createCommand(name="ps", description="Display running processes.", example="ps", 
-                                message="Tasked agent to display running processes.", mitre=["T1424"])
-cmd_ps.registerToGroup("situational awareness")
+                                message="Tasked agent to display running processes.", mitre=["T1424"]
+).registerToGroup("situational awareness")
 
 conquest.registerModule(
     name="systeminfo", 
@@ -116,42 +116,42 @@ conquest.registerModule(
     commands=[cmd_ps])
 
 cmd_pwd = conquest.createCommand(name="pwd", description="Retrieve current working directory.", example="pwd", 
-                                 message="Tasked agent to retrieve current working directory.", mitre=["T1083"])
-cmd_pwd.registerToGroup("situational awareness")
+                                 message="Tasked agent to retrieve current working directory.", mitre=["T1083"]
+).registerToGroup("situational awareness")
 
 cmd_cd = (
     conquest.createCommand(name="cd", description="Change current working directory.", example="cd C:\\Windows\\Tasks", 
                            message="Tasked agent to change working directory.", mitre=["T1083"])
-            .addArgString("directory", "Relative or absolute path of the directory to change to.", True))
-cmd_cd.registerToGroup("situational awareness")
+            .addArgString("directory", "Relative or absolute path of the directory to change to.", True)
+).registerToGroup("situational awareness")
 
 cmd_ls = (
     conquest.createCommand(name="ls", description="List files and directories.", example="ls C:\\Users\\Administrator\\Desktop", 
                            message="Tasked agent to list files and directories.", mitre=["T1083"])
-            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, "."))
-cmd_ls.registerToGroup("situational awareness")
+            .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, ".")
+).registerToGroup("situational awareness")
 
 cmd_rm = (
     conquest.createCommand(name="rm", description="Remove a file.", example="rm C:\\Windows\\Tasks\\payload.exe", message="Tasked agent to remove file.")
-            .addArgString("file", "Relative or absolute path to the file to delete.", True))
-cmd_rm.registerToGroup("situational awareness")
+            .addArgString("file", "Relative or absolute path to the file to delete.", True)
+).registerToGroup("situational awareness")
 
 cmd_rmdir = (
     conquest.createCommand(name="rmdir", description="Remove a directory.", example="rmdir C:\\Payloads", message="Tasked agent to remove directory.")
-            .addArgString("directory", "Relative or absolute path to the directory to delete.", True))
-cmd_rmdir.registerToGroup("situational awareness")
+            .addArgString("directory", "Relative or absolute path to the directory to delete.", True)
+).registerToGroup("situational awareness")
 
 cmd_move = (
     conquest.createCommand(name="move", description="Move a file or directory.", example="move source.exe C:\\Windows\\Tasks\\destination.exe", message="Tasked agent to move file or directory.")
             .addArgString("source", "Source file path.", True)
-            .addArgString("destination", "Destination file path.", True))
-cmd_move.registerToGroup("situational awareness")
+            .addArgString("destination", "Destination file path.", True)
+).registerToGroup("situational awareness")
 
 cmd_copy = (
     conquest.createCommand(name="copy", description="Copy a file or directory.", example="copy source.exe C:\\Windows\\Tasks\\destination.exe", message="Tasked agent to copy file or directory.")
             .addArgString("source", "Source file path.", True)
-            .addArgString("destination", "Destination file path.", True))
-cmd_copy.registerToGroup("situational awareness")
+            .addArgString("destination", "Destination file path.", True)
+).registerToGroup("situational awareness")
 
 conquest.registerModule(
     name="filesystem", 
@@ -159,8 +159,8 @@ conquest.registerModule(
     commands=[cmd_pwd, cmd_cd, cmd_ls, cmd_rm, cmd_rmdir, cmd_move, cmd_copy])
 
 cmd_screenshot = conquest.createCommand(name="screenshot", description="Take and retrieve a screenshot of the target desktop.", example="screenshot", 
-                                        message="Tasked agent to take a screenshot of the target desktop.", mitre=["T1113"])
-cmd_screenshot.registerToGroup("situational awareness")
+                                        message="Tasked agent to take a screenshot of the target desktop.", mitre=["T1113"]
+).registerToGroup("situational awareness")
 
 conquest.registerModule(
     name="screenshot", 
@@ -180,32 +180,29 @@ cmd_maketoken = (
   - 5: LOGON_SERVICE
   - 8: LOGON_NETWORK_CLEARTEXT 
   - 9: LOGON_NEW_CREDENTIALS (default)                        
-""", False, 9))
-cmd_maketoken.registerToGroup("user impersonation")
+""", False, 9)).registerToGroup("user impersonation")
 
 cmd_stealtoken = (
     conquest.createCommand(name="steal-token", description="Steal the primary access token of a remote process.", example="steal-token 1234", 
                            message="Tasked agent to steal an access token.", mitre=["T1134.001"])
-            .addArgInt("pid", "Process ID of the target process.", True))
-cmd_stealtoken.registerToGroup("user impersonation")
+            .addArgInt("pid", "Process ID of the target process.", True)
+).registerToGroup("user impersonation")
 
-cmd_rev2self = conquest.createCommand(name="rev2self", description="Revert to original access token.", example="rev2self", message="Tasked agent to revert to original access token.")
-cmd_rev2self.registerToGroup("user impersonation")
+cmd_rev2self = conquest.createCommand(name="rev2self", description="Revert to original access token.", example="rev2self", message="Tasked agent to revert to original access token.").registerToGroup("user impersonation")
 
-cmd_tokeninfo = conquest.createCommand(name="token-info", description="Retrieve information about the current access token.", example="token-info", message="Tasked agent to retrieve information about the current access token.")
-cmd_tokeninfo.registerToGroup("user impersonation")
+cmd_tokeninfo = conquest.createCommand(name="token-info", description="Retrieve information about the current access token.", example="token-info", message="Tasked agent to retrieve information about the current access token.").registerToGroup("user impersonation")
 
 cmd_enablepriv = (
     conquest.createCommand(name="enable-privilege", description="Enable a token privilege.", example="enable-privilege SeImpersonatePrivilege", 
                            message="Tasked agent to enable a token privilege.", mitre=["T1134"])
-            .addArgString("privilege", "Privilege to enable.", True))
-cmd_enablepriv.registerToGroup("user impersonation")
+            .addArgString("privilege", "Privilege to enable.", True)
+).registerToGroup("user impersonation")
 
 cmd_disablepriv = (
     conquest.createCommand(name="disable-privilege", description="Disable a token privilege.", example="disable-privilege SeImpersonatePrivilege", 
                            message="Tasked agent to disable a token privilege.", mitre=["T1134"])
-            .addArgString("privilege", "Privilege to disable.", True))
-cmd_disablepriv.registerToGroup("user impersonation")
+            .addArgString("privilege", "Privilege to disable.", True)
+).registerToGroup("user impersonation")
 
 conquest.registerModule(
     name="token", 
