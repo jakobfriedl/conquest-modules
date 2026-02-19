@@ -8,8 +8,9 @@ cmd_exit = (
   - THREAD.""", False, "PROCESS")
 ).registerToGroup("core")
 
-cmd_selfdestruct = conquest.createCommand(name="self-destruct", description="Exit the agent and delete the executable from disk.", example="self-destruct", 
-                                          message="Tasked agent to self-destruct.", mitre=["T1070.004"]
+cmd_selfdestruct = (
+    conquest.createCommand(name="self-destruct", description="Exit the agent and delete the executable from disk.", example="self-destruct", 
+                           message="Tasked agent to self-destruct.", mitre=["T1070.004"])
 ).registerToGroup("core")
 
 cmd_sleep = (
@@ -106,8 +107,9 @@ conquest.registerModule(
     commands=[cmd_download, cmd_upload])
 
 # Situational awareness
-cmd_ps = conquest.createCommand(name="ps", description="Display running processes.", example="ps", 
-                                message="Tasked agent to display running processes.", mitre=["T1424"]
+cmd_ps = (
+    conquest.createCommand(name="ps", description="Display running processes.", example="ps", 
+                           message="Tasked agent to display running processes.", mitre=["T1424"])
 ).registerToGroup("situational awareness")
 
 conquest.registerModule(
@@ -115,8 +117,9 @@ conquest.registerModule(
     description="Retrieve information about the target system and environment.", 
     commands=[cmd_ps])
 
-cmd_pwd = conquest.createCommand(name="pwd", description="Retrieve current working directory.", example="pwd", 
-                                 message="Tasked agent to retrieve current working directory.", mitre=["T1083"]
+cmd_pwd = (
+    conquest.createCommand(name="pwd", description="Retrieve current working directory.", example="pwd",
+                           message="Tasked agent to retrieve current working directory.", mitre=["T1083"])
 ).registerToGroup("situational awareness")
 
 cmd_cd = (
@@ -158,8 +161,9 @@ conquest.registerModule(
     description="Conduct simple filesystem operations via Windows API.", 
     commands=[cmd_pwd, cmd_cd, cmd_ls, cmd_rm, cmd_rmdir, cmd_move, cmd_copy])
 
-cmd_screenshot = conquest.createCommand(name="screenshot", description="Take and retrieve a screenshot of the target desktop.", example="screenshot", 
-                                        message="Tasked agent to take a screenshot of the target desktop.", mitre=["T1113"]
+cmd_screenshot = (
+    conquest.createCommand(name="screenshot", description="Take and retrieve a screenshot of the target desktop.", example="screenshot", 
+                           message="Tasked agent to take a screenshot of the target desktop.", mitre=["T1113"])
 ).registerToGroup("situational awareness")
 
 conquest.registerModule(
@@ -188,9 +192,15 @@ cmd_stealtoken = (
             .addArgInt("pid", "Process ID of the target process.", True)
 ).registerToGroup("user impersonation")
 
-cmd_rev2self = conquest.createCommand(name="rev2self", description="Revert to original access token.", example="rev2self", message="Tasked agent to revert to original access token.").registerToGroup("user impersonation")
+cmd_rev2self = (
+    conquest.createCommand(name="rev2self", description="Revert to original access token.", example="rev2self", 
+                           message="Tasked agent to revert to original access token.")
+).registerToGroup("user impersonation")
 
-cmd_tokeninfo = conquest.createCommand(name="token-info", description="Retrieve information about the current access token.", example="token-info", message="Tasked agent to retrieve information about the current access token.").registerToGroup("user impersonation")
+cmd_tokeninfo = (
+    conquest.createCommand(name="token-info", description="Retrieve information about the current access token.", example="token-info", 
+                           message="Tasked agent to retrieve information about the current access token.")
+).registerToGroup("user impersonation")
 
 cmd_enablepriv = (
     conquest.createCommand(name="enable-privilege", description="Enable a token privilege.", example="enable-privilege SeImpersonatePrivilege", 
