@@ -138,10 +138,10 @@ def _noconsolation(agentId, cmdline, args):
         conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_noconsolation = (
-    conquest.createCommand(name="no-consolation", description="Execute unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe \"exit\"",
+    conquest.createCommand(name="no-consolation", description="Execute unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe coffee exit",
                            message="Tasked agent to execute an unmanaged PE in memory.", mitre=["T1055", "T1620"])
             .addArgString("path", "Full path to the windows EXE/DLL to be run in memory. If already loaded, you can simply specify the binary name.")
-            .addArgString("arguments", "Arguments to pass to the binary.")
+            .addArgString("arguments", "Arguments to pass to the binary.", False, "", -1)
             .addFlagBool("--local", "local", "Load the binary from the target Windows machine.")
             .addFlagBool("--inthread", "inthread", "Run the PE with the main thread (may hang the agent).")
             .addFlagBool("--link-to-peb", "link-to-peb", "Load the PE into the PEB.")
