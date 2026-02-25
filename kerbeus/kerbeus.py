@@ -39,7 +39,7 @@ Flags:
         message="Tasked agent to retrieve a TGT.", 
         mitre=["T1558.001"]
     )
-    .addArgString("arguments", "TGT request arguments.")
+    .addArgString("arguments", "TGT request arguments.", False, "", -1)
     .setHandler(_kerbeus("asktgt"))
 ).registerToGroup("kerberos abuse")
 
@@ -64,7 +64,7 @@ Flags:
         message="Tasked agent to retrieve a service ticket.", 
         mitre=["T1558.003"]
     )
-    .addArgString("arguments", "TGS request arguments.")
+    .addArgString("arguments", "TGS request arguments.", False, "", -1)
     .setHandler(_kerbeus("asktgs"))
 ).registerToGroup("kerberos abuse")
 
@@ -80,7 +80,7 @@ Flags:
         message="Tasked agent to renew a TGT.", 
         mitre=["T1558.001"]
     )
-    .addArgString("arguments", "TGT renewal arguments.")
+    .addArgString("arguments", "TGT renewal arguments.", False, "", -1)
     .setHandler(_kerbeus("renew"))
 ).registerToGroup("kerberos abuse")
 
@@ -104,7 +104,7 @@ Flags:
         message="Tasked agent to perform S4U delegation abuse.", 
         mitre=["T1134.005"]
     )
-    .addArgString("arguments", "S4U delegation arguments.")
+    .addArgString("arguments", "S4U delegation arguments.", False, "", -1)
     .setHandler(_kerbeus("s4u"))
 ).registerToGroup("kerberos abuse")
 
@@ -128,7 +128,7 @@ Flags:
         message="Tasked agent to perform cross-domain S4U delegation abuse.", 
         mitre=["T1134.005"]
     )
-    .addArgString("arguments", "Cross-domain S4U arguments.")
+    .addArgString("arguments", "Cross-domain S4U arguments.", False, "", -1)
     .setHandler(_kerbeus("cross_s4u"))
 ).registerToGroup("kerberos abuse")
 
@@ -143,7 +143,7 @@ Flags:
         message="Tasked agent to inject a TGT.", 
         mitre=["T1550.003"]
     )
-    .addArgString("arguments", "PTT arguments.")
+    .addArgString("arguments", "PTT arguments.", False, "", -1)
     .setHandler(_kerbeus("ptt"))
 ).registerToGroup("kerberos abuse")
 
@@ -157,7 +157,7 @@ Flags:
         message="Tasked agent to purge tickets.", 
         mitre=["T1550.003"]
     )
-    .addArgString("arguments", "Purge arguments.")
+    .addArgString("arguments", "Purge arguments.", False, "", -1)
     .setHandler(_kerbeus("purge"))
 ).registerToGroup("kerberos abuse")
 
@@ -171,7 +171,7 @@ Flags:
         message="Tasked agent to describe a ticket.", 
         mitre=["T1558"]
     )
-    .addArgString("arguments", "Ticket to describe.")
+    .addArgString("arguments", "Ticket to describe.", False, "", -1)
     .setHandler(_kerbeus("describe"))
 ).registerToGroup("kerberos abuse")
 
@@ -188,7 +188,7 @@ Flags:
         message="Tasked agent to list tickets.", 
         mitre=["T1558"]
     )
-    .addArgString("arguments", "List filters.")
+    .addArgString("arguments", "List filters.", False, "", -1)
     .setHandler(_kerbeus("klist"))
 ).registerToGroup("kerberos abuse")
 
@@ -205,7 +205,7 @@ Flags:
         message="Tasked agent to dump tickets.", 
         mitre=["T1003.006"]
     )
-    .addArgString("arguments", "Dump filters.")
+    .addArgString("arguments", "Dump filters.", False, "", -1)
     .setHandler(_kerbeus("dump"))
 ).registerToGroup("kerberos abuse")
 
@@ -222,7 +222,7 @@ Flags:
         message="Tasked agent to triage tickets.", 
         mitre=["T1558"]
     )
-    .addArgString("arguments", "Triage filters.")
+    .addArgString("arguments", "Triage filters.", False, "", -1)
     .setHandler(_kerbeus("triage"))
 ).registerToGroup("kerberos abuse")
 
@@ -236,7 +236,7 @@ Flags:
         message="Tasked agent to retrieve TGT via delegation.", 
         mitre=["T1558.001"]
     )
-    .addArgString("arguments", "TGT delegation arguments.")
+    .addArgString("arguments", "TGT delegation arguments.", False, "", -1)
     .setHandler(_kerbeus("tgtdeleg"))
 ).registerToGroup("kerberos abuse")
 
@@ -255,7 +255,7 @@ Flags:
         message="Tasked agent to perform Kerberoasting.", 
         mitre=["T1558.003"]
     )
-    .addArgString("arguments", "Kerberoasting arguments.")
+    .addArgString("arguments", "Kerberoasting arguments.", False, "", -1)
     .setHandler(_kerbeus("kerberoasting"))
 ).registerToGroup("kerberos abuse")
 
@@ -271,7 +271,7 @@ Flags:
         message="Tasked agent to perform AS-REP roasting.", 
         mitre=["T1558.004"]
     )
-    .addArgString("arguments", "AS-REP roasting arguments.")
+    .addArgString("arguments", "AS-REP roasting arguments.", False, "", -1)
     .setHandler(_kerbeus("asreproasting"))
 ).registerToGroup("kerberos abuse")
 
@@ -287,7 +287,7 @@ Flags:
         message="Tasked agent to calculate Kerberos hashes.", 
         mitre=["T1078"]
     )
-    .addArgString("arguments", "Hash calculation arguments.")
+    .addArgString("arguments", "Hash calculation arguments.", False, "", -1)
     .setHandler(_kerbeus("hash"))
 ).registerToGroup("kerberos abuse")
 
@@ -305,6 +305,6 @@ Flags:
         message="Tasked agent to change user password using TGT.", 
         mitre=["T1098"]
     )
-    .addArgString("arguments", "Password change arguments.")
+    .addArgString("arguments", "Password change arguments.", False, "", -1)
     .setHandler(_kerbeus("changepw"))
 ).registerToGroup("kerberos abuse")
