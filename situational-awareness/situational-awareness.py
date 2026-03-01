@@ -465,6 +465,10 @@ LDAP_QUERIES = {
     "trusts": (
         "(objectClass=trustedDomain)",
         "trustPartner,trustDirection,trustType,trustAttributes,flatName"
+    ),
+    "pre2k": (
+        "(&(objectCategory=computer)(userAccountControl:1.2.840.113549.1.9.15.30.1:=4096)(logonCount=0))",
+        "samAccountName"
     )
 }
 
