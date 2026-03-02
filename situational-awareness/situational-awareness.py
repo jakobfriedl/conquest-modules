@@ -517,7 +517,8 @@ Available options:
 - groups: Enumerate domain groups.
 - gpos: Enumerate group policies.
 - ous: Enumerate organizational units.
-- trusts: Enumerate domain trusts.""", True)
+- trusts: Enumerate domain trusts.
+- pre2k: Enumerate pre-Windows 2000 Computers.""", True)
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
