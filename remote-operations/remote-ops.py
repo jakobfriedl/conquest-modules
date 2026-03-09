@@ -531,7 +531,7 @@ SCHTASKS_USER_MODE = {
 
 def _schtasksCreate(agentId, cmdline, args): 
     task = conquest.get_string(args, 0)
-    xmlPath = conquest.get_string(args, 1)
+    xmlName, xmlBytes = conquest.get_file(args, 1)
     mode = conquest.get_string(args, 2).upper()
     user = conquest.get_string(args, 3)
     password = conquest.get_string(args, 4)
@@ -544,23 +544,11 @@ def _schtasksCreate(agentId, cmdline, args):
         conquest.error(agentId, cmdline, f"Invalid value for argument --user-mode: {mode}.")
         return
     
-    # Read task xml
-    try: 
-        try:
-            with open(xmlPath, 'r', encoding='utf-16-le') as f:
-                xml = f.read()
-        
-        except (UnicodeDecodeError, UnicodeError):
-            # Fallback to UTF-8
-            with open(xmlPath, 'r', encoding='utf-8') as f:
-                xml = f.read()
-    
-    except FileNotFoundError:
-        conquest.error(agentId, cmdline, f"File not found: {xmlPath}")
-        return
-    except Exception as e:
-        conquest.error(agentId, cmdline, f"Error processing data: {str(e)}")
-        return
+    # Decode XML (try UTF-16-LE first, fall back to UTF-8)
+    try:
+        xml = bytes(xmlBytes).decode('utf-16-le')
+    except (UnicodeDecodeError, UnicodeError):
+        xml = bytes(xmlBytes).decode('utf-8')
 
     bof = conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/schtaskscreate/schtaskscreate.x64.o"
     params = conquest.bof_pack("ZZZZZii", [
@@ -572,18 +560,16 @@ def _schtasksCreate(agentId, cmdline, args):
         userMode,       # i: User mode 
         int(update)     # i: Overwrite/update task if already existing   
     ])
-
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
         conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
-
 cmd_schtasksCreate = ( 
     conquest.createCommand(name="schtasks-create", description="Create a scheduled task on the target system", example="schtasks-create \"\\MyTasks\\TestTask\" /local/path/to/task.xml --user-mode:SYSTEM --update", 
                            message="Tasked agent to create a scheduled task.", mitre=[])
             .addArgString("task", "Path for the created scheduled task.", True)
-            .addArgString("xml", "File containing the XML task definition.\nCreate XML from existing task: schtasks /query /tn \"\\Microsoft\\Windows\\Defrag\\ScheduledDefrag\" /xml > task.xml", True)
+            .addArgFile("xml", "File containing the XML task definition.\nCreate XML from existing task: schtasks /query /tn \"\\Microsoft\\Windows\\Defrag\\ScheduledDefrag\" /xml > task.xml", True)
             .addFlagString("--user-mode", "mode", """Available options:
     - USER: current user context (default)
     - XML: user from XML task definition
@@ -594,7 +580,7 @@ cmd_schtasksCreate = (
             .addFlagBool("--update", "update", "Specify to update a scheduled task if it already exists. If a tasks already exists and this flag is not set, the creation will fail.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(_schtasksCreate)
-) .registerToGroup("scheduled tasks")
+).registerToGroup("scheduled tasks")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 

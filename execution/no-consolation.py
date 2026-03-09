@@ -2,7 +2,7 @@ import conquest
 import os.path 
 
 def _noconsolation(agentId, cmdline, args): 
-    path = conquest.get_string(args, 0)
+    path = conquest.get_string(args, 0)             # Path needs to be a string arg instead of file because a cached filename can also be supplied as the argument
     arguments = conquest.get_string(args, 1)
     local = conquest.get_bool(args, 2)
     inthread = conquest.get_bool(args, 3)
@@ -140,7 +140,7 @@ def _noconsolation(agentId, cmdline, args):
 cmd_noconsolation = (
     conquest.createCommand(name="no-consolation", description="Execute unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe coffee exit",
                            message="Tasked agent to execute an unmanaged PE in memory.", mitre=["T1055", "T1620"])
-            .addArgString("path", "Full path to the windows EXE/DLL to be run in memory. If already loaded, you can simply specify the binary name.")
+            .addArgString("path", "Full path to the windows EXE/DLL to be run in memory. If already loaded, you can simply specify the binary name.")   
             .addArgString("arguments", "Arguments to pass to the binary.", False, "", -1)
             .addFlagBool("--local", "local", "Load the binary from the target Windows machine.")
             .addFlagBool("--inthread", "inthread", "Run the PE with the main thread (may hang the agent).")
