@@ -9,7 +9,8 @@ def _scshell(agentId, cmdline, args):
     share = conquest.get_string(args, 4)
 
     # Format path
-    path = f"\\\\{target}\\{share}\\{name if name else os.path.basename(payloadName)}"
+    path = f"\\\\{target}\\{share}\\{name if name else service}"
+    if not path.endswith(".exe"): path += ".exe"
 
     bof = conquest.modules_root() + "/lateral-movement/scshell/scshell.x64.o"
     params = conquest.bof_pack("zzzb", [

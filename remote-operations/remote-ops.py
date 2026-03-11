@@ -332,7 +332,7 @@ def _regSave(agentId, cmdline, args):
 
 cmd_regSave = ( 
     conquest.createCommand(name="reg-save", description="Save a specified registry key to a file on the target system.", example="reg-save HKLM SAM C:\\Windows\\Tasks\\sam.txt",
-                           message="Tasked agent to save a registry key.", mitre=["T1112"])
+                           message="Tasked agent to save a registry key.", mitre=["T1003.002"])
             .addArgString("hive", """Registry hive.
 Available options:
   - HKCR    HKEY_CLASSES_ROOT
@@ -348,7 +348,7 @@ Available options:
 
 cmd_scConfig = (
     conquest.createCommand(name="sc-config", description="Configure an existing service on the target system", example="sc-config ConquestSvc C:\\Temp\\malware.exe",
-                           message="Tasked agent to configure a service.", mitre=[])
+                           message="Tasked agent to configure a service.", mitre=["T1543.003", "T1574.011"])
             .addArgString("service", "Service to configure.", True)
             .addArgString("binPath", "Binary path to set on the service.")
             .addFlagInt("--error-mode", "error-mode", """Error mode.
@@ -428,7 +428,7 @@ def _scCreate(agentId, cmdline, args):
 
 cmd_scCreate = (
  conquest.createCommand(name="sc-create", description="Create a service on the target system", example="sc-create ConquestSvc \"Conquest Service\" C:\\Windows\\System32\\calc.exe --description \"Conquest service description.\"",
-                           message="Tasked agent to configure a service.", mitre=[])
+                           message="Tasked agent to configure a service.", mitre=["T1543.003"])
             .addArgString("service", "Service name.", True)
             .addArgString("display-name", "Display name of the service to create.", True)
             .addArgString("binPath", "Binary path of the service to create.", True)
@@ -458,7 +458,7 @@ Available options:
 
 cmd_scDelete = (
     conquest.createCommand(name="sc-delete", description="Delete a service on the target system", example="sc-delete ConquestSvc --server dc01",
-                           message="Tasked agent to delete a service.", mitre=[])
+                           message="Tasked agent to delete a service.", mitre=["T1070"])
             .addArgString("service", "Name of the service to delete.", True)
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -480,7 +480,7 @@ cmd_scDelete = (
 
 cmd_scStart = (
     conquest.createCommand(name="sc-start", description="Start a service on the target system", example="sc-start ConquestSvc --server dc01",
-                           message="Tasked agent to start a service.", mitre=[])
+                           message="Tasked agent to start a service.", mitre=["T1569.002"])
             .addArgString("service", "Name of the service to start.", True)
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -502,7 +502,7 @@ cmd_scStart = (
 
 cmd_scStop = (
     conquest.createCommand(name="sc-stop", description="Stop a service on the target system", example="sc-stop ConquestSvc --server dc01",
-                           message="Tasked agent to stop a service.", mitre=[])
+                           message="Tasked agent to stop a service.", mitre=["T1489"])
             .addArgString("service", "Name of the service to stop.", True)
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -567,7 +567,7 @@ def _schtasksCreate(agentId, cmdline, args):
 
 cmd_schtasksCreate = ( 
     conquest.createCommand(name="schtasks-create", description="Create a scheduled task on the target system", example="schtasks-create \"\\MyTasks\\TestTask\" /local/path/to/task.xml --user-mode:SYSTEM --update", 
-                           message="Tasked agent to create a scheduled task.", mitre=[])
+                           message="Tasked agent to create a scheduled task.", mitre=["T1053.005"])
             .addArgString("task", "Path for the created scheduled task.", True)
             .addArgFile("xml", "File containing the XML task definition.\nCreate XML from existing task: schtasks /query /tn \"\\Microsoft\\Windows\\Defrag\\ScheduledDefrag\" /xml > task.xml", True)
             .addFlagString("--user-mode", "mode", """Available options:
@@ -586,7 +586,7 @@ cmd_schtasksCreate = (
 
 cmd_schtasksDelete = (
     conquest.createCommand(name="schtasks-delete", description="Delete a scheduled task or task folder on the target system", example="schtasks-delete \\MyTasks --folder", 
-                           message="Tasked agent to create a scheduled task.", mitre=[])
+                           message="Tasked agent to create a scheduled task.", mitre=["T1070"])
             .addFlagString("--task", "task", "Path for the scheduled task to delete.")
             .addFlagString("--folder", "folder", "Path for the folder to delete (must be empty).")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
@@ -616,7 +616,7 @@ cmd_schtasksDelete = (
 
 cmd_schtasksStart = (
     conquest.createCommand(name="schtasks-start", description="Run a scheduled task on the target system", example="schtasks-start \\MyTasks\\ConquestTask", 
-                           message="Tasked agent to run a scheduled task.", mitre=[])
+                           message="Tasked agent to run a scheduled task.", mitre=["T1053.005"])
             .addArgString("task", "Path for the scheduled task.", True)
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -638,7 +638,7 @@ cmd_schtasksStart = (
 
 cmd_schtasksStop = (
     conquest.createCommand(name="schtasks-stop", description="Stop a running scheduled task on the target system", example="schtasks-stop \\MyTasks\\ConquestTask", 
-                           message="Tasked agent to stop a scheduled task.", mitre=[])
+                           message="Tasked agent to stop a scheduled task.", mitre=["T1053.005"])
             .addArgString("task", "Path for the scheduled task.", True)
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(lambda agentId, cmdline, args: (
@@ -660,7 +660,7 @@ cmd_schtasksStop = (
 
 cmd_shutdown = ( 
     conquest.createCommand(name="shutdown", description="Shutdown or reboot a target system.", example="shutdown --message \"Goodbye from Conquest\" --in 20 --reboot",
-                           message="Tasked agent to shutdown a computer.", mitre=[])
+                           message="Tasked agent to shutdown a computer.", mitre=["T1529"])
             .addArgString("target", "Target system (default: local computer).")
             .addFlagString("--message", "message", "Message to display before shutdown (default: none).")
             .addFlagInt("--in", "seconds", "Number of seconds before shutdown/reboot (default: 0).")
