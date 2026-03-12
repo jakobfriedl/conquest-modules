@@ -7,13 +7,13 @@ This is the offical modules repository for the [Conquest](https://github.com/jak
 Refer to the following modules for more information about the included commands.
 
 - [Core Modules](https://github.com/jakobfriedl/conquest/blob/main/docs/7-MODULES.md)
-- [Situational Awareness](./situational-awareness/README.md)
-- [Remote Operations](./remote-operations/README.md)
-- [Kerberos Abuse](./kerbeus/README.md)
-- [Privilege Escalation](./privilege/escalation/README.md)
-- [Credential Dumping](./credential-dumping/README.md)
-- [Lateral Movement](./lateral-movement/README.md)
-- [Execution](./execution/README.md)
+- [Execution](./execution/)
+- [Situational Awareness](./situational-awareness/)
+- [Remote Operations](./remote-operations/)
+- [Privilege Escalation](./privilege-escalation/)
+- [Kerberos Abuse](./kerbeus/)
+- [Credential Dumping](./credential-dumping/)
+- [Lateral Movement](./lateral-movement/)
 
 ```
 CORE
