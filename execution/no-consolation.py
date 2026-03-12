@@ -138,7 +138,7 @@ def _noconsolation(agentId, cmdline, args):
         conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
 cmd_noconsolation = (
-    conquest.createCommand(name="no-consolation", description="Execute unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe coffee exit",
+    conquest.createCommand(name="no-consolation", description="Execute an unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe coffee exit",
                            message="Tasked agent to execute an unmanaged PE in memory.", mitre=["T1055", "T1620"])
             .addArgString("path", "Full path to the windows EXE/DLL to be run in memory. If already loaded, you can simply specify the binary name.")   
             .addArgString("arguments", "Arguments to pass to the binary.", False, "", -1)
@@ -146,7 +146,7 @@ cmd_noconsolation = (
             .addFlagBool("--inthread", "inthread", "Run the PE with the main thread (may hang the agent).")
             .addFlagBool("--link-to-peb", "link-to-peb", "Load the PE into the PEB.")
             .addFlagBool("--dont-unload", "dont-unload", "Don't unload the DLL after execution.")
-            .addFlagInt("--timeout", "timeout", "Timeout in seconds to wait for PE completion (default: 60, 0 to disable).", 0, 60)
+            .addFlagInt("--timeout", "timeout", "Timeout in seconds to wait for PE completion (default: 60, 0 to disable). Not compatible with --inthread.", 0, 60)
             .addFlagBool("-k", "overwrite-headers", "Overwrite the PE headers.")
             .addFlagString("--method", "method", "Export method/function name to execute for DLLs (default: DllMain).", False, "DllMain")
             .addFlagBool("-w", "unicode-args", "Pass command line arguments in UNICODE format (default: ANSI).")
