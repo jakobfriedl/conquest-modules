@@ -6,6 +6,7 @@ This is the offical modules repository for the [Conquest](https://github.com/jak
 
 Refer to the following modules for more information about the included commands.
 
+- [Core Modules](https://github.com/jakobfriedl/conquest/blob/main/docs/7-MODULES.md)
 - [Situational Awareness](./situational-awareness/README.md)
 - [Remote Operations](./remote-operations/README.md)
 - [Kerberos Abuse](./kerbeus/README.md)
