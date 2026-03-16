@@ -1,6 +1,6 @@
 # Conquest Modules
 
-This is the offical module repository for the [Conquest](https://github.com/jakobfriedl/conquest/) post-exploitation framework. It contains a collection of Python modules that allow operators to use battle-tested BOFs with the Conquest framework. Among others, commands are created for post-exploitation capabilities from famous repositories, such as [CS-Situational-Awareness-BOF](https://github.com/trustedsec/CS-Situational-Awareness-BOF) and [CS-Remote-OPs-BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF)
+This is the offical module repository for the [Conquest](https://github.com/jakobfriedl/conquest/) post-exploitation framework. It contains a collection of Python modules that allow operators to use battle-tested BOFs with the Conquest framework. Among others, commands are created for post-exploitation capabilities from famous repositories, such as [CS-Situational-Awareness-BOF](https://github.com/trustedsec/CS-Situational-Awareness-BOF) and [CS-Remote-OPs-BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF).
 
 ## Modules 
 
