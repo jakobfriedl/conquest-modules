@@ -66,6 +66,17 @@ cmd_unlink = (
             .registerToGroup("core")
 )
 
+cmd_jobs = (
+    conquest.createCommand(name="jobs", description="List running jobs.", example="jobs", message="Tasked agent to list jobs.")
+            .registerToGroup("core")
+)
+
+cmd_cancel = ( 
+    conquest.createCommand(name="cancel", description="Cancel a running job.", example="cancel DEADBEEF", message="Tasked agent cancel a job.")
+            .addArgString("job", "ID of the job to cancel.", True)
+            .registerToGroup("core")
+)
+
 # Execution modules
 cmd_shell = (
     conquest.createCommand(name="shell", description="Execute a shell command and retrieve the output.", example="shell whoami /all", 
