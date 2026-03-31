@@ -334,12 +334,38 @@ def _netUser(agentId, cmdline, args):
     else:
         conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
 
+def _netUserOutput(agentId, output):
+    lines = output.strip().split('\n')
+    result = []
+
+    for line in lines:
+        line = line.rstrip()
+
+        if not line:
+            result.append('')
+            continue
+
+        if line.startswith(' ') or line.startswith('\t'):
+            result.append(f' * {line.strip()}')
+            continue
+
+        if ':' in line:
+            colon = line.index(':')
+            key   = line[:colon].strip()
+            value = line[colon + 1:].strip()
+            result.append(f'{(key + ":") :<32} {value}' if value else f'{key}:')
+        else:
+            result.append(line)
+
+    conquest.output(agentId, '\n'.join(result))
+
 cmd_netUser = (
     conquest.createCommand(name="net-user", description="List user information.", example="net-user svc_sql --domain domain.local",
                            message="Tasked agent to list user information.", mitre=["T1087.001", "T1087.002"])
             .addArgString("user", "Specify username to retrieve user information. If no username is provided, this command enumerates and lists all users instead.")
             .addFlagString("--domain", "domain", "Specify domain to list domain users rather than local users.")
             .setHandler(_netUser)
+            .setOutputHandler(_netUserOutput)    # Properly format user information
 ).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
