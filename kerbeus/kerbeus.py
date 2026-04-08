@@ -13,7 +13,7 @@ def _kerbeus(command):
         if os.path.exists(bof):
             conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
         else:
-            conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
     return handler
 
 cmd_asktgt = (

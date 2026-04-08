@@ -33,32 +33,32 @@ def _noconsolation(agentId, cmdline, args):
     
     # Validation
     if not free_libraries and not unload_pe and not list_pes and not close_handles and not path:
-        conquest.error(agentId, cmdline, "Missing required positional argument: path")
+        conquest.error(agentId, "Missing required positional argument: path", cmdline)
         return
     
     if path and (os.path.exists(path) or path.startswith(('C:\\', 'D:\\', 'E:\\', 'F:\\'))):
         path_set = True
     elif not local and path and not os.path.exists(path) and path.startswith('/'):
-        conquest.error(agentId, cmdline, f"Specified executable {path} does not exist")
+        conquest.error(agentId, f"Specified executable {path} does not exist", cmdline)
         return
     elif not local and path and path.endswith('.exe'):
         name_set = True
         pename = path
     
     if list_pes and (path_set or unload_pe or free_libraries):
-        conquest.error(agentId, cmdline, "The option --list-pes must be run alone")
+        conquest.error(agentId, "The option --list-pes must be run alone", cmdline)
         return
     
     if free_libraries and unload_pe:
-        conquest.error(agentId, cmdline, "The option --unload-pe must be run alone")
+        conquest.error(agentId, "The option --unload-pe must be run alone", cmdline)
         return
     
     if path_set and (unload_pe or free_libraries):
-        conquest.error(agentId, cmdline, "The option --unload-pe or --free-libraries must be run alone")
+        conquest.error(agentId, "The option --unload-pe or --free-libraries must be run alone", cmdline)
         return
     
     if timeout != 60 and inthread:
-        conquest.error(agentId, cmdline, "The options --inthread and --timeout are not compatible")
+        conquest.error(agentId, "The options --inthread and --timeout are not compatible", cmdline)
         return
     
     # Parse the PE if provided as an argument
@@ -70,18 +70,18 @@ def _noconsolation(agentId, cmdline, args):
             pepath = "C:\\Windows\\System32\\" + pename
             
             if not os.path.exists(path):
-                conquest.error(agentId, cmdline, f"Specified executable does not exist: {path}")
+                conquest.error(agentId, f"Specified executable does not exist: {path}", cmdline)
                 return
             
             try:
                 with open(path, 'rb') as f:
                     pebytes = f.read()
             except Exception as e:
-                conquest.error(agentId, cmdline, f"Could not read PE: {str(e)}")
+                conquest.error(agentId, f"Could not read PE: {str(e)}", cmdline)
                 return
             
             if len(pebytes) == 0:
-                conquest.error(agentId, cmdline, "Could not read PE.")
+                conquest.error(agentId, "Could not read PE.", cmdline)
                 return
             
             path = "" 
@@ -135,7 +135,7 @@ def _noconsolation(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_noconsolation = (
     conquest.createCommand(name="no-consolation", description="Execute an unmanaged PE in memory.", example="no-consolation --local C:\\Windows\\System32\\calc.exe\n         no-consolation /mnt/c/tools/precompiled-binaries/Credentials/mimikatz.exe coffee exit",

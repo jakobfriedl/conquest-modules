@@ -25,19 +25,19 @@ def _privkit(agentId, cmdline, args):
             if os.path.exists(bof):
                 conquest.execute_alias(agentId, f"privkit {name}", f"bof {bof}")
             else:
-                conquest.error(agentId, "cmdline", f"Failed to open object file: {bof}")
+                conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
     else:
         # Execute specific check
         path = PRIVESC_CHECKS.get(check)
         if path is None:
-            conquest.error(agentId, cmdline, f"Invalid privilege escalation check: {check}")
+            conquest.error(agentId, f"Invalid privilege escalation check: {check}", cmdline)
             return
         
         bof = conquest.modules_root() + path
         if os.path.exists(bof):
             conquest.execute_alias(agentId, cmdline, f"bof {bof}")
         else:
-            conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_privkit = (
     conquest.createCommand(name="privkit", description="Run Windows privilege escalation checks.", example="privkit unquoted-svc-path",

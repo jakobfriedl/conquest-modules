@@ -20,7 +20,7 @@ cmd_addUser = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("remote operations")
 
@@ -49,7 +49,7 @@ cmd_addGroupmembership = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("remote operations")
 
@@ -72,7 +72,7 @@ cmd_enableUser = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("remote operations")
 
@@ -95,7 +95,7 @@ cmd_unexpireUser = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("remote operations")
 
@@ -121,7 +121,7 @@ cmd_setPassword = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("remote operations")
 
@@ -165,13 +165,13 @@ def _regSet(agentId, cmdline, args):
     # Validate hive
     reg_hive = REGISTRY_HIVES.get(hive)
     if reg_hive is None:
-        conquest.error(agentId, cmdline, f"Invalid registry hive: {hive}.")
+        conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
     # Validate type
     reg_type = REGISTRY_TYPES.get(type)
     if reg_type is None:
-        conquest.error(agentId, cmdline, f"Invalid registry type: {type}.")
+        conquest.error(agentId, f"Invalid registry type: {type}.", cmdline)
         return
     
     # Prepare server (add \\ prefix if specified)
@@ -202,16 +202,16 @@ def _regSet(agentId, cmdline, args):
                 reg_data = f.read()
         
         else:
-            conquest.error(agentId, cmdline, f"Unsupported registry type: {type}")
+            conquest.error(agentId, f"Unsupported registry type: {type}", cmdline)
             return 
     except ValueError:
-        conquest.error(agentId, cmdline, f"Invalid key for {type}: {data}")
+        conquest.error(agentId, f"Invalid key for {type}: {data}", cmdline)
         return
     except FileNotFoundError:
-        conquest.error(agentId, cmdline, f"File not found: {data}")
+        conquest.error(agentId, f"File not found: {data}", cmdline)
         return
     except Exception as e:
-        conquest.error(agentId, cmdline, f"Error processing data: {str(e)}")
+        conquest.error(agentId, f"Error processing data: {str(e)}", cmdline)
         return
     
     bof = conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/reg_set/reg_set.x64.o"    
@@ -227,7 +227,7 @@ def _regSet(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_regSet = ( 
     conquest.createCommand(name="reg-set", description="Create or set a registry key/value on a target system.", example="reg-set HKCU \"Software\\TestApp\" TestValue REG_SZ \"Hello World\"",
@@ -265,7 +265,7 @@ def _regDelete(agentId, cmdline, args):
     # Validate hive
     reg_hive = REGISTRY_HIVES.get(hive)
     if reg_hive is None:
-        conquest.error(agentId, cmdline, f"Invalid registry hive: {hive}.")
+        conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
     # Prepare server (add \\ prefix if specified)
@@ -284,7 +284,7 @@ def _regDelete(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 
 cmd_regDelete = ( 
@@ -313,7 +313,7 @@ def _regSave(agentId, cmdline, args):
     # Validate hive
     reg_hive = REGISTRY_HIVES.get(hive)
     if reg_hive is None:
-        conquest.error(agentId, cmdline, f"Invalid registry hive: {hive}.")
+        conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
     bof = conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/reg_save/reg_save.x64.o"    
@@ -327,7 +327,7 @@ def _regSave(agentId, cmdline, args):
         conquest.execute_alias(agentId, "enable-privilege SeBackupPrivilege", f"enable-privilege SeBackupPrivilege")    # SeBackupPrivilege is required, so enable it first
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 
 cmd_regSave = ( 
@@ -380,7 +380,7 @@ Available options:
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("windows services")
 
@@ -406,7 +406,7 @@ def _scCreate(agentId, cmdline, args):
     # Validate service type
     scType = SERVICE_TYPES.get(type)
     if scType is None:
-        conquest.error(agentId, cmdline, f"Invalid service type: {type}.")
+        conquest.error(agentId, f"Invalid service type: {type}.", cmdline)
         return
 
     bof = conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/sc_create/sc_create.x64.o"
@@ -424,7 +424,7 @@ def _scCreate(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_scCreate = (
  conquest.createCommand(name="sc-create", description="Create a service on the target system", example="sc-create ConquestSvc \"Conquest Service\" C:\\Windows\\System32\\calc.exe --description \"Conquest service description.\"",
@@ -472,7 +472,7 @@ cmd_scDelete = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("windows services")
 
@@ -494,7 +494,7 @@ cmd_scStart = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("windows services")
 
@@ -516,7 +516,7 @@ cmd_scStop = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("windows services")
 
@@ -541,7 +541,7 @@ def _schtasksCreate(agentId, cmdline, args):
     # Validate user mode 
     userMode = SCHTASKS_USER_MODE.get(mode)
     if userMode is None:
-        conquest.error(agentId, cmdline, f"Invalid value for argument --user-mode: {mode}.")
+        conquest.error(agentId, f"Invalid value for argument --user-mode: {mode}.", cmdline)
         return
     
     # Decode XML (try UTF-16-LE first, fall back to UTF-8)
@@ -563,7 +563,7 @@ def _schtasksCreate(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_schtasksCreate = ( 
     conquest.createCommand(name="schtasks-create", description="Create a scheduled task on the target system", example="schtasks-create \"\\MyTasks\\TestTask\" /local/path/to/task.xml --user-mode:SYSTEM --update", 
@@ -596,7 +596,7 @@ cmd_schtasksDelete = (
                 server := conquest.get_string(args, 2),
 
                 # Only one option must be set at the same time
-                conquest.error(agentId, cmdline, "Must specify either --task or --folder.") if ((task and folder) or (not task and not folder)) 
+                conquest.error(agentId, "Must specify either --task or --folder.", cmdline) if ((task and folder) or (not task and not folder)) 
                 else (
 
                     bof := conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/schtasksdelete/schtasksdelete.x64.o",
@@ -607,7 +607,7 @@ cmd_schtasksDelete = (
                     ]),
 
                     conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                    else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                    else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
                 )
             ))
 ).registerToGroup("scheduled tasks") 
@@ -630,7 +630,7 @@ cmd_schtasksStart = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("scheduled tasks") 
 
@@ -652,7 +652,7 @@ cmd_schtasksStop = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("scheduled tasks") 
 
@@ -675,7 +675,7 @@ cmd_shutdown = (
                 reboot := conquest.get_bool(args, 4),
                 confirm := conquest.get_bool(args, 5),
 
-                conquest.error(agentId, cmdline, "Set the --confirm flag to shutdown the target system.") if not confirm
+                conquest.error(agentId, "Set the --confirm flag to shutdown the target system.", cmdline) if not confirm
                 else (
                     
                     bof := conquest.modules_root() + "/remote-operations/CS-Remote-OPs-BOF/Remote/shutdown/shutdown.x64.o",
@@ -688,7 +688,7 @@ cmd_shutdown = (
                     ]),
 
                     conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                    else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                    else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
                 )
             ))
 ).registerToGroup("remote operations")

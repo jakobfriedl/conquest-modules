@@ -1,5 +1,12 @@
 import conquest
 import os.path
+import base64
+import uuid
+try:
+    from impacket.ldap.ldaptypes import SR_SECURITY_DESCRIPTOR
+    IMPACKET_AVAILABLE = True
+except ImportError:
+    IMPACKET_AVAILABLE = False
 
 cmd_cat = (
     conquest.createCommand(name="cat", description="Retrieve the contents of a file.", example="cat C:\\Users\\Desktop\\Administrator\\passwords.txt", 
@@ -14,7 +21,7 @@ cmd_cat = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -26,7 +33,7 @@ cmd_enumdrives = (
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/situational-awareness/OperatorsKit/KIT/EnumDrives/enumdrives.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -38,7 +45,7 @@ cmd_whoami = (
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/whoami/whoami.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -50,7 +57,7 @@ cmd_env = (
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/env/env.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -72,7 +79,7 @@ cmd_dir = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -92,7 +99,7 @@ cmd_cacls = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -104,7 +111,7 @@ cmd_arp = (
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/arp/arp.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -116,7 +123,7 @@ cmd_ipconfig = (
             .setHandler(lambda agentId, cmdline, args: (
                 bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/ipconfig/ipconfig.x64.o",
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -171,7 +178,7 @@ Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HI
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -183,7 +190,7 @@ cmd_listdns = (
         .setHandler(lambda agentId, cmdline, args: (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/listdns/listdns.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
 ).registerToGroup("situational awareness")
 
@@ -195,7 +202,7 @@ cmd_netstat = (
         .setHandler(lambda agentId, cmdline, args: (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/netstat/netstat.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
 ).registerToGroup("situational awareness")
 
@@ -207,7 +214,7 @@ cmd_listroute = (
         .setHandler(lambda agentId, cmdline, args: (
             bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/routeprint/routeprint.x64.o",
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
 ).registerToGroup("situational awareness")
 
@@ -239,7 +246,7 @@ cmd_checkport = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -258,7 +265,7 @@ cmd_pingsweep = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -281,7 +288,7 @@ cmd_netDomainGroup = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -304,7 +311,7 @@ cmd_netLocalGroup = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -332,7 +339,7 @@ def _netUser(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 def _netUserOutput(agentId, output):
     lines = output.strip().split('\n')
@@ -386,7 +393,7 @@ cmd_netShares = (
             ]),
 
             conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-            else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+            else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
 ).registerToGroup("situational awareness")
 
@@ -422,7 +429,198 @@ def _ldapSearch(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+
+# LDAPSearch output handler: 
+# - Converts ntSecurityDescriptor base64 value into a human-readable string using impacket.
+# - Replaces well-known SIDs with group/user names. Only custom permissions show up as raw SID string.
+# - Replaces access masks with Bloodhound-like DACL descriptions.
+
+# Well-known local SIDs
+WELL_KNOWN_SIDS = {
+    "S-1-1-0": "Everyone",
+    "S-1-3-0": "Creator Owner",
+    "S-1-5-9": "Enterprise Domain Controllers",
+    "S-1-5-10": "Self",
+    "S-1-5-11": "Authenticated Users",
+    "S-1-5-18": "SYSTEM",
+    "S-1-5-32-544": "BUILTIN\\Administrators",
+    "S-1-5-32-548": "BUILTIN\\Account Operators",
+    "S-1-5-32-550": "BUILTIN\\Print Operators",
+    "S-1-5-32-554": "BUILTIN\\Pre-Windows 2000 Compatible Access",
+    "S-1-5-32-560": "BUILTIN\\Windows Authorization Access Group",
+    "S-1-5-32-561": "BUILTIN\\Terminal Server License Servers",
+}
+
+# Well-known Domain RIDs
+WELL_KNOWN_RIDS = {
+    500: "Administrator",
+    501: "Guest",
+    502: "krbtgt",
+    512: "Domain Admins",
+    513: "Domain Users",
+    514: "Domain Guests",
+    515: "Domain Computers",
+    516: "Domain Controllers",
+    517: "Cert Publishers",
+    518: "Schema Admins",
+    519: "Enterprise Admins",
+    520: "Group Policy Creator Owners",
+    521: "Read-only Domain Controllers",
+    522: "Cloneable Domain Controllers",
+    525: "Protected Users",
+    526: "Key Admins",
+    527: "Enterprise Key Admins",
+    553: "RAS and IAS Servers"
+}
+
+# Standard access rights
+# https://learn.microsoft.com/en-us/windows/win32/api/iads/ne-iads-ads_rights_enum
+ACCESS_RIGHTS = {
+    0x10000000: "GenericAll",
+    0x40000000: "GenericWrite",
+    0x80000000: "GenericRead",
+    0x20000000: "GenericExecute",
+    0x00080000: "WriteOwner",
+    0x00040000: "WriteDacl",
+    0x01000000: "AccessSystemSecurity",
+    0x00100000: "Synchronize",
+    0x00020000: "ReadControl",
+    0x00010000: "Delete",
+    0x00000080: "ListObject",
+    0x00000040: "DeleteTree",
+    0x00000008: "Self",
+    0x00000004: "ListChildren",
+    0x00000002: "DeleteChild",
+    0x00000001: "CreateChild",
+}
+
+ACE_OBJECT_TYPE_PRESENT = 0x01
+GENERIC_ALL = 0x10000000
+CONTROL_ACCESS = 0x00000100
+WRITE_PROP = 0x00000020
+READ_PROP = 0x00000010
+
+# Bloodhound edge mapping
+EXTENDED_RIGHT_EDGES = {
+    "00299570-246d-11d0-a768-00aa006e0529": "ForceChangePassword",
+    "ab721a53-1e2f-11d0-9819-00aa0040529b": "UserChangePassword",
+    "1131f6aa-9c07-11d1-f79f-00c04fc2dcd2": "GetChanges",                   # DCSync (needs GetChangesAll too)
+    "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2": "GetChangesAll",                # DCSync (needs GetChanges too)
+    "1131f6ab-9c07-11d1-f79f-00c04fc2dcd2": "SyncReplication",
+    "1131f6ac-9c07-11d1-f79f-00c04fc2dcd2": "ManageReplicationTopology",
+    "0e10c968-78fb-11d2-90d4-00c04f79dc55": "Enroll",
+    "a05b8cc2-17bc-4802-a710-e7c15ab866a2": "AutoEnroll",
+}
+
+WRITE_PROPERTY_EDGES = {
+    "bf9679c0-0de6-11d0-a285-00aa003049e2": "AddMember",                    # member attribute
+    "5b47d60f-6090-40b2-9f37-2a4de88f3063": "AddKeyCredentialLink",         # msDS-KeyCredentialLink
+    "3f78c3e5-f79a-46bd-a0b8-9d18116ddc79": "WriteAccountRestrictions"      # msDS-AllowedToActOnBehalfOfOtherIdentity
+}
+
+READ_PROPERTY_EDGES = {
+    "d0bbf0b6-af77-4244-a7e9-9c5b08c20e7a": "ReadLAPSPassword",             # ms-Mcs-AdmPwd (LAPS v1)
+    "e6fbb6ef-c39b-49b6-8512-c1e2d4a6aa80": "ReadLAPSPassword",             # msLAPS-Password (LAPS v2)
+    "aee7307d-2b4e-4f26-8bc6-6498b5b5dcdd": "ReadLAPSPassword",             # msLAPS-EncryptedPassword (LAPS v2)
+}
+
+# Helper functions
+def _resolve_sid(sid_str):
+    if sid_str in WELL_KNOWN_SIDS:
+        return WELL_KNOWN_SIDS[sid_str]
+    parts = sid_str.split('-')
+    if len(parts) >= 3:
+        try:
+            rid = int(parts[-1])
+            if rid in WELL_KNOWN_RIDS:
+                return WELL_KNOWN_RIDS[rid]
+        except ValueError:
+            pass
+    return sid_str
+
+def _get_ace_guid(ace):
+    try:
+        if ace['Flags'] & ACE_OBJECT_TYPE_PRESENT:  
+            return str(uuid.UUID(bytes_le=bytes(ace['ObjectType'])))
+    except (KeyError, AttributeError, ValueError):
+        pass
+    return None
+
+def _resolve_ace_edges(mask, guid=None):
+    if mask & GENERIC_ALL:
+        return ["GenericAll"]
+
+    edges = [name for bit, name in ACCESS_RIGHTS.items() if bit != 0x10000000 and mask & bit]
+
+    if mask & CONTROL_ACCESS:
+        edges.append(EXTENDED_RIGHT_EDGES.get(guid, "AllExtendedRights") if guid else "AllExtendedRights")
+
+    if mask & WRITE_PROP: 
+        edges.append(WRITE_PROPERTY_EDGES.get(guid, "WriteProperty") if guid else "WriteProperty")
+
+    if mask & READ_PROP:
+       edges.append(READ_PROPERTY_EDGES.get(guid, "ReadProperty") if guid else "ReadProperty")
+
+    if "WriteDacl" in edges and "WriteOwner" in edges:
+        return ["GenericAll"]
+
+    return edges or [f"0x{mask:08X}"]
+
+def _format_sid(sid):
+    try:
+        return sid.formatCanonical()
+    except:
+        return sid.getData().hex()
+
+def _decode_security_descriptor(sd_string):
+    try:
+        sd = SR_SECURITY_DESCRIPTOR()
+        sd.fromString(base64.b64decode(sd_string))
+        lines = []
+        if sd['OwnerSid']:
+            lines.append(f"  Owner: {_resolve_sid(_format_sid(sd['OwnerSid']))}")
+        if sd['GroupSid']:
+            lines.append(f"  Group: {_resolve_sid(_format_sid(sd['GroupSid']))}")
+        if sd['Dacl']:
+            lines.append("  DACL:")
+            for ace in sd['Dacl']['Data']:
+                sid_str = _resolve_sid(_format_sid(ace['Ace']['Sid']))
+                mask    = ace['Ace']['Mask']['Mask']
+                aceType = ace['TypeName'].split("_")[1].capitalize()
+                guid    = _get_ace_guid(ace['Ace'])
+                edges   = _resolve_ace_edges(mask, guid)
+                
+                lines.append(f"    [{aceType}]".ljust(9) + f" {sid_str}: {', '.join(edges)}")
+        return '\n'.join(lines)
+    
+    except Exception as e:
+        return f"  [!] Failed to decode nTSecurityDescriptor: {e}"
+
+# Output handler
+def _ldapSearchOutput(agentId, output):
+    if not IMPACKET_AVAILABLE:
+        conquest.warn(agentId, "Missing pip dependency: impacket. Install impacket to convert ntSecurityDescriptor into human-readable output.")
+
+    result = []
+    for line in output.split('\n'):        
+        # Process group memberships
+        if line.lower().startswith('memberof:'):
+            key, _, groups = line.partition(':')
+            result.append(key + ':')
+            for group in groups.strip().split(', '):
+                result.append('  ' + group)
+        
+        # Process ntSecurityDescriptor if python3-impacket is installed
+        elif IMPACKET_AVAILABLE and line.lower().startswith('ntsecuritydescriptor:'):
+            key, _, sd_b64 = line.partition(':')
+            result.append(key + ':')
+            result.append(_decode_security_descriptor(sd_b64.strip()))
+        
+        else:
+            result.append(line)
+
+    conquest.output(agentId, '\n'.join(result))
 
 cmd_ldapsearch = (
     conquest.createCommand(name="ldapsearch", description="Execute a LDAP query.", example="ldapsearch \"(objectClass=user)\" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local",
@@ -439,6 +637,7 @@ Available options:
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
             .setHandler(_ldapSearch)
+            .setOutputHandler(_ldapSearchOutput)
 ).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -506,7 +705,7 @@ def _ldapQuery(agentId, cmdline, args):
     
     query_data = LDAP_QUERIES.get(type)
     if query_data is None: 
-        conquest.error(agentId, cmdline, f"Invalid LDAP query: {type}. Use \"help ldapquery\" to list available options.")
+        conquest.error(agentId, f"Invalid LDAP query: {type}. Use \"help ldapquery\" to list available options.", cmdline)
         return
     
     (query, attributes) = query_data
@@ -525,7 +724,7 @@ def _ldapQuery(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_ldapQuery = (
     conquest.createCommand(name="ldapquery", description="Execute a pre-configured LDAP query.", example="ldapquery rbcd",
@@ -574,7 +773,7 @@ def _scEnum(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_scEnum = (
     conquest.createCommand(name="sc-enum", description="Get service information.", example="sc-enum --server dc01",
@@ -602,7 +801,7 @@ cmd_scQuery = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("windows services")
 
@@ -629,7 +828,7 @@ def _schtasksEnum(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_schtasksEnum = (
     conquest.createCommand(name="schtasks-enum", description="Get information about scheduled task.", example="schtasks-enum \"\\Microsoft\\Office\\Office Background Push Maintenance\"",
@@ -656,7 +855,7 @@ def _regQuery(agentId, cmdline, args):
     
     regHive = REGISTRY_HIVES.get(hive)
     if regHive is None:
-        conquest.error(agentId, cmdline, f"Invalid registry hive: {hive}.")
+        conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
     bof = conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/reg_query/reg_query.x64.o"
@@ -671,7 +870,7 @@ def _regQuery(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_regQuery = (
     conquest.createCommand(name="reg-query", description="Query the registry.", example="reg-query HKLM \"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\" ProgramFilesDir",
@@ -704,7 +903,7 @@ cmd_windowList = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
 
@@ -730,6 +929,6 @@ cmd_wmiQuery = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")

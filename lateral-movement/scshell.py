@@ -24,7 +24,7 @@ def _scshell(agentId, cmdline, args):
     if os.path.exists(bof):
         conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
     else:
-        conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_scshell = (
     conquest.createCommand(name="scshell", description="Perform fileless lateral movement by modifying an existing remote service's binary path (SCShell tool).", example="scshell dc01 bin/monarch.smb_x64.svc.exe --service Spooler --name update.exe",

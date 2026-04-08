@@ -2,6 +2,7 @@
 
 ## Contents <!-- omit from toc -->
 
+- [Dependencies](#dependencies)
 - [Overview](#overview)
   - [cat](#cat)
   - [dir](#dir)
@@ -30,6 +31,10 @@
   - [sc-query](#sc-query)
   - [schtasks-enum](#schtasks-enum)
   - [reg-query](#reg-query)
+
+## Dependencies
+
+- `impacket`: used by ldapsearch command
 
 ## Overview
 

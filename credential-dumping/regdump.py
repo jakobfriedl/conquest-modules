@@ -14,6 +14,6 @@ cmd_regdump = (
                 ]),
 
                 conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, cmdline, f"Failed to open object file: {bof}")
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("post-exploitation")
