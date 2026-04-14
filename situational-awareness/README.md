@@ -27,6 +27,7 @@
   - [net-shares](#net-shares)
   - [ldapsearch](#ldapsearch)
   - [ldapquery](#ldapquery)
+  - [convertfrom-sid](#convertfrom-sid)
   - [sc-enum](#sc-enum)
   - [sc-query](#sc-query)
   - [schtasks-enum](#schtasks-enum)
@@ -64,6 +65,7 @@ The situational awareness modules provide commands for enumerating the local sys
  * net-shares               List shares on a target system.
  * ldapsearch               Execute a LDAP query.
  * ldapquery                Execute a pre-configured LDAP query.
+ * convert-fromsid          Convert a SID to a group/user name.
  * sc-enum                  Get service information.
  * sc-query                 Query service status.
  * schtasks-enum            Get information about scheduled tasks.
@@ -299,6 +301,8 @@ Optional arguments:
 ### ldapsearch
 Execute a LDAP query.
 
+If the `NtSecurityDescriptor` field is returned by the query, the commands output handler automatically parses the base64-encoded value using the Python `impacket` library and displays it as human-readable output. Well-known SIDs and access masks are resolved as well. 
+
 ```
 Usage  : ldapsearch <query> [--attributes <attributes>] [--count <count>] [--scope <scope>] [--dc <dc>] [--dn <dn>] [--ldaps]
 Example: ldapsearch "(objectClass=user)" --attributes *,ntsecuritydescriptor --dn DC=conquest,DC=local --dc dc01.conquest.local
@@ -351,6 +355,21 @@ The following pre-configured queries are available:
 | `trusts` | `(objectClass=trustedDomain)` | `trustPartner`, `trustDirection`, `trustType`, `trustAttributes`, `flatName` |
 | `pre2k` | `(&(objectCategory=computer)(userAccountControl:1.2.840.113549.1.9.15.30.1:=4096)(logonCount=0))` | `samAccountName` |
 
+### convertfrom-sid 
+Convert a SID to a group/user name.
+
+```
+Usage: convert-fromsid <sid> [--dc hostname] [--dn dn] [--ldaps]
+Example: convert-fromsid S-1-5-21-2062779629-1118245407-2952427100-1105
+
+Required arguments:
+  sid                       STRING     Security identifier to convert.
+
+Optional arguments:
+  --dc hostname             STRING     Hostname or IP of domain controller (default: default domain controller).
+  --dn dn                   STRING     LDAP query base DN (default: current domain).
+  --ldaps                   BOOL       Use LDAPS on port 636 instead of LDAP on port 389.
+```
 
 ### sc-enum
 Get service information. If no service name is provided, lists all services on the target system.

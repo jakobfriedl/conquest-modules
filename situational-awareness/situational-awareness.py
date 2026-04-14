@@ -752,6 +752,47 @@ Available options:
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
+# Extract msDS-PrincipalName from ldapsearch output
+def _convertFromSidOutput(agentId, output): 
+    for line in output.splitlines():
+        if line.strip().lower().startswith("msds-principalname:"):
+            conquest.output(agentId, line.split(":", 1)[1].strip())
+            return
+    conquest.error(agentId, "Could not resolve SID.")
+
+cmd_convertFromSid = (
+    conquest.createCommand(name="convertfrom-sid", description="Convert a SID to a group/user name.", example="convertfrom-sid S-1-5-21-2062779629-1118245407-2952427100-1105",
+                           message="Tasked agent to convert SID to group/user name.", mitre=[])
+            .addArgString("sid", "Security identifier to convert.", True)
+            .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
+            .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
+            .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .setHandler(lambda agentId, cmdline, args: (
+                sid := conquest.get_string(args, 0),
+                dc := conquest.get_string(args, 1),
+                dn := conquest.get_string(args, 2),
+                ldaps := conquest.get_bool(args, 3),
+
+                bof := conquest.modules_root() + "/situational-awareness/CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o",
+                params := conquest.bof_pack("zziizzi", [
+                    f"(objectSid={sid})",       # z: LDAP filter Query
+                    "msDS-PrincipalName",       # z: Username in format DOMAIN\sAMAccountName
+                    0,                          # i: 0 -> Return all results
+                    3,                          # i: 3 -> Subtree
+                    dc,                         # z: DC hostname (auto-discover if empty)
+                    dn,                         # z: Domain DN (auto-detect if empty)
+                    int(ldaps)                  # i: Use LDAPS
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+            ))
+            .setOutputHandler(_convertFromSidOutput)
+).registerToGroup("situational awareness")
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 def _scEnum(agentId, cmdline, args): 
     service = conquest.get_string(args, 0)
     server = conquest.get_string(args, 1)

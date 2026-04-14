@@ -3,6 +3,9 @@
 ## Contents <!-- omit from toc -->
 
 - [Overview](#overview)
+  - [get-maq](#get-maq)
+  - [add-computer](#add-computer)
+  - [del-computer](#del-computer)
   - [add-user](#add-user)
   - [add-groupmembership](#add-groupmembership)
   - [enable-user](#enable-user)
@@ -27,6 +30,9 @@
 The remote operations modules provide commands for managing users, registry keys, services, scheduled tasks, and system state on local and remote systems. All commands are implemented as BOF wrappers for [CS-Remote-OPs-BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF). The module contains the following commands:
 
 ```
+ * get-maq                  Retrieve MachineAccountQuota in the current domain.
+ * add-computer             Add computer account to the Active Directory domain.
+ * del-computer             Delete computer account from the Active Directory domain.
  * add-user                 Add a user to a machine.
  * add-groupmembership      Add a specified user to a group.
  * enable-user              Enable a specified user account.
@@ -45,6 +51,37 @@ The remote operations modules provide commands for managing users, registry keys
  * schtasks-start           Run a scheduled task on the target system.
  * schtasks-stop            Stop a running scheduled task on the target system.
  * shutdown                 Shutdown or reboot a target system.
+```
+
+### get-maq
+Retrieve MachineAccountQuota in the current domain.
+
+```
+Usage: get-maq 
+Example: get-maq
+```
+
+### add-computer
+Add computer account to the Active Directory domain.
+
+```
+Usage: add-computer <name> <password>
+Example: add-computer FAKE01 Password123!
+
+Required arguments:
+  name                      STRING     Name of the computer account to add.
+  password                  STRING     Password of the new computer account.
+```
+
+### del-computer 
+Delete computer account from the Active Directory domain.
+
+```
+Usage: del-computer <name>
+Example: del-computer FAKE01
+
+Required arguments:
+  name                      STRING     Name of the computer account to delete.
 ```
 
 ### add-user
