@@ -4,6 +4,7 @@
 
 - [Overview](#overview)
   - [regdump](#regdump)
+  - [silentharvest](#silentharvest)
 
 ## Overview
 
@@ -11,6 +12,7 @@ The credential dumping modules provide commands for extracting credentials and s
 
 ```
  * regdump                  Dump SAM, SYSTEM and SECURITY from the Windows registry.
+ * silentharvest            Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.
 ```
 
 ### regdump
@@ -29,3 +31,15 @@ The output files can be used with tools like `impacket-secretsdump` to extract N
 ```bash
 impacket-secretsdump -sam sam.txt -system system.txt -security security.txt LOCAL
 ```
+
+### silentharvest
+Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values. Requires `SeBackupPrivilege`, but not necessarily SYSTEM privileges.
+
+
+```
+Usage: silentharvest 
+Example: silentharvest
+```
+Activate the required privilege first by running `enable-privilege SeBackupPrivilege`
+
+![SilentHarvest](../assets/silentharvest.png)

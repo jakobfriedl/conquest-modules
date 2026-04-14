@@ -68,7 +68,7 @@ def _godpotato(agentId, cmdline, args):
         conquest.error(agentId, "The arguments 'token' and 'command' are mutually exclusive.", cmdline)
         return
 
-    bof = conquest.modules_root() + "/privilege-escalation/dist/godpotato.x64.o"
+    bof = conquest.modules_root() + "/privilege-escalation/GodPotato/dist/godpotato.x64.o"
     params = conquest.bof_pack("zz", [
         "token" if token else cmd,      # z: Action
         pipe                            # z: Pipe name 

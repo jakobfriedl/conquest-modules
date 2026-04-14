@@ -17,3 +17,15 @@ cmd_regdump = (
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("post-exploitation")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_silentharvest = (
+    conquest.createCommand(name="silentharvest", description="Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", example="silentharvest",
+                           message="Tasked agent to gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", mitre=["T1003"])
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := conquest.modules_root() + "/credential-dumping/SilentHarvest_BOF/dist/silentharvest.x64.o",
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+            ))
+).registerToGroup("post-exploitation")
