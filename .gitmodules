@@ -28,9 +28,6 @@
 [submodule "privilege-escalation/UAC-BOF-Bonanza"]
 	path = privilege-escalation/UAC-BOF-Bonanza
 	url = https://github.com/icyguider/UAC-BOF-Bonanza
-[submodule "privilege-escalation/GodPotatoBOF"]
-	path = privilege-escalation/GodPotatoBOF
-	url = https://github.com/incursi0n/GodPotatoBOF.git
 [submodule "credential-dumping/SilentHarvest_BOF"]
 	path = credential-dumping/SilentHarvest_BOF
 	url = https://github.com/jakobfriedl/SilentHarvest_BOF
