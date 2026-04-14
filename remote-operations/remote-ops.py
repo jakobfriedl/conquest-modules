@@ -1,8 +1,6 @@
 import conquest 
 import os.path
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
 cmd_maq = (
     conquest.createCommand(name="get-maq", description="Retrieve MachineAccountQuota in the current domain.", example="get-maq",
                            message="Tasked agent to retrieve MachineAccountQuota.", mitre=[])
@@ -11,7 +9,7 @@ cmd_maq = (
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
-).registerToGroup("remote operations")
+).registerToGroup("situational awareness")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 

