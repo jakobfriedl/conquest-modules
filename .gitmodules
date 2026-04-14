@@ -31,3 +31,6 @@
 [submodule "credential-dumping/SilentHarvest_BOF"]
 	path = credential-dumping/SilentHarvest_BOF
 	url = https://github.com/jakobfriedl/SilentHarvest_BOF
+[submodule "privilege-escalation/GodPotato/GodPotatoBOF"]
+	path = privilege-escalation/GodPotato/GodPotatoBOF
+	url = https://github.com/incursi0n/GodPotatoBOF.git
