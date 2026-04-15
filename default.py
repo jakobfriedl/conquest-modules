@@ -4,7 +4,7 @@ import conquest
 conquest.createModule("shell", "Execute shell commands.")
 conquest.createModule("bof", "Load and execute BOF/COFF files in memory.")
 conquest.createModule("dotnet", "Load and execute .NET assemblies in memory.")
-conquest.createModule("rdll", "Load and execute DLLs in memory.")
+conquest.createModule("dll", "Load and execute DLLs in memory.")
 conquest.createModule("filetransfer", "Upload/download files to/from the target system.")
 conquest.createModule("process", "Interact with Windows processes.")
 conquest.createModule("filesystem", "Conduct simple filesystem operations via Windows API.")
@@ -93,7 +93,6 @@ cmd_bof = (
                            message="Tasked agent to execute an object-file in memory and retrieve the output.", mitre=["T1055", "T1620"])
             .addArgFile("object-file", "Path to the object file to execute.", True)
             .addArgString("arguments", "Arguments to be passed to the object file, packed as a HEX string according to beacon_generate.py.")
-            .addFlagBool("--async", "async", "Execute object file asynchronously.")
             .registerToGroup("execution")
             .registerToModule("bof")
 )
@@ -107,14 +106,14 @@ cmd_dotnet = (
             .registerToModule("dotnet")
 )
 
-cmd_rdll = (
-    conquest.createCommand(name="rdll", description="Execute a DLL asynchronously in memory.", example="rdll /path/to/async-bof.dll <args>", 
+cmd_dll = (
+    conquest.createCommand(name="dll", description="Execute a DLL asynchronously in memory.", example="dll /path/to/async-bof.dll Run <packed-args>", 
                            message="Tasked agent to execute a DLL in memory.", mitre=["T1620"])
-            .addArgString("dll", "Path to the DLL to execute.", True)
-            .addFlagString("--export", "export", "Name of the exported function to execute (default: Run).", False, "Run")
-            .addArgString("args", "Arguments to pass to the exported function, packed as a HEX string.", False)
+            .addArgFile("dll", "Path to the DLL to execute.", True)
+            .addArgString("function", "Name of the exported function to execute.", True)
+            .addArgString("arguments", "Arguments to pass to the exported function, packed as a HEX string.", False)
             .registerToGroup("execution")
-            .registerToModule("rdll")
+            .registerToModule("dll")
 )
 
 # Post-exploitation
