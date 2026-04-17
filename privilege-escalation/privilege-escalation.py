@@ -1,18 +1,20 @@
 import conquest
-import os.path 
+import os.path
+
+SCRIPT_DIR = os.path.dirname(__file__)
 
 # Windows Privilege Escalation checks using PrivKit BOFs by @merterpreter & @nickvourd
 PRIVESC_CHECKS = {
-    "always-install-elevated": "/privilege-escalation/PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
-    "autologon": "/privilege-escalation/PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
-    "cred-manager": "/privilege-escalation/PrivKit/CredentialManagerCheck/CredentialManagerCheck.x64.o",
-    "hijack-path": "/privilege-escalation/PrivKit/HijackablePathCheck/HijackablePathCheck.x64.o",
-    "modify-autorun": "/privilege-escalation/PrivKit/ModifiableAutorunCheck/ModifiableAutorunCheck.x64.o",
-    "modify-svc": "/privilege-escalation/PrivKit/ModifiableSVCCheck/ModifiableSVCCheck.x64.o",
-    "token-privs": "/privilege-escalation/PrivKit/TokenPrivilegesCheck/TokenPrivilegesCheck.x64.o",
-    "unquoted-svc-path": "/privilege-escalation/PrivKit/UnquotedSVCPathCheck/UnquotedSVCPathCheck.x64.o",
-    "ps-history": "/privilege-escalation/PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
-    "uac-status": "/privilege-escalation/PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
+    "always-install-elevated": "PrivKit/AlwaysInstallElevatedCheck/AlwaysInstallElevatedCheck.x64.o",
+    "autologon": "PrivKit/AutoLogonCheck/AutoLogonCheck.x64.o",
+    "cred-manager": "PrivKit/CredentialManagerCheck/CredentialManagerCheck.x64.o",
+    "hijack-path": "PrivKit/HijackablePathCheck/HijackablePathCheck.x64.o",
+    "modify-autorun": "PrivKit/ModifiableAutorunCheck/ModifiableAutorunCheck.x64.o",
+    "modify-svc": "PrivKit/ModifiableSVCCheck/ModifiableSVCCheck.x64.o",
+    "token-privs": "PrivKit/TokenPrivilegesCheck/TokenPrivilegesCheck.x64.o",
+    "unquoted-svc-path": "PrivKit/UnquotedSVCPathCheck/UnquotedSVCPathCheck.x64.o",
+    "ps-history": "PrivKit/PowerShellHistoryCheck/PowerShellHistoryCheck.x64.o",
+    "uac-status": "PrivKit/UACStatusCheck/UACStatusCheck.x64.o"
 }
 def _privkit(agentId, cmdline, args): 
     check = conquest.get_string(args, 0).lower()
@@ -20,7 +22,7 @@ def _privkit(agentId, cmdline, args):
     if check == "all":
         # Execute all checks
         for name, path in PRIVESC_CHECKS.items():
-            bof = conquest.modules_root() + path
+            bof = os.path.join(SCRIPT_DIR, path)
             if os.path.exists(bof):
                 conquest.execute_alias(agentId, f"privkit {name}", f"bof {bof}")
             else:
@@ -32,7 +34,7 @@ def _privkit(agentId, cmdline, args):
             conquest.error(agentId, f"Invalid privilege escalation check: {check}", cmdline)
             return
         
-        bof = conquest.modules_root() + path
+        bof = os.path.join(SCRIPT_DIR, path)
         if os.path.exists(bof):
             conquest.execute_alias(agentId, cmdline, f"bof {bof}")
         else:
@@ -63,7 +65,7 @@ def _godpotato(agentId, cmdline, args):
     cmd = conquest.get_string(args, 0)
     pipe = conquest.get_string(args, 1)
 
-    bof = conquest.modules_root() + "/privilege-escalation/GodPotato/dist/BOF.x64.o"
+    bof = os.path.join(SCRIPT_DIR, "GodPotato/dist/BOF.x64.o")
     params = conquest.bof_pack("zz", [
         cmd if cmd else "token",        # z: Action
         pipe                            # z: Pipe name 

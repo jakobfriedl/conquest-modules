@@ -1,11 +1,13 @@
-import conquest 
+import conquest
 import os.path
+
+SCRIPT_DIR = os.path.dirname(__file__)
 
 def _kerbeus(command):
     def handler(agentId, cmdline, args):
         args = conquest.get_string(args, 0)
         
-        bof = conquest.modules_root() + f"/kerbeus/dist/{command}.x64.o"
+        bof = os.path.join(SCRIPT_DIR, f"dist/{command}.x64.o")
         params = conquest.bof_pack("z", [
             args    # z: Command arguments
         ])

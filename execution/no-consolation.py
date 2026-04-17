@@ -1,5 +1,7 @@
 import conquest
-import os.path 
+import os.path
+
+SCRIPT_DIR = os.path.dirname(__file__)
 
 def _noconsolation(agentId, cmdline, args): 
     path = conquest.get_string(args, 0)             # Path needs to be a string arg instead of file because a cached filename can also be supplied as the argument
@@ -100,7 +102,7 @@ def _noconsolation(agentId, cmdline, args):
     import datetime
     timestamp = datetime.datetime.now().strftime('%d/%m %H:%M')
     
-    bof = conquest.modules_root() + "/execution/No-Consolation/dist/NoConsolation.x64.o"    
+    bof = os.path.join(SCRIPT_DIR, "No-Consolation/dist/NoConsolation.x64.o")    
     params = conquest.bof_pack("ZzZbziiiZzziiiiziizzziiizzzi", [
         pename,                         # Z: PE name (wide)
         pename,                         # z: PE name
