@@ -4,6 +4,7 @@
 
 - [Overview](#overview)
   - [no-consolation](#no-consolation)
+  - [bof-async](#bof-async)
 
 ## Overview
 
@@ -11,6 +12,7 @@ The execution modules provide commands for executing binaries and code in memory
 
 ```
  * no-consolation           Execute an unmanaged PE in memory.
+ * bof-async                Execute an object file asynchronously in the background.
 ```
 
 ### no-consolation
@@ -57,3 +59,20 @@ Optional flags:
 ![No Consolation](../assets/no-consolation.png)
 
 ![Executing stored PE](../assets/no-consolation-2.png)
+
+### bof-async
+
+Execute an object file asynchronously in the background. This command requires the `async-bof.dll` DLL to exist in `data/resources/async-bof-loader` in order to work.
+
+```
+Usage: bof-async <object-file> [arguments]
+Example: bof-async /path/to/process-notify.x64.o <packed-args>
+
+Required arguments:
+  object-file               STRING     Path to the object file to execute.
+
+Optional arguments:
+  arguments                 STRING     Arguments to be passed to the object file, packed as a HEX string.
+```
+
+In order to create the `arguments` HEX-string, it is recommended to use the [beacon_generate.py](https://github.com/trustedsec/COFFLoader/blob/main/beacon_generate.py) script provided by trustedsec. 
