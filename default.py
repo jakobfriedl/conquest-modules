@@ -216,6 +216,7 @@ cmd_maketoken = (
   - 8: LOGON_NETWORK_CLEARTEXT 
   - 9: LOGON_NEW_CREDENTIALS (default)                        
 """, False, 9)
+            .addFlagBool("--store", "store", "Store access token in vault.")
             .registerToGroup("user impersonation")
             .registerToModule("token")
 )
@@ -224,13 +225,44 @@ cmd_stealtoken = (
     conquest.createCommand(name="steal-token", description="Steal the primary access token of a remote process.", example="steal-token 1234", 
                            message="Tasked agent to steal an access token.", mitre=["T1134.001"])
             .addArgInt("pid", "Process ID of the target process.", True)
+            .addFlagBool("--store", "store", "Store access token in vault.")
+            .registerToGroup("user impersonation")
+            .registerToModule("token")
+)
+
+cmd_usetoken = (
+    conquest.createCommand(name="use-token", description="Use and impersonate access token from the vault.", example="use-token 1",
+                           message="Tasked agent to use a token from the vault.", mitre=["T1134"])
+            .addArgInt("token", "ID of the token to impersonate.", True)
+            .registerToGroup("user impersonation")
+            .registerToModule("token")
+)
+
+cmd_removetoken = (
+    conquest.createCommand(name="remove-token", description="Remove access token from the vault.", example="remove-token --all",
+                           message="Tasked agent to use a token from the vault.", mitre=["T1134"])
+            .addArgInt("token", "ID of the token to remove.")
+            .addFlagBool("--all", "all", "Remove all tokens from the vault.")
+            .setHandler(lambda agentId, cmdline, args: (
+                token := conquest.get_int(args, 0),
+                remove_all := conquest.get_bool(args, 1),
+                conquest.error(agentId, "Specify either a token ID or --all.", cmdline) if not remove_all and token == 0
+                else conquest.execute_command(agentId, cmdline)
+            ))
             .registerToGroup("user impersonation")
             .registerToModule("token")
 )
 
 cmd_rev2self = (
     conquest.createCommand(name="rev2self", description="Revert to original access token.", example="rev2self", 
-                           message="Tasked agent to revert to original access token.")
+                           message="Tasked agent to revert to original access token.", mitre=[])
+            .registerToGroup("user impersonation")
+            .registerToModule("token")
+)
+
+cmd_tokenvault = ( 
+    conquest.createCommand(name="token-vault", description="List access tokens stored in the vault.", example="token-vault",
+                           message="Tasked agent to list token vault.", mitre=[])
             .registerToGroup("user impersonation")
             .registerToModule("token")
 )
