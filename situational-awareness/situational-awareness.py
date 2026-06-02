@@ -417,6 +417,10 @@ def _ldapSearch(agentId, cmdline, args):
     dn = conquest.get_string(args, 5)
     ldaps = conquest.get_bool(args, 6)
     
+    # Use a global variable to set the option for the output handler
+    global RAW
+    RAW = conquest.get_bool(args, 7)    
+    
     ldapScope = LDAP_SCOPE.get(scope, LDAP_SCOPE["subtree"])
     
     bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o")
@@ -615,8 +619,9 @@ def _ldapSearchOutput(agentId, output):
             for group in groups.strip().split(', '):
                 result.append('  ' + group)
         
-        # Process ntSecurityDescriptor if python3-impacket is installed
-        elif IMPACKET_AVAILABLE and line.lower().startswith('ntsecuritydescriptor:'):
+        # Process ntSecurityDescriptor if python3-impacket is installed 
+        # Does not parse the field if the global RAW variable was set by the command handler
+        elif not RAW and IMPACKET_AVAILABLE and line.lower().startswith('ntsecuritydescriptor:'):
             key, _, sd_b64 = line.partition(':')
             result.append(key + ':')
             result.append(_decode_security_descriptor(sd_b64.strip()))
@@ -640,6 +645,7 @@ Available options:
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .addFlagBool("--raw", "raw", "Return raw ntSecurityDescriptor field (base64) instead of human readable output.")
             .setHandler(_ldapSearch)
             .setOutputHandler(_ldapSearchOutput)
 ).registerToGroup("situational awareness")
