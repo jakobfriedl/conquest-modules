@@ -71,7 +71,7 @@ cmd_dir = (
     conquest.createCommand(name="dir", description="List files and directories using BOF.", example="ls C:\\Users\\Administrator\\Desktop --recursive", 
                            message="Tasked agent to list files and directories using BOF.", mitre=["T1083"])
             .addArgString("directory", "Relative or absolute path. (default: current working directory)", False, ".")
-            .addFlagBool("--recursive", "recursive", "Search all sub-directories recursively. Use with caution!")
+            .addFlagBool("--recursive", "Search all sub-directories recursively. Use with caution!")
             .setHandler(lambda agentId, cmdline, args: (
                 directory := conquest.get_string(args, 0),
                 recurse := conquest.get_bool(args, 1),
@@ -385,7 +385,7 @@ cmd_netShares = (
     conquest.createCommand(name="net-shares", description="List shares on a target system.", example="net-shares dc01 --admin",
                         message="Tasked agent to list shares.", mitre=["T1135"])
         .addArgString("host", "Hostname of the target system (default: local computer).")
-        .addFlagBool("--admin", "admin", "List shares as admin (requires admin privileges).")
+        .addFlagBool("--admin", "List shares as admin (requires admin privileges).")
         .setHandler(lambda agentId, cmdline, args: (
             host := conquest.get_string(args, 0),
             admin := conquest.get_bool(args, 1),
@@ -644,8 +644,8 @@ Available options:
   - subtree (default)""", False, "subtree")
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
-            .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
-            .addFlagBool("--raw", "raw", "Return raw ntSecurityDescriptor field (base64) instead of human readable output.")
+            .addFlagBool("--ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .addFlagBool("--raw", "Return raw ntSecurityDescriptor field (base64) instead of human readable output.")
             .setHandler(_ldapSearch)
             .setOutputHandler(_ldapSearchOutput)
 ).registerToGroup("situational awareness")
@@ -756,7 +756,7 @@ Available options:
 - pre2k: Enumerate pre-Windows 2000 Computers.""", True)
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
-            .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .addFlagBool("--ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
             .setHandler(_ldapQuery)                        
 ).registerToGroup("situational awareness")
 
@@ -776,7 +776,7 @@ cmd_convertFromSid = (
             .addArgString("sid", "Security identifier to convert.", True)
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
-            .addFlagBool("--ldaps", "ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
+            .addFlagBool("--ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
             .setHandler(lambda agentId, cmdline, args: (
                 sid := conquest.get_string(args, 0),
                 dc := conquest.get_string(args, 1),
@@ -935,7 +935,7 @@ Available options:
             .addArgString("path", "Registry path.", True)
             .addArgString("key", "Specific key/value name to query. If not provided, enumerates all subkeys and values.")
             .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
-            .addFlagBool("--recursive", "recursive", "Recursively enumerate all subkeys.")
+            .addFlagBool("--recursive", "Recursively enumerate all subkeys.")
             .setHandler(_regQuery)
 ).registerToGroup("windows registry")
 
@@ -944,7 +944,7 @@ Available options:
 cmd_windowList = (
     conquest.createCommand(name="list-windows", description="List visible windows in the current user session.", example="list-windows --all",
                            message="Tasked agent to list windows.", mitre=["T1010"])
-            .addFlagBool("--all", "all", "Include hidden windows in window list.")
+            .addFlagBool("--all", "Include hidden windows in window list.")
             .setHandler(lambda agentId, cmdline, args: (
                 all := conquest.get_bool(args, 0),
 

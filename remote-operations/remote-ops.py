@@ -353,7 +353,7 @@ Available options:
   - HKU     HKEY_USERS""", True)
             .addArgString("path", "Path to the registry key to delete.", True)
             .addFlagString("--key", "key", "Name of the registry key to delete (default: \"\").")
-            .addFlagBool("--delete-key", "delete-key", "Set this flag to delete the entire registry key.")
+            .addFlagBool("--delete-key", "Set this flag to delete the entire registry key.")
             .addFlagString("--server", "server", "Target server for remote registry (default: local computer).")
             .setHandler(_regDelete)
 ).registerToGroup("windows registry")
@@ -632,7 +632,7 @@ cmd_schtasksCreate = (
     - PASSWORD: credentials passed using --user and --password parameters""", False, "USER")
             .addFlagString("--user", "user", "Username of the user the task will run as (default: current user).")
             .addFlagString("--password", "password", "Password of the user the task will run as (default: current user).")
-            .addFlagBool("--update", "update", "Specify to update a scheduled task if it already exists. If a tasks already exists and this flag is not set, the creation will fail.")
+            .addFlagBool("--update", "Specify to update a scheduled task if it already exists. If a tasks already exists and this flag is not set, the creation will fail.")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(_schtasksCreate)
 ).registerToGroup("scheduled tasks")
@@ -719,9 +719,9 @@ cmd_shutdown = (
             .addArgString("target", "Target system (default: local computer).")
             .addFlagString("--message", "message", "Message to display before shutdown (default: none).")
             .addFlagInt("--in", "seconds", "Number of seconds before shutdown/reboot (default: 0).")
-            .addFlagBool("--close-apps", "close-apps", "Close all running applications without saving.")
-            .addFlagBool("--reboot", "reboot", "Reboot system after shutdown.")
-            .addFlagBool("--confirm", "confirm", "Confirm shutdown. This flag acts as a safety net to prevent unwanted shutdowns/reboots")
+            .addFlagBool("--close-apps", "Close all running applications without saving.")
+            .addFlagBool("--reboot", "Reboot system after shutdown.")
+            .addFlagBool("--confirm", "Confirm shutdown. This flag acts as a safety net to prevent unwanted shutdowns/reboots")
             .setHandler(lambda agentId, cmdline, args: (
                 target := conquest.get_string(args, 0),
                 message := conquest.get_string(args, 1),
