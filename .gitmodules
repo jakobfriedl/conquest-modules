@@ -7,9 +7,6 @@
 [submodule "OperatorsKit"]
 	path = situational-awareness/OperatorsKit
 	url = https://github.com/fyxme/OperatorsKit.git
-[submodule "portscanbof"]
-	path = situational-awareness/portscanbof
-	url = https://github.com/fyxme/portscanbof/
 [submodule "No-Consolation"]
 	path = execution/No-Consolation
 	url = https://github.com/fortra/No-Consolation

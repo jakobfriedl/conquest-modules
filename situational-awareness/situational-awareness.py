@@ -256,25 +256,6 @@ cmd_checkport = (
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-cmd_pingsweep = (
-    conquest.createCommand(name="pingsweep", description="Scan an IP range for live hosts.", example="pingsweep 10.10.15.0/24",
-                           message="Tasked agent to perform a pingscan.", mitre=["T1018", "T1046"])
-            .addArgString("targets", "Comma separated list of hosts to scan. Hostnames, IPs and IP ranges supported (eg. 192.168.1.128-192.168.2.240,192.168.1.0/24).", True)
-            .setHandler(lambda agentId, cmdline, args: (
-                targets := conquest.get_string(args, 0),
-
-                bof := os.path.join(SCRIPT_DIR, "portscanbof/bin/pingscanner.bof.o"),
-                params := conquest.bof_pack("z", [
-                    targets         # z: Target list
-                ]),
-
-                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
-            ))
-).registerToGroup("situational awareness")
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
 cmd_netDomainGroup = (
     conquest.createCommand(name="net-group", description="List domain groups or members of a specified domain group.", example="net-group \"Domain Admins\" --domain domain.local",
                            message="Tasked agent to enumerate domain groups / domain group-memberships.", mitre=["T1069.002"])
