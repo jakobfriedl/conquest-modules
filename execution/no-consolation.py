@@ -102,7 +102,7 @@ def _noconsolation(agentId, cmdline, args):
     import datetime
     timestamp = datetime.datetime.now().strftime('%d/%m %H:%M')
     
-    bof = os.path.join(SCRIPT_DIR, "No-Consolation/dist/NoConsolation.x64.o")    
+    bof = os.path.join(SCRIPT_DIR, f"No-Consolation/dist/NoConsolation.{conquest.arch(agentId)}.o")    
     params = conquest.bof_pack("ZzZbziiiZzziiiiziizzziiizzzi", [
         pename,                         # Z: PE name (wide)
         pename,                         # z: PE name

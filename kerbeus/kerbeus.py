@@ -7,6 +7,7 @@ def _kerbeus(command):
     def handler(agentId, cmdline, args):
         args = conquest.get_string(args, 0)
         
+        # Available on x64 only
         bof = os.path.join(SCRIPT_DIR, f"dist/{command}.x64.o")
         params = conquest.bof_pack("z", [
             args    # z: Command arguments

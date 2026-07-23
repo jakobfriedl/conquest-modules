@@ -7,7 +7,7 @@ cmd_maq = (
     conquest.createCommand(name="get-maq", description="Retrieve MachineAccountQuota in the current domain.", example="get-maq",
                            message="Tasked agent to retrieve MachineAccountQuota.", mitre=[])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "AddMachineAccount/GetMachineAccountQuota.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/GetMachineAccountQuota.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -24,7 +24,7 @@ cmd_addComputer = (
                 name := conquest.get_string(args, 0).rstrip("$"),   # Remove trailing '$' from computer name
                 password := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "AddMachineAccount/AddMachineAccount.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/AddMachineAccount.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZ", [
                     name,              # Z: Computer name
                     password           # Z: Password
@@ -44,7 +44,7 @@ cmd_delComputer = (
             .setHandler(lambda agentId, cmdline, args: (
                 name := conquest.get_string(args, 0).rstrip("$"),   # Remove trailing '$' from computer name
 
-                bof := os.path.join(SCRIPT_DIR, "AddMachineAccount/DelMachineAccount.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/DelMachineAccount.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("Z", [
                     name,              # Z: Computer name
                 ]),
@@ -67,7 +67,7 @@ cmd_addUser = (
                 password := conquest.get_string(args, 1),
                 server := conquest.get_string(args, 2),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/adduser/adduser.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/adduser/adduser.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZZ", [
                     username,           # Z: Username
                     password,           # Z: Password
@@ -95,7 +95,7 @@ cmd_addGroupmembership = (
                 domain := user.split('\\')[0] if '\\' in user else "",
                 username := user.split('\\')[1] if '\\' in user else user,
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/addusertogroup/addusertogroup.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/addusertogroup/addusertogroup.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZZZ", [
                     domain,             # Z: Domain (empty if local account)
                     server,             # Z: Target system
@@ -120,7 +120,7 @@ cmd_enableUser = (
                 domain := user.split('\\')[0] if '\\' in user else "",
                 username := user.split('\\')[1] if '\\' in user else user,
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/enableuser/enableuser.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/enableuser/enableuser.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZ", [
                     domain,             # Z: Domain (empty if local account)
                     username,           # Z: Target user
@@ -143,7 +143,7 @@ cmd_unexpireUser = (
                 domain := user.split('\\')[0] if '\\' in user else "",
                 username := user.split('\\')[1] if '\\' in user else user,
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/unexpireuser/unexpireuser.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/unexpireuser/unexpireuser.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZ", [
                     domain,             # Z: Domain (empty if local account)
                     username,           # Z: Target user
@@ -168,7 +168,7 @@ cmd_setPassword = (
                 domain := user.split('\\')[0] if '\\' in user else "",
                 username := user.split('\\')[1] if '\\' in user else user,
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/setuserpass/setuserpass.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/setuserpass/setuserpass.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZZ", [
                     domain,             # Z: Domain (empty if local account)
                     username,           # Z: Target user
@@ -269,7 +269,7 @@ def _regSet(agentId, cmdline, args):
         conquest.error(agentId, f"Error processing data: {str(e)}", cmdline)
         return
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/reg_set/reg_set.x64.o")    
+    bof = os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/reg_set/reg_set.{conquest.arch(agentId)}.o")    
     params = conquest.bof_pack(pack_fmt, [
         server,             # z: Hostname (empty or \\server)
         reg_hive,           # i: Registry hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
@@ -285,7 +285,7 @@ def _regSet(agentId, cmdline, args):
         conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_regSet = ( 
-    conquest.createCommand(name="reg-set", description="Create or set a registry key/value on a target system.", example="reg-set HKCU \"Software\\TestApp\" TestValue REG_SZ \"Hello World\"",
+    conquest.createCommand(name="reg-set", description="Create or set a registry key/value on a target system.", example="reg-set HKCU \"Software\\TestApp\" REG_SZ \"Hello World\" --key TestValue",
                            message="Tasked agent to set a registry key.", mitre=["T1112"])
             .addArgString("hive", """Registry hive.
 Available options:
@@ -327,7 +327,7 @@ def _regDelete(agentId, cmdline, args):
     if server:
         server = f"\\\\{server}"
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/reg_delete/reg_delete.x64.o")    
+    bof = os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/reg_delete/reg_delete.{conquest.arch(agentId)}.o")    
     params = conquest.bof_pack("zizzi", [
         server,                     # z: Hostname (empty or \\server)
         reg_hive,                   # i: Registry hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
@@ -371,7 +371,7 @@ def _regSave(agentId, cmdline, args):
         conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/reg_save/reg_save.x64.o")    
+    bof = os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/reg_save/reg_save.{conquest.arch(agentId)}.o")    
     params = conquest.bof_pack("zzi", [
         path,                       # z: Registry path
         outfile,                    # z: Output file
@@ -425,7 +425,7 @@ Available options:
                 startMode := conquest.get_int(args, 3),
                 server := conquest.get_string(args, 4),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/sc_config/sc_config.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/sc_config/sc_config.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zzzss", [
                     server,             # z: Target system
                     service,            # z: Target service
@@ -464,7 +464,7 @@ def _scCreate(agentId, cmdline, args):
         conquest.error(agentId, f"Invalid service type: {type}.", cmdline)
         return
 
-    bof = os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/sc_create/sc_create.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/sc_create/sc_create.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("zzzzzsss", [
         server,             # z: Target system
         service,            # z: Target service
@@ -520,7 +520,7 @@ cmd_scDelete = (
                 service := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1), 
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/sc_delete/sc_delete.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/sc_delete/sc_delete.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zz", [
                     server,             # z: Target system
                     service,            # z: Target service
@@ -542,7 +542,7 @@ cmd_scStart = (
                 service := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1), 
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/sc_start/sc_start.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/sc_start/sc_start.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zz", [
                     server,             # z: Target system
                     service,            # z: Target service
@@ -564,7 +564,7 @@ cmd_scStop = (
                 service := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1), 
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/sc_stop/sc_stop.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/sc_stop/sc_stop.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zz", [
                     server,             # z: Target system
                     service,            # z: Target service
@@ -605,7 +605,7 @@ def _schtasksCreate(agentId, cmdline, args):
     except (UnicodeDecodeError, UnicodeError):
         xml = bytes(xmlBytes).decode('utf-8')
 
-    bof = os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/schtaskscreate/schtaskscreate.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/schtaskscreate/schtaskscreate.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("ZZZZZii", [
         server,         # Z: Target system
         user,           # Z: Username
@@ -654,7 +654,7 @@ cmd_schtasksDelete = (
                 conquest.error(agentId, "Must specify either --task or --folder.", cmdline) if ((task and folder) or (not task and not folder)) 
                 else (
 
-                    bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/schtasksdelete/schtasksdelete.x64.o"),
+                    bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/schtasksdelete/schtasksdelete.{conquest.arch(agentId)}.o"),
                     params := conquest.bof_pack("ZZi", [
                         server,                     # Z: Target system
                         task if task else folder,   # Z: Path (task or folder)
@@ -678,7 +678,7 @@ cmd_schtasksStart = (
                 task := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/schtasksrun/schtasksrun.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/schtasksrun/schtasksrun.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZ", [
                     server,                 # Z: Target system
                     task                    # Z: Path to task
@@ -700,7 +700,7 @@ cmd_schtasksStop = (
                 task := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/schtasksstop/schtasksstop.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/schtasksstop/schtasksstop.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZ", [
                     server,                 # Z: Target system
                     task                    # Z: Path to task
@@ -733,7 +733,7 @@ cmd_shutdown = (
                 conquest.error(agentId, "Set the --confirm flag to shutdown the target system.", cmdline) if not confirm
                 else (
                     
-                    bof := os.path.join(SCRIPT_DIR, "CS-Remote-OPs-BOF/Remote/shutdown/shutdown.x64.o"),
+                    bof := os.path.join(SCRIPT_DIR, f"CS-Remote-OPs-BOF/Remote/shutdown/shutdown.{conquest.arch(agentId)}.o"),
                     params := conquest.bof_pack("zziss", [
                         target,                 # z: Target system
                         message,                # z: Shutdown message

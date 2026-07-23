@@ -19,7 +19,7 @@ cmd_cat = (
             .setHandler(lambda agentId, cmdline, args: (
                 file := conquest.get_string(args, 0),
 
-                bof := os.path.join(SCRIPT_DIR, "cobaltstrike-cat-bof/cat.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"cobaltstrike-cat-bof/cat.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("Z", [
                     file    # Z: File name
                 ]),
@@ -35,7 +35,8 @@ cmd_enumdrives = (
     conquest.createCommand(name="enum-drives", description="List local drive letters and types.", example="enum-drives",
                            message="Tasked agent to list local drives.", mitre=["T1082", "T1083"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "OperatorsKit/KIT/EnumDrives/enumdrives.o"),
+                # Available on x64 only 
+                bof := os.path.join(SCRIPT_DIR, f"OperatorsKit/KIT/EnumDrives/enumdrives.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -47,7 +48,7 @@ cmd_whoami = (
     conquest.createCommand(name="whoami", description="Get user and group information.", example="whoami", 
                            message="Tasked agent to retrieve user and group information.", mitre=["T1033"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/whoami/whoami.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/whoami/whoami.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -59,7 +60,7 @@ cmd_env = (
     conquest.createCommand(name="env", description="List environment variables.", example="env", 
                            message="Tasked agent to list environment variables.")
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/env/env.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/env/env.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -76,7 +77,7 @@ cmd_dir = (
                 directory := conquest.get_string(args, 0),
                 recurse := conquest.get_bool(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/dir/dir.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/dir/dir.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zs", [
                     directory,          # z: Directory
                     int(recurse)        # s: Search sub-directories
@@ -97,7 +98,7 @@ cmd_cacls = (
             .setHandler(lambda agentId, cmdline, args: (
                 file := conquest.get_string(args, 0),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/cacls/cacls.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/cacls/cacls.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("Z", [
                     file    # Z: File name
                 ]),
@@ -113,7 +114,7 @@ cmd_arp = (
     conquest.createCommand(name="arp", description="List ARP table.", example="arp", 
                            message="Tasked agent to retrieve ARP table.", mitre=["T1018", "T1049"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/arp/arp.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/arp/arp.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -125,7 +126,7 @@ cmd_ipconfig = (
     conquest.createCommand(name="ipconfig", description="List IPv4 address, hostname, and DNS server.", example="ipconfig", 
                            message="Tasked agent to list network configuration.", mitre=["T1016"])
             .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/ipconfig/ipconfig.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/ipconfig/ipconfig.{conquest.arch(agentId)}.o"),
                 conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
@@ -174,7 +175,7 @@ Supported record types: ANY, A, NS, MD, MF, CNAME, SOA, MB, MG, MR, WKS, PTR, HI
 
                 recordType := DNS_RECORD_TYPES.get(type, DNS_RECORD_TYPES["ANY"]),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/nslookup/nslookup.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/nslookup/nslookup.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zzs", [
                     hostname,       # z: Hostname
                     server,         # z: DNS Server
@@ -192,7 +193,7 @@ cmd_listdns = (
     conquest.createCommand(name="list-dns", description="List DNS cache entries.", example="list-dns", 
                         message="Tasked agent to list DNS cache entries.", mitre=["T1016", "T1049"])
         .setHandler(lambda agentId, cmdline, args: (
-            bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/listdns/listdns.x64.o"),
+            bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/listdns/listdns.{conquest.arch(agentId)}.o"),
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
@@ -204,7 +205,7 @@ cmd_netstat = (
     conquest.createCommand(name="netstat", description="List network connections.", example="netstat", 
                         message="Tasked agent to list network connections.", mitre=["T1049"])
         .setHandler(lambda agentId, cmdline, args: (
-            bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netstat/netstat.x64.o"),
+            bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netstat/netstat.{conquest.arch(agentId)}.o"),
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
@@ -216,7 +217,7 @@ cmd_listroute = (
     conquest.createCommand(name="list-routes", description="List IPv4 routing table.", example="list-routes", 
                         message="Tasked agent to list routing table.", mitre=["T1016"])
         .setHandler(lambda agentId, cmdline, args: (
-            bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/routeprint/routeprint.x64.o"),
+            bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/routeprint/routeprint.{conquest.arch(agentId)}.o"),
             conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
             else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
         ))
@@ -243,7 +244,7 @@ cmd_checkport = (
                 target := conquest.get_string(args, 0),
                 port := conquest.get_int(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/probe/probe.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/probe/probe.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zi", [
                     target,         # z: Target hostname or IP 
                     port            # i: Port
@@ -265,7 +266,7 @@ cmd_netDomainGroup = (
                 group := conquest.get_string(args, 0),
                 domain := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netgroup/netgroup.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netgroup/netgroup.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("sZZ", [
                     int(group != ""),               # s: Type (0: list groups, 1: list group-memberships)
                     domain,                         # Z: Domain name
@@ -288,7 +289,7 @@ cmd_netLocalGroup = (
                 group := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netlocalgroup/netlocalgroup.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netlocalgroup/netlocalgroup.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("sZZ", [
                     int(group != ""),               # s: Type (0: list groups, 1: list group-memberships)
                     server,                         # Z: Server
@@ -308,14 +309,14 @@ def _netUser(agentId, cmdline, args):
 
     if user != "": 
         # List user information if a username is specified
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netuser/netuser.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netuser/netuser.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("ZZ", [
             user,       # Z: Username 
             domain      # Z: Domain name
         ])
     else: 
         # List users
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netuserenum/netuserenum.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netuserenum/netuserenum.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("ii", [
             int(domain != ""),          # i: Use domain (0: local users, 1: domain users)
             1                           # i: Filter (1: all users, 2: locked-out users, 3: disabled users, 4: neither disabled and not locked-out users)
@@ -371,7 +372,7 @@ cmd_netShares = (
             host := conquest.get_string(args, 0),
             admin := conquest.get_bool(args, 1),
 
-            bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/netshares/netshares.x64.o"),
+            bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/netshares/netshares.{conquest.arch(agentId)}.o"),
             params := conquest.bof_pack("Zi", [
                 host,           # Z: Host 
                 int(admin)      # i: List shares as admin
@@ -404,7 +405,7 @@ def _ldapSearch(agentId, cmdline, args):
     
     ldapScope = LDAP_SCOPE.get(scope, LDAP_SCOPE["subtree"])
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("zziizzi", [
         query,                      # z: LDAP filter query
         attributes,                 # z: Attributes (comma-separated or "*")
@@ -701,7 +702,7 @@ def _ldapQuery(agentId, cmdline, args):
     
     (query, attributes) = query_data
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("zziizzi", [
         query,                      # z: LDAP filter query
         attributes,                 # z: Attributes (comma-separated or "*")
@@ -764,7 +765,7 @@ cmd_convertFromSid = (
                 dn := conquest.get_string(args, 2),
                 ldaps := conquest.get_bool(args, 3),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zziizzi", [
                     f"(objectSid={sid})",       # z: LDAP filter Query
                     "msDS-PrincipalName",       # z: Username in format DOMAIN\sAMAccountName
@@ -790,14 +791,14 @@ def _scEnum(agentId, cmdline, args):
 
     if service != "": 
         # Get information about a specific service (sc_qc)
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/sc_qc/sc_qc.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/sc_qc/sc_qc.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("zz", [
             server,         # z: Target server 
             service,        # z: Target service
         ])
     else: 
         # List all services (sc_enum)
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/sc_enum/sc_enum.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/sc_enum/sc_enum.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("z", [
             server          # z: Target server 
         ])
@@ -826,7 +827,7 @@ cmd_scQuery = (
                 service := conquest.get_string(args, 0),
                 server := conquest.get_string(args, 1),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/sc_query/sc_query.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/sc_query/sc_query.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("zz", [
                     server,         # z: Target server 
                     service,        # z: Target service
@@ -845,14 +846,14 @@ def _schtasksEnum(agentId, cmdline, args):
 
     if task != "": 
         # Get information about a specific scheduled task
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/schtasksquery/schtasksquery.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/schtasksquery/schtasksquery.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("ZZ", [
             server,         # Z: Target server 
             task,           # Z: Target scheduled task
         ])
     else: 
         # List all scheduled tasks
-        bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/schtasksenum/schtasksenum.x64.o")
+        bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/schtasksenum/schtasksenum.{conquest.arch(agentId)}.o")
         params = conquest.bof_pack("Z", [
             server          # Z: Target server 
         ])
@@ -890,7 +891,7 @@ def _regQuery(agentId, cmdline, args):
         conquest.error(agentId, f"Invalid registry hive: {hive}.", cmdline)
         return
     
-    bof = os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/reg_query/reg_query.x64.o")
+    bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/reg_query/reg_query.{conquest.arch(agentId)}.o")
     params = conquest.bof_pack("zizzi", [
         server,                     # z: Hostname 
         regHive,                    # i: Hive (0=HKCR, 1=HKCU, 2=HKLM, 3=HKU)
@@ -929,7 +930,7 @@ cmd_windowList = (
             .setHandler(lambda agentId, cmdline, args: (
                 all := conquest.get_bool(args, 0),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/windowlist/windowlist.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/windowlist/windowlist.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("i", [
                     int(all),         # i: List all windows 
                 ]),
@@ -952,7 +953,7 @@ cmd_wmiQuery = (
                 server := conquest.get_string(args, 1),
                 namespace := conquest.get_string(args, 2),
 
-                bof := os.path.join(SCRIPT_DIR, "CS-Situational-Awareness-BOF/SA/wmi_query/wmi_query.x64.o"),
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/wmi_query/wmi_query.{conquest.arch(agentId)}.o"),
                 params := conquest.bof_pack("ZZZZ", [
                     server,                             # Z: Target system
                     namespace,                          # Z: Target namespace
