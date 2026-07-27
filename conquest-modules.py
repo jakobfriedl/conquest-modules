@@ -8,6 +8,7 @@ scripts = [
     "lateral-movement/scshell.py",
     "credential-dumping/credential-dumping.py",
     "kerbeus/kerbeus.py",
+    "mssql/SQL.py",
     "execution/no-consolation.py",
     "execution/async-bof.py"
 ]

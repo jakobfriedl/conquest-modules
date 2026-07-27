@@ -31,3 +31,6 @@
 [submodule "privilege-escalation/GodPotato/GodPotatoBOF"]
 	path = privilege-escalation/GodPotato/GodPotatoBOF
 	url = https://github.com/incursi0n/GodPotatoBOF.git
+[submodule "mssql/SQL-BOF"]
+	path = mssql/SQL-BOF
+	url = https://github.com/Tw1sm/SQL-BOF

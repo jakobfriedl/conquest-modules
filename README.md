@@ -12,29 +12,35 @@ Refer to the following modules for more information about the included commands.
 - [Remote Operations](./remote-operations/)
 - [Privilege Escalation](./privilege-escalation/)
 - [Kerberos Abuse](./kerbeus/)
+- [MSSQL Abuse](./mssql/)
 - [Credential Dumping](./credential-dumping/)
 - [Lateral Movement](./lateral-movement/)
 
 ```
 CORE
+ * config                   Retrieve and update agent settings.
  * exit                     Exit the agent.
  * self-destruct            Exit the agent and delete the executable from disk.
- * sleep                    Update sleep delay settings.
- * jitter                   Update jitter settings.
- * sleepmask                Retrieve or update sleepmask settings. Executing without arguments retrieves the current sleepmask settings.
  * link                     Create a link to a SMB agent.
  * unlink                   Remove a link to a SMB agent.
+ * links                    List linked agents.
+ * jobs                     List running jobs.
+ * cancel                   Cancel a running job.
 
 EXECUTION
  * shell                    Execute a shell command and retrieve the output.
  * bof                      Execute an object file in memory and retrieve the output.
  * dotnet                   Execute a .NET assembly in memory and retrieve the output.
+ * dll                      Execute a DLL asynchronously in memory.
  * no-consolation           Execute an unmanaged PE in memory.
+ * bof-async                Execute an object file asynchronously in the background.
 
 POST-EXPLOITATION
  * download                 Download a file.
  * upload                   Upload a file.
  * regdump                  Dump SAM, SYSTEM and SECURITY from the Windows registry.
+ * silentharvest            Gather SAM and SECURITY secrets using the SilentHarvest method of dumping registry values.
+ * keelog                   Capture KeePass master password (async).
 
 SITUATIONAL AWARENESS
  * ps                       Display running processes.
@@ -46,6 +52,13 @@ SITUATIONAL AWARENESS
  * move                     Move a file or directory.
  * copy                     Copy a file or directory.
  * screenshot               Take and retrieve a screenshot of the target desktop.
+ * get-maq                  Retrieve MachineAccountQuota in the current domain.
+ * asyncscan                Scan target systems for open ports (async).
+ * asyncsweep               Scan for live hosts (async).
+ * clipboard-monitor        Monitor and output clipboard changes to the agent console (async).
+ * get-clipboard            Retrieve clipboard contents.
+ * usb-monitor              Notify when a USB device is connected/disconnected (async).
+ * logon-monitor            Notify when a user logs on to a target system (async).
  * cat                      Retrieve the contents of a file.
  * enum-drives              List local drive letters and types.
  * whoami                   Get user and group information.
@@ -60,25 +73,30 @@ SITUATIONAL AWARENESS
  * list-routes              List IPv4 routing table.
  * list-pipes               List named pipes.
  * check-port               Check if a specific port is open on a remote machine.
- * pingsweep                Scan an IP range for live hosts.
  * net-group                List domain groups or members of a specified domain group.
  * net-localgroup           List local groups or members of a specified local group.
  * net-user                 List user information.
  * net-shares               List shares on a target system.
  * ldapsearch               Execute a LDAP query.
  * ldapquery                Execute a pre-configured LDAP query.
+ * convertfrom-sid          Convert a SID to a group/user name.
  * list-windows             List visible windows in the current user session.
  * wmi-query                Run a WMI query on a local or remote system.
 
 USER IMPERSONATION
  * make-token               Create an access token from username and password.
  * steal-token              Steal the primary access token of a remote process.
+ * use-token                Use and impersonate access token from the vault.
+ * remove-token             Remove access token from the vault.
  * rev2self                 Revert to original access token.
+ * token-vault              List access tokens stored in the vault.
  * token-info               Retrieve information about the current access token.
  * enable-privilege         Enable a token privilege.
  * disable-privilege        Disable a token privilege.
 
 REMOTE OPERATIONS
+ * add-computer             Add computer account to the Active Directory domain.
+ * del-computer             Delete computer account from the Active Directory domain.
  * add-user                 Add a user to a machine.
  * add-groupmembership      Add a specified user to a group.
  * enable-user              Enable a specified user account.
@@ -108,8 +126,12 @@ SCHEDULED TASKS
  * schtasks-stop            Stop a running scheduled task on the target system
  * schtasks-enum            Get information about scheduled task.
 
+PRIVILEGE ESCALATION
+ * privkit                  Run Windows privilege escalation checks.
+ * godpotato                Escalate privileges to NT AUTHORITY\SYSTEM via SeImpersonatePrivilege (GodPotato).
+
 LATERAL MOVEMENT
- * scshell                  Perform fileless lateral movment by modifying an existing remote service's binary path (SCShell tool).
+ * scshell                  Perform fileless lateral movement by modifying an existing remote service's binary path (SCShell tool).
 
 KERBEROS ABUSE
  * asktgt                   Retrieve a TGT for a user using username and password/hash.
@@ -128,11 +150,34 @@ KERBEROS ABUSE
  * asreproast               Perform AS-REP roasting.
  * hash                     Calculate rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1 hashes.
  * changepw                 Reset a user's password from a supplied TGT.
+ * tgt-monitor              Monitor for new Kerberos TGTs and automatically extract them as they appear (async).
+ * tgt-renew                Automatically renew Kerberos TGTs that are about to expire (async).
 
-PRIVILEGE ESCALATION
- * privkit                  Run Windows privilege escalation checks.
+MSSQL ABUSE
+ * sql-1434udp              Enumerate SQL Server connection information.
+ * sql-adsi                 Obtain ADSI credentials from a linked server.
+ * sql-agentcmd             Execute a system command using agent jobs.
+ * sql-agentstatus          Enumerate SQL Agent status and jobs.
+ * sql-checkrpc             Enumerate RPC status of linked servers.
+ * sql-clr                  Load and execute .NET assembly in a stored procedure.
+ * sql-columns              Enumerate columns within a table.
+ * sql-databases            Enumerate SQL databases.
+ * sql-enable               Enable a SQL server module.
+ * sql-disable              Disable a SQL server module.
+ * sql-impersonate          Enumerate users that can be impersonated.
+ * sql-info                 Gather information about the SQL server.
+ * sql-links                Enumerate linked servers.
+ * sql-olecmd               Execute a system command using OLE Automation Procedures.
+ * sql-query                Execute a custom SQL query.
+ * sql-rows                 Get the count of rows in a table.
+ * sql-search               Search a table for a column name.
+ * sql-smb                  Coerce NetNTLM auth via xp_dirtree.
+ * sql-tables               Enumerate tables within a database.
+ * sql-users                Enumerate users with database access.
+ * sql-whoami               Gather logged in user, mapped user and roles.
+ * sql-xpcmdshell           Execute a system command via xp_cmdshell.
 ```
 
 ## Creating Modules
 
-Check out the [Conquest documentation](https://github.com/jakobfriedl/conquest/blob/main/docs/8-SCRIPTING.md) to learn how to use the Python Scripting API to create your own modules. 
+Check out the [Conquest documentation](https://github.com/jakobfriedl/conquest/blob/main/docs/8-SCRIPTING.md) to learn how to use the Python Scripting API to create your own modules.
