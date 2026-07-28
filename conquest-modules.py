@@ -4,6 +4,7 @@ import os.path
 scripts = [
     "situational-awareness/situational-awareness.py",
     "remote-operations/remote-ops.py",
+    "remote-operations/ldap-bof-collection/ldap.py",
     "privilege-escalation/privilege-escalation.py",
     "lateral-movement/scshell.py",
     "credential-dumping/credential-dumping.py",

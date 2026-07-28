@@ -34,3 +34,6 @@
 [submodule "mssql/SQL-BOF"]
 	path = mssql/SQL-BOF
 	url = https://github.com/Tw1sm/SQL-BOF
+[submodule "remote-ops/ldap-bof-collection"]
+	path = remote-operations/ldap-bof-collection
+	url = https://github.com/jakobfriedl/ldap-bof-collection.git

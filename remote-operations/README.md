@@ -3,9 +3,9 @@
 ## Contents <!-- omit from toc -->
 
 - [Overview](#overview)
-  - [get-maq](#get-maq)
-  - [add-computer](#add-computer)
-  - [del-computer](#del-computer)
+  - [get-machineaccountquota](#get-machineaccountquota)
+  - [add-machineaccount](#add-machineaccount)
+  - [remove-machineaccount](#remove-machineaccount)
   - [add-user](#add-user)
   - [add-groupmembership](#add-groupmembership)
   - [enable-user](#enable-user)
@@ -24,15 +24,68 @@
   - [schtasks-start](#schtasks-start)
   - [schtasks-stop](#schtasks-stop)
   - [shutdown](#shutdown)
+- [LDAP Operations](#ldap-operations)
+  - [get-users](#get-users)
+  - [get-computers](#get-computers)
+  - [get-groups](#get-groups)
+  - [get-usergroups](#get-usergroups)
+  - [get-groupmembers](#get-groupmembers)
+  - [get-object](#get-object)
+  - [get-domaininfo](#get-domaininfo)
+  - [get-maq](#get-maq)
+  - [get-writable](#get-writable)
+  - [get-delegation](#get-delegation)
+  - [get-uac](#get-uac)
+  - [get-attribute](#get-attribute)
+  - [get-spn](#get-spn)
+  - [get-acl](#get-acl)
+  - [get-rbcd](#get-rbcd)
+  - [add-user](#add-user-1)
+  - [add-computer](#add-computer)
+  - [add-group](#add-group)
+  - [add-groupmember](#add-groupmember)
+  - [add-ou](#add-ou)
+  - [add-sidhistory](#add-sidhistory)
+  - [add-spn](#add-spn)
+  - [add-attribute](#add-attribute)
+  - [add-uac](#add-uac)
+  - [add-delegation](#add-delegation)
+  - [add-ace](#add-ace)
+  - [add-rbcd](#add-rbcd)
+  - [add-genericall](#add-genericall)
+  - [add-genericwrite](#add-genericwrite)
+  - [add-dcsync](#add-dcsync)
+  - [add-asreproastable](#add-asreproastable)
+  - [add-unconstrained](#add-unconstrained)
+  - [add-constrained](#add-constrained)
+  - [set-password](#set-password-1)
+  - [set-spn](#set-spn)
+  - [set-delegation](#set-delegation)
+  - [set-attribute](#set-attribute)
+  - [set-uac](#set-uac)
+  - [set-owner](#set-owner)
+  - [move-object](#move-object)
+  - [remove-groupmember](#remove-groupmember)
+  - [remove-object](#remove-object)
+  - [remove-spn](#remove-spn)
+  - [remove-delegation](#remove-delegation)
+  - [remove-attribute](#remove-attribute)
+  - [remove-uac](#remove-uac)
+  - [remove-ace](#remove-ace)
+  - [remove-rbcd](#remove-rbcd)
+  - [remove-dcsync](#remove-dcsync)
+  - [remove-genericwrite](#remove-genericwrite)
+  - [remove-genericall](#remove-genericall)
+
 
 ## Overview
 
 The remote operations modules provide commands for managing users, registry keys, services, scheduled tasks, and system state on local and remote systems. All commands are implemented as BOF wrappers for [CS-Remote-OPs-BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF). The module contains the following commands:
 
 ```
- * get-maq                  Retrieve MachineAccountQuota in the current domain.
- * add-computer             Add computer account to the Active Directory domain.
- * del-computer             Delete computer account from the Active Directory domain.
+ * get-machineaccountquota  Retrieve MachineAccountQuota in the current domain.
+ * add-machineaccount       Add computer account to the Active Directory domain.
+ * remove-machineaccount    Delete computer account from the Active Directory domain.
  * add-user                 Add a user to a machine.
  * add-groupmembership      Add a specified user to a group.
  * enable-user              Enable a specified user account.
@@ -53,32 +106,32 @@ The remote operations modules provide commands for managing users, registry keys
  * shutdown                 Shutdown or reboot a target system.
 ```
 
-### get-maq
+### get-machineaccountquota
 Retrieve MachineAccountQuota in the current domain.
 
 ```
-Usage: get-maq 
-Example: get-maq
+Usage: get-machineaccountquota 
+Example: get-machineaccountquota
 ```
 
-### add-computer
+### add-machineaccount
 Add computer account to the Active Directory domain.
 
 ```
-Usage: add-computer <name> <password>
-Example: add-computer FAKE01 Password123!
+Usage: add-machineaccount <name> <password>
+Example: add-machineaccount FAKE01 Password123!
 
 Required arguments:
   name                      STRING     Name of the computer account to add.
   password                  STRING     Password of the new computer account.
 ```
 
-### del-computer 
+### remove-machineaccount 
 Delete computer account from the Active Directory domain.
 
 ```
-Usage: del-computer <name>
-Example: del-computer FAKE01
+Usage: remove-machineaccount <name>
+Example: remove-machineaccount FAKE01
 
 Required arguments:
   name                      STRING     Name of the computer account to delete.
@@ -400,4 +453,934 @@ Optional arguments:
   --close-apps              BOOL       Close all running applications without saving.
   --reboot                  BOOL       Reboot system after shutdown.
   --confirm                 BOOL       Confirm shutdown. Required to proceed.
+```
+
+## LDAP Operations
+
+The LDAP BOF collection provides commands for comprehensive Active Directory enumeration and manipulation via LDAP. All commands are implemented as wrappers for the modified BOFs from [LDAP-BOF-Collection](https://github.com/P0142/ldap-bof-collection) and support automatic DN/username detection, LDAPS (port 636), and OU-scoped queries. The module contains the following commands:
+
+```
+ * get-users                List all users in the domain.
+ * get-computers            List all computers in the domain.
+ * get-groups               List all groups in the domain.
+ * get-usergroups           List all groups a user is a member of.
+ * get-groupmembers         List all members of a group.
+ * get-object               Get all attributes of an object.
+ * get-domaininfo           Get domain information from rootDSE.
+ * get-maq                  Get machine account quota (ms-DS-MachineAccountQuota).
+ * get-writable             Find objects you have write access to.
+ * get-delegation           Get delegation configuration for an object.
+ * get-uac                  Get UAC flags for an object.
+ * get-attribute            Get specific attribute values.
+ * get-spn                  Get SPNs for an object.
+ * get-acl                  Get ACL/security descriptor for an object.
+ * get-rbcd                 Get RBCD configuration for an object.
+ * add-user                 Add a user to the domain.
+ * add-computer             Add a computer to the domain.
+ * add-group                Add a group to the domain.
+ * add-groupmember          Add a member to a group.
+ * add-ou                   Add an organizational unit.
+ * add-sidhistory           Add a SID to an object's sidHistory attribute.
+ * add-spn                  Add an SPN to an object.
+ * add-attribute            Add a value to an attribute.
+ * add-uac                  Add UAC flags to an object.
+ * add-delegation           Add a delegation SPN to an object.
+ * add-ace                  Add an ACE to an object's DACL.
+ * add-rbcd                 Add an RBCD delegation.
+ * add-genericall           Add a GenericAll ACE to an object's DACL.
+ * add-genericwrite         Add a GenericWrite ACE to an object's DACL.
+ * add-dcsync               Add a DCSync ACE to an object's DACL.
+ * add-asreproastable       Make a user AS-REP roastable (set DONT_REQ_PREAUTH).
+ * add-unconstrained        Enable unconstrained delegation on an object.
+ * add-constrained          Set/replace delegation SPNs (constrained delegation).
+ * set-password             Set/reset a user's password.
+ * set-spn                  Set/replace all SPNs on an object.
+ * set-delegation           Set/replace delegation SPNs.
+ * set-attribute            Set/replace an attribute value.
+ * set-uac                  Set UAC flags (replaces all).
+ * set-owner                Set the owner of an object (requires WriteOwner).
+ * move-object              Move an object to a different OU.
+ * remove-groupmember       Remove a member from a group.
+ * remove-object            Remove an object from the domain.
+ * remove-spn               Remove an SPN from an object.
+ * remove-delegation        Remove a delegation SPN.
+ * remove-attribute         Remove an attribute or attribute value.
+ * remove-uac               Remove UAC flags from an object.
+ * remove-ace               Remove an ACE from an object's DACL.
+ * remove-rbcd              Remove an RBCD delegation.
+ * remove-dcsync            Remove a DCSync ACE from an object's DACL.
+ * remove-genericwrite      Remove a GenericWrite ACE from an object's DACL.
+ * remove-genericall        Remove a GenericAll ACE from an object's DACL.
+```
+
+### get-users
+List all users in the domain.
+
+```
+Usage  : get-users [--ou <path>] [--dc <fqdn>] [--attributes <attributes>] [--ldaps]
+Example: get-users --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local --attributes description,mail
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --attributes attributes   STRING     Comma-separated list of attributes to retrieve.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-computers
+List all computers in the domain.
+
+```
+Usage  : get-computers [--ou <path>] [--dc <fqdn>] [--attributes <attributes>] [--ldaps]
+Example: get-computers --ou "OU=Computers,DC=conquest,DC=local" --dc dc01.conquest.local --attributes description,operatingSystem
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --attributes attributes   STRING     Comma-separated list of attributes to retrieve.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-groups
+List all groups in the domain.
+
+```
+Usage  : get-groups [--ou <path>] [--dc <fqdn>] [--attributes <attributes>] [--ldaps]
+Example: get-groups --ou "OU=Groups,DC=conquest,DC=local" --dc dc01.conquest.local --attributes description,member
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --attributes attributes   STRING     Comma-separated list of attributes to retrieve.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-usergroups
+List all groups a user is a member of.
+
+```
+Usage  : get-usergroups <user> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-usergroups julius --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  user                      STRING     Username or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-groupmembers
+List all members of a group.
+
+```
+Usage  : get-groupmembers <group> [--ou <path>] [--dc <fqdn>]
+Example: get-groupmembers "Domain Admins" --ou "OU=Groups,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  group                     STRING     Group name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+```
+
+### get-object
+Get all attributes of an object.
+
+```
+Usage  : get-object <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-object julius --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-domaininfo
+Get domain information from rootDSE.
+
+```
+Usage  : get-domaininfo [--dc <fqdn>] [--ldaps]
+Example: get-domaininfo --dc dc01.conquest.local
+
+Optional arguments:
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-maq
+Get machine account quota (ms-DS-MachineAccountQuota).
+
+```
+Usage  : get-maq [--dc <fqdn>] [--ldaps]
+Example: get-maq --dc dc01.conquest.local
+
+Optional arguments:
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-writable
+Find objects you have write access to.
+
+```
+Usage  : get-writable [--ou <path>] [--dc <fqdn>] [--ldaps] [--detailed]
+Example: get-writable --ou "OU=Projects,DC=conquest,DC=local" --dc dc01.conquest.local --detailed
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+  --detailed                BOOL       Show detailed output.
+```
+
+### get-delegation
+Get delegation configuration for an object.
+
+```
+Usage  : get-delegation <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-delegation machine01$ --ou "OU=Computers,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-uac
+Get UAC flags for an object.
+
+```
+Usage  : get-uac <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-uac julius --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-attribute
+Get specific attribute values.
+
+```
+Usage  : get-attribute <target> <attributes> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-attribute julius objectSid,mail,description --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  attributes                STRING     Comma-separated list of attribute names.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-spn
+Get SPNs for an object.
+
+```
+Usage  : get-spn <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-spn machine01$ --ou "OU=Computers,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### get-acl
+Get ACL/security descriptor for an object.
+
+```
+Usage  : get-acl <target> [--ou <path>] [--dc <fqdn>] [--ldaps] [--resolve]
+Example: get-acl julius --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local --resolve
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+  --resolve                 BOOL       Resolve SID names.
+```
+
+### get-rbcd
+Get RBCD configuration for an object.
+
+```
+Usage  : get-rbcd <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: get-rbcd WEB01$ --ou "OU=Computers,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-user
+Add a user to the domain.
+
+```
+Usage  : add-user <username> <password> [--fn <firstname>] [--ln <lastname>] [--email <email>] [--disabled] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-user julius 'P@ssw0rd!' --fn Julius --ln Caesar --email julius@conquest.local --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  username                  STRING     Username or DN.
+  password                  STRING     Password for the user.
+
+Optional arguments:
+  --fn firstname            STRING     First name.
+  --ln lastname             STRING     Last name.
+  --email email             STRING     Email address.
+  --disabled                BOOL       Create account disabled.
+  --ou path                 STRING     Target OU path.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-computer
+Add a computer to the domain.
+
+```
+Usage  : add-computer <computer> [password] [--ou <path>] [--dc <fqdn>] [--disabled] [--ldaps]
+Example: add-computer FAKE01 'Password123!' --ou "OU=Computers,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  computer                  STRING     Computer name or DN.
+
+Optional arguments:
+  password                  STRING     Password for the computer (default: Randomized).
+  --ou path                 STRING     Target OU path.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --disabled                BOOL       Create account disabled.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-group
+Add a group to the domain.
+
+```
+Usage  : add-group <groupname> [--desc <description>] [--type <type>] [--scope <scope>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-group WksAdmins --desc "Workstation Admins" --scope global --ou "OU=Groups,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  groupname                 STRING     Group name or DN.
+
+Optional arguments:
+  --desc description        STRING     Group description.
+  --type type               STRING     Group type: security or distribution.
+  --scope scope             STRING     Group scope: global, domainlocal, or universal.
+  --ou path                 STRING     Target OU path.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-groupmember
+Add a member to a group.
+
+```
+Usage  : add-groupmember <group> <member> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-groupmember "Domain Admins" julius --ou "OU=Groups,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  group                     STRING     Group name or DN.
+  member                    STRING     Member name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-ou
+Add an organizational unit.
+
+```
+Usage  : add-ou <ou_name> [--desc <description>] [--parent <parent_ou>] [--dc <fqdn>] [--ldaps]
+Example: add-ou Research --desc "Research OU" --parent "OU=Departments,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  ou_name                   STRING     OU name or DN.
+
+Optional arguments:
+  --desc description        STRING     OU description.
+  --parent parent_ou        STRING     Parent OU DN.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-sidhistory
+Add a SID to an object's sidHistory attribute.
+
+```
+Usage  : add-sidhistory <target> <sid_source> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-sidhistory julius S-1-5-21-123456789-123456789-123456789-500 --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  sid_source                STRING     SID string, username, or DN to copy SID from.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-spn
+Add an SPN to an object.
+
+```
+Usage  : add-spn <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-spn machine01 HOST/machine01.conquest.local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     SPN to add.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-attribute
+Add a value to an attribute.
+
+```
+Usage  : add-attribute <target> <attribute> <value> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-attribute julius description 'Some description' --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  attribute                 STRING     Attribute name.
+  value                     STRING     Value to add.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-uac
+Add UAC flags to an object.
+
+```
+Usage  : add-uac <target> <flags> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-uac julius DONT_REQ_PREAUTH --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  flags                     STRING     Comma-separated UAC flags.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-delegation
+Add a delegation SPN to an object.
+
+```
+Usage  : add-delegation <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-delegation machine01 RestrictedKrbHost/machine01.conquest.local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     Delegation SPN to add.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-ace
+Add an ACE to an object's DACL.
+
+```
+Usage  : add-ace <target> <trustee> <rights> [--type <ace_type>] [--flags <flags>] [--guid <guid>] [--inherit-guid <inherit_guid>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-ace CN=SomeObject,DC=conquest,DC=local julius GenericAll --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+  rights                    STRING     Access rights (e.g., GenericAll, WriteDacl, DCSync).
+
+Optional arguments:
+  --type ace_type           STRING     ACE type: allow (default), deny.
+  --flags flags             STRING     ACE inheritance flags (e.g., CI,OI).
+  --guid guid               STRING     Object type GUID.
+  --inherit-guid inherit_guid STRING   Inherited object type GUID.
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-rbcd
+Add an RBCD delegation.
+
+```
+Usage  : add-rbcd <target> <delegate> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-rbcd targetComputer$ principalAccount$ --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  delegate                  STRING     Object allowed to delegate.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-genericall
+Add a GenericAll ACE to an object's DACL.
+
+```
+Usage  : add-genericall <target> <trustee> [--type <ace_type>] [--flags <flags>] [--guid <guid>] [--inherit-guid <inherit_guid>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-genericall CN=SomeObject,DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type: allow (default), deny.
+  --flags flags             STRING     ACE inheritance flags (e.g., CI,OI).
+  --guid guid               STRING     Object type GUID.
+  --inherit-guid inherit_guid STRING   Inherited object type GUID.
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-genericwrite
+Add a GenericWrite ACE to an object's DACL.
+
+```
+Usage  : add-genericwrite <target> <trustee> [--type <ace_type>] [--flags <flags>] [--guid <guid>] [--inherit-guid <inherit_guid>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-genericwrite CN=SomeObject,DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type: allow (default), deny.
+  --flags flags             STRING     ACE inheritance flags (e.g., CI,OI).
+  --guid guid               STRING     Object type GUID.
+  --inherit-guid inherit_guid STRING   Inherited object type GUID.
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-dcsync
+Add a DCSync ACE to an object's DACL.
+
+```
+Usage  : add-dcsync <target> <trustee> [--type <ace_type>] [--flags <flags>] [--guid <guid>] [--inherit-guid <inherit_guid>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-dcsync DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type: allow (default), deny.
+  --flags flags             STRING     ACE inheritance flags (e.g., CI,OI).
+  --guid guid               STRING     Object type GUID.
+  --inherit-guid inherit_guid STRING   Inherited object type GUID.
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-asreproastable
+Make a user AS-REP roastable (set DONT_REQ_PREAUTH).
+
+```
+Usage  : add-asreproastable <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-asreproastable julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target user name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-unconstrained
+Enable unconstrained delegation on an object.
+
+```
+Usage  : add-unconstrained <target> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-unconstrained machine01$ --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### add-constrained
+Set/replace delegation SPNs (constrained delegation).
+
+```
+Usage  : add-constrained <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: add-constrained machine01$ RestrictedKrbHost/machine01.conquest.local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     Delegation SPN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-password
+Set/reset a user's password.
+
+```
+Usage  : set-password <target> <password> [--old <old_password>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-password julius 'N3wP@ssw0rd!' --old 'OldP@ss' --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     User name or DN.
+  password                  STRING     New password.
+
+Optional arguments:
+  --old old_password        STRING     Old password (for self-service change, omit for admin reset).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-spn
+Set/replace all SPNs on an object.
+
+```
+Usage  : set-spn <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-spn machine01$ HOST/machine01.conquest.local --dc dc01.conquest.local --ldaps
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     SPN to set (replaces all existing).
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-delegation
+Set/replace delegation SPNs.
+
+```
+Usage  : set-delegation <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-delegation appsvc RestrictedKrbHost/appsvc.conquest.local --dc dc01.conquest.local --ldaps
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     Delegation SPN (replaces all existing).
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-attribute
+Set/replace an attribute value.
+
+```
+Usage  : set-attribute <target> <attribute> <value> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-attribute julius description 'New description' --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  attribute                 STRING     Attribute name.
+  value                     STRING     Value to set.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-uac
+Set UAC flags (replaces all).
+
+```
+Usage  : set-uac <target> <flags> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-uac julius DONT_EXPIRE_PASSWD --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  flags                     STRING     Comma-separated UAC flags (replaces all).
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### set-owner
+Set the owner of an object (requires WriteOwner).
+
+```
+Usage  : set-owner <target> <owner> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: set-owner CN=resource,DC=conquest,DC=local CN=julius,DC=conquest,DC=local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  owner                     STRING     New owner name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### move-object
+Move an object to a different OU.
+
+```
+Usage  : move-object <object> <destination> [--name <name>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: move-object julius "OU=Managers,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  object                    STRING     Object name or DN to move.
+  destination               STRING     Destination OU DN.
+
+Optional arguments:
+  --name name               STRING     New name for the object.
+  --ou path                 STRING     OU path to search for object.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-groupmember
+Remove a member from a group.
+
+```
+Usage  : remove-groupmember <group> <member> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-groupmember Stark julius --dc dc01.conquest.local
+
+Required arguments:
+  group                     STRING     Group name or DN.
+  member                    STRING     Member name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-object
+Remove an object from the domain.
+
+```
+Usage  : remove-object <object> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-object julius --ou "OU=Users,DC=conquest,DC=local" --dc dc01.conquest.local
+
+Required arguments:
+  object                    STRING     Object name or DN.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-spn
+Remove an SPN from an object.
+
+```
+Usage  : remove-spn <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-spn machine01$ HOST/machine01.conquest.local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     SPN to remove.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-delegation
+Remove a delegation SPN.
+
+```
+Usage  : remove-delegation <target> <spn> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-delegation machine01$ RestrictedKrbHost/machine01.conquest.local --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  spn                       STRING     Delegation SPN to remove.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-attribute
+Remove an attribute or attribute value.
+
+```
+Usage  : remove-attribute <target> <attribute> [--value <value>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-attribute julius description --value 'Old description' --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  attribute                 STRING     Attribute name.
+
+Optional arguments:
+  --value value             STRING     Specific value to remove (removes entire attribute if not specified).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-uac
+Remove UAC flags from an object.
+
+```
+Usage  : remove-uac <target> <flags> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-uac julius DONT_EXPIRE_PASSWD --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Object name or DN.
+  flags                     STRING     Comma-separated UAC flags to remove.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-ace
+Remove an ACE from an object's DACL.
+
+```
+Usage  : remove-ace <target> [--trustee <trustee>] [--rights <rights>] [--type <ace_type>] [--index <ace_index>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-ace CN=SomeObject,DC=conquest,DC=local --trustee julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+
+Optional arguments:
+  --trustee trustee         STRING     Trustee name or DN to match.
+  --rights rights           STRING     Access rights to match (e.g., GenericAll, DCSync).
+  --type ace_type           STRING     ACE type to match: allow, deny.
+  --index ace_index         INT        ACE index to remove (use get-acl to find index).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-rbcd
+Remove an RBCD delegation.
+
+```
+Usage  : remove-rbcd <target> <delegate> [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-rbcd targetComputer principalAccount --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  delegate                  STRING     Object to remove from delegation.
+
+Optional arguments:
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-dcsync
+Remove a DCSync ACE from an object's DACL.
+
+```
+Usage  : remove-dcsync <target> <trustee> [--type <ace_type>] [--index <ace_index>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-dcsync DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type to match: allow, deny.
+  --index ace_index         INT        ACE index to remove (use get-acl to find index).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-genericwrite
+Remove a GenericWrite ACE from an object's DACL.
+
+```
+Usage  : remove-genericwrite <target> <trustee> [--type <ace_type>] [--index <ace_index>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-genericwrite CN=SomeObject,DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type to match: allow, deny.
+  --index ace_index         INT        ACE index to remove (use get-acl to find index).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+### remove-genericall
+Remove a GenericAll ACE from an object's DACL.
+
+```
+Usage  : remove-genericall <target> <trustee> [--type <ace_type>] [--index <ace_index>] [--ou <path>] [--dc <fqdn>] [--ldaps]
+Example: remove-genericall CN=SomeObject,DC=conquest,DC=local julius --dc dc01.conquest.local
+
+Required arguments:
+  target                    STRING     Target object name or DN.
+  trustee                   STRING     Trustee name or DN.
+
+Optional arguments:
+  --type ace_type           STRING     ACE type to match: allow, deny.
+  --index ace_index         INT        ACE index to remove (use get-acl to find index).
+  --ou path                 STRING     OU path to search.
+  --dc fqdn                 STRING     FQDN of the domain controller.
+  --ldaps                   BOOL       Use LDAPS (port 636).
 ```

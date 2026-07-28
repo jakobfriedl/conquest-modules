@@ -4,7 +4,7 @@ import os.path
 SCRIPT_DIR = os.path.dirname(__file__)
 
 cmd_maq = (
-    conquest.createCommand(name="get-maq", description="Retrieve MachineAccountQuota in the current domain.", example="get-maq",
+    conquest.createCommand(name="get-machineaccountquota", description="Retrieve MachineAccountQuota in the current domain.", example="get-machineaccountquota",
                            message="Tasked agent to retrieve MachineAccountQuota.", mitre=[])
             .setHandler(lambda agentId, cmdline, args: (
                 bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/GetMachineAccountQuota.{conquest.arch(agentId)}.o"),
@@ -16,7 +16,7 @@ cmd_maq = (
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 cmd_addComputer = (
-    conquest.createCommand(name="add-computer", description="Add computer account to the Active Directory domain.", example="add-computer FAKE01 Password123!",
+    conquest.createCommand(name="add-machineaccount", description="Add computer account to the Active Directory domain.", example="add-machineaccount FAKE01 Password123!",
                            message="Tasked agent to add a computer account.", mitre=["T1136"])
             .addArgString("name", "Name of the computer account to add.", True)
             .addArgString("password", "Password of the new computer account.", True)
@@ -38,7 +38,7 @@ cmd_addComputer = (
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 cmd_delComputer = (
-    conquest.createCommand(name="del-computer", description="Delete computer account from the Active Directory domain.", example="del-computer FAKE01",
+    conquest.createCommand(name="remove-machineaccount", description="Delete computer account from the Active Directory domain.", example="remove-machineaccount FAKE01",
                            message="Tasked agent to delete a computer account.", mitre=[])
             .addArgString("name", "Name of the computer account to delete.", True)
             .setHandler(lambda agentId, cmdline, args: (

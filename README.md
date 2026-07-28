@@ -52,7 +52,7 @@ SITUATIONAL AWARENESS
  * move                     Move a file or directory.
  * copy                     Copy a file or directory.
  * screenshot               Take and retrieve a screenshot of the target desktop.
- * get-maq                  Retrieve MachineAccountQuota in the current domain.
+ * get-machineaccountquota  Retrieve MachineAccountQuota in the current domain.
  * asyncscan                Scan target systems for open ports (async).
  * asyncsweep               Scan for live hosts (async).
  * clipboard-monitor        Monitor and output clipboard changes to the agent console (async).
@@ -83,27 +83,6 @@ SITUATIONAL AWARENESS
  * list-windows             List visible windows in the current user session.
  * wmi-query                Run a WMI query on a local or remote system.
 
-USER IMPERSONATION
- * make-token               Create an access token from username and password.
- * steal-token              Steal the primary access token of a remote process.
- * use-token                Use and impersonate access token from the vault.
- * remove-token             Remove access token from the vault.
- * rev2self                 Revert to original access token.
- * token-vault              List access tokens stored in the vault.
- * token-info               Retrieve information about the current access token.
- * enable-privilege         Enable a token privilege.
- * disable-privilege        Disable a token privilege.
-
-REMOTE OPERATIONS
- * add-computer             Add computer account to the Active Directory domain.
- * del-computer             Delete computer account from the Active Directory domain.
- * add-user                 Add a user to a machine.
- * add-groupmembership      Add a specified user to a group.
- * enable-user              Enable a specified user account.
- * unexpire-user            Unexpire and enable a specified user account.
- * set-password             Set the password of a target user account.
- * shutdown                 Shutdown or reboot a target system.
-
 WINDOWS REGISTRY
  * reg-set                  Create or set a registry key/value on a target system.
  * reg-delete               Delete a registry key/key on a target system.
@@ -126,13 +105,6 @@ SCHEDULED TASKS
  * schtasks-stop            Stop a running scheduled task on the target system
  * schtasks-enum            Get information about scheduled task.
 
-PRIVILEGE ESCALATION
- * privkit                  Run Windows privilege escalation checks.
- * godpotato                Escalate privileges to NT AUTHORITY\SYSTEM via SeImpersonatePrivilege (GodPotato).
-
-LATERAL MOVEMENT
- * scshell                  Perform fileless lateral movement by modifying an existing remote service's binary path (SCShell tool).
-
 KERBEROS ABUSE
  * asktgt                   Retrieve a TGT for a user using username and password/hash.
  * asktgs                   Retrieve a service ticket using a TGT.
@@ -152,6 +124,34 @@ KERBEROS ABUSE
  * changepw                 Reset a user's password from a supplied TGT.
  * tgt-monitor              Monitor for new Kerberos TGTs and automatically extract them as they appear (async).
  * tgt-renew                Automatically renew Kerberos TGTs that are about to expire (async).
+
+USER IMPERSONATION
+ * make-token               Create an access token from username and password.
+ * steal-token              Steal the primary access token of a remote process.
+ * use-token                Use and impersonate access token from the vault.
+ * remove-token             Remove access token from the vault.
+ * rev2self                 Revert to original access token.
+ * token-vault              List access tokens stored in the vault.
+ * token-info               Retrieve information about the current access token.
+ * enable-privilege         Enable a token privilege.
+ * disable-privilege        Disable a token privilege.
+
+REMOTE OPERATIONS
+ * add-machineaccount       Add computer account to the Active Directory domain.
+ * remove-machineaccount    Delete computer account from the Active Directory domain.
+ * add-user                 Add a user to a machine.
+ * add-groupmembership      Add a specified user to a group.
+ * enable-user              Enable a specified user account.
+ * unexpire-user            Unexpire and enable a specified user account.
+ * set-password             Set the password of a target user account.
+ * shutdown                 Shutdown or reboot a target system.
+
+PRIVILEGE ESCALATION
+ * privkit                  Run Windows privilege escalation checks.
+ * godpotato                Escalate privileges to NT AUTHORITY\SYSTEM via SeImpersonatePrivilege (GodPotato).
+
+LATERAL MOVEMENT
+ * scshell                  Perform fileless lateral movement by modifying an existing remote service's binary path (SCShell tool).
 
 MSSQL ABUSE
  * sql-1434udp              Enumerate SQL Server connection information.
@@ -176,6 +176,59 @@ MSSQL ABUSE
  * sql-users                Enumerate users with database access.
  * sql-whoami               Gather logged in user, mapped user and roles.
  * sql-xpcmdshell           Execute a system command via xp_cmdshell.
+
+LDAP OPERATIONS
+ * get-users                List all users in the domain.
+ * get-computers            List all computers in the domain.
+ * get-groups               List all groups in the domain.
+ * get-usergroups           List all groups a user is a member of.
+ * get-groupmembers         List all members of a group.
+ * get-object               Get all attributes of an object.
+ * get-domaininfo           Get domain information from rootDSE.
+ * get-maq                  Get machine account quota (ms-DS-MachineAccountQuota).
+ * get-writable             Find objects you have write access to.
+ * get-delegation           Get delegation configuration for an object.
+ * get-uac                  Get UAC flags for an object.
+ * get-attribute            Get specific attribute values.
+ * get-spn                  Get SPNs for an object.
+ * get-acl                  Get ACL/security descriptor for an object.
+ * get-rbcd                 Get RBCD configuration for an object.
+ * add-user                 Add a user to the domain.
+ * add-computer             Add a computer to the domain.
+ * add-group                Add a group to the domain.
+ * add-groupmember          Add a member to a group.
+ * add-ou                   Add an organizational unit.
+ * add-sidhistory           Add a SID to an object's sidHistory attribute.
+ * add-spn                  Add an SPN to an object.
+ * add-attribute            Add a value to an attribute.
+ * add-uac                  Add UAC flags to an object.
+ * add-delegation           Add a delegation SPN to an object.
+ * add-rbcd                 Add an RBCD delegation.
+ * add-ace                  Add an ACE to an object's DACL.
+ * add-genericall           Add a GenericAll ACE to an object's DACL.
+ * add-genericwrite         Add a GenericWrite ACE to an object's DACL.
+ * add-dcsync               Add a DCSync ACE to an object's DACL.
+ * add-asreproastable       Make a user AS-REP roastable (set DONT_REQ_PREAUTH).
+ * add-unconstrained        Enable unconstrained delegation on an object.
+ * add-constrained          Set/replace delegation SPNs (constrained delegation).
+ * set-password             Set/reset a user's password.
+ * set-spn                  Set/replace all SPNs on an object.
+ * set-delegation           Set/replace delegation SPNs.
+ * set-attribute            Set/replace an attribute value.
+ * set-uac                  Set UAC flags (replaces all).
+ * set-owner                Set the owner of an object (requires WriteOwner).
+ * move-object              Move an object to a different OU.
+ * remove-groupmember       Remove a member from a group.
+ * remove-object            Remove an object from the domain.
+ * remove-spn               Remove an SPN from an object.
+ * remove-delegation        Remove a delegation SPN.
+ * remove-attribute         Remove an attribute or attribute value.
+ * remove-uac               Remove UAC flags from an object.
+ * remove-ace               Remove an ACE from an object's DACL.
+ * remove-rbcd              Remove an RBCD delegation.
+ * remove--dcsync           Remove a DCSync ACE from an object's DACL.
+ * remove-genericwrite      Remove a GenericWrite ACE from an object's DACL.
+ * remove-genericall        Remove a GenericAll ACE from an object's DACL.
 ```
 
 ## Creating Modules
