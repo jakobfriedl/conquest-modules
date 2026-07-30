@@ -398,11 +398,8 @@ def _ldapSearch(agentId, cmdline, args):
     hostname = conquest.get_string(args, 4)
     dn = conquest.get_string(args, 5)
     ldaps = conquest.get_bool(args, 6)
-    
-    # Use a global variable to set the option for the output handler
-    global RAW
-    RAW = conquest.get_bool(args, 7)    
-    
+    raw = not conquest.get_bool(args, 7) # "--raw" = true -> outputHandler = false
+      
     ldapScope = LDAP_SCOPE.get(scope, LDAP_SCOPE["subtree"])
     
     bof = os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/ldapsearch/ldapsearch.{conquest.arch(agentId)}.o")
@@ -417,7 +414,7 @@ def _ldapSearch(agentId, cmdline, args):
     ])
     
     if os.path.exists(bof):
-        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}")
+        conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}", raw)
     else:
         conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
@@ -602,8 +599,7 @@ def _ldapSearchOutput(agentId, output):
                 result.append('  ' + group)
         
         # Process ntSecurityDescriptor if python3-impacket is installed 
-        # Does not parse the field if the global RAW variable was set by the command handler
-        elif not RAW and IMPACKET_AVAILABLE and line.lower().startswith('ntsecuritydescriptor:'):
+        elif IMPACKET_AVAILABLE and line.lower().startswith('ntsecuritydescriptor:'):
             key, _, sd_b64 = line.partition(':')
             result.append(key + ':')
             result.append(_decode_security_descriptor(sd_b64.strip()))
@@ -627,7 +623,7 @@ Available options:
             .addFlagString("--dc", "hostname", "Hostname or IP of domain controller (default: default domain controller).")
             .addFlagString("--dn", "dn", "LDAP query base DN (default: current domain).")
             .addFlagBool("--ldaps", "Use LDAPS on port 636 instead of LDAP on port 389.")
-            .addFlagBool("--raw", "Return raw ntSecurityDescriptor field (base64) instead of human readable output.")
+            .addFlagBool("--raw", "Disable output handler to return raw ntSecurityDescriptor field (base64) instead of human readable output.")
             .setHandler(_ldapSearch)
             .setOutputHandler(_ldapSearchOutput)
 ).registerToGroup("situational awareness")
