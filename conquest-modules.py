@@ -15,6 +15,6 @@ scripts = [
 ]
 
 for script in scripts:
-    conquest.load_script(os.path.join(conquest.modules_root(), script))
+    conquest.load_script(os.path.join(os.path.dirname(__file__), script))
 
 conquest.unload_script(__file__)
