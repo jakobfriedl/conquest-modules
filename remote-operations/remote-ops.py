@@ -450,8 +450,8 @@ SERVICE_TYPES = {
 }
 def _scCreate(agentId, cmdline, args): 
     service = conquest.get_string(args, 0)
-    displayName = conquest.get_string(args, 1)
-    binPath = conquest.get_string(args, 2)
+    binPath = conquest.get_string(args, 1)
+    displayName = conquest.get_string(args, 2)
     description = conquest.get_string(args, 3)
     errorMode = conquest.get_int(args, 4)
     startMode = conquest.get_int(args, 5)
@@ -482,11 +482,11 @@ def _scCreate(agentId, cmdline, args):
         conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
 
 cmd_scCreate = (
- conquest.createCommand(name="sc-create", description="Create a service on the target system", example="sc-create ConquestSvc \"Conquest Service\" C:\\Windows\\System32\\calc.exe --description \"Conquest service description.\"",
+ conquest.createCommand(name="sc-create", description="Create a service on the target system", example="sc-create ConquestSvc C:\\Windows\\System32\\calc.exe --name \"Conquest Service\"  --description \"Conquest service description.\"",
                            message="Tasked agent to configure a service.", mitre=["T1543.003"])
             .addArgString("service", "Service name.", True)
-            .addArgString("display-name", "Display name of the service to create.", True)
             .addArgString("binPath", "Binary path of the service to create.", True)
+            .addFlagString("--name", "display-name", "Display name of the service to create.")
             .addFlagString("--description", "description", "Description of the service to create (default: \"\").")
             .addFlagInt("--error-mode", "error-mode", """Error mode.
 Available options:
@@ -500,11 +500,11 @@ Available options:
     - 3: on demand start 
     - 4: disabled""", False, 2)
             .addFlagString("--sc-type", "service-type", """Type of the service to create.
-                        Available options: 
-- SERVICE_FILE_SYSTEM_DRIVER
-- SERVICE_KERNEL_DRIVER
-- SERVICE_WIN32_OWN_PROCESS (default)
-- SERVICE_WIN32_SHARE_PROCESS""", False, "SERVICE_WIN32_OWN_PROCESS")
+Available options: 
+    - SERVICE_FILE_SYSTEM_DRIVER
+    - SERVICE_KERNEL_DRIVER
+    - SERVICE_WIN32_OWN_PROCESS (default)
+    - SERVICE_WIN32_SHARE_PROCESS""", False, "SERVICE_WIN32_OWN_PROCESS")
             .addFlagString("--server", "server", "Hostname or IP address of the target system (default: local computer).")
             .setHandler(_scCreate)
 ).registerToGroup("windows services")
