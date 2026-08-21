@@ -40,7 +40,7 @@ Required arguments:
 | `uac-status` | Retrieve the current UAC configuration and elevation level. |
 
 ### godpotato
-Use GodPotato to escalate privileges to NT AUTHORITY\SYSTEM via SeImpersonatePrivilege. Use the `--token` flag to impersonate SYSTEM token directly.
+Use GodPotato to escalate privileges to NT AUTHORITY\SYSTEM via SeImpersonatePrivilege. Without arguments, the BOF steals the SYSTEM token and applies it to the current session.
 
 ```
 Usage: godpotato [command] [--pipe pipe] [--token]
@@ -49,7 +49,6 @@ Example: godpotato cmd /c whoami --pipe my-custom-pipe
 Optional arguments:
   command                   STRING     Command to execute (default: "cmd /c whoami").
   --pipe pipe               STRING     Pipe to write output to.
-  --token                   BOOL       Steal SYSTEM token and apply it to the agent process.
 ```
 
 ![Godpotato](../assets/godpotato.png)
