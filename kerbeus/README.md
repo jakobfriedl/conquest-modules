@@ -15,8 +15,8 @@
   - [dump](#dump)
   - [triage](#triage)
   - [tgtdeleg](#tgtdeleg)
-  - [kerberoast](#kerberoast)
-  - [asreproast](#asreproast)
+  - [kerbeus-kerberoast](#kerbeus-kerberoast)
+  - [kerbeus-asreproast](#kerbeus-asreproast)
   - [hash](#hash)
   - [changepw](#changepw)
 
@@ -37,8 +37,8 @@ The Kerberos abuse modules provide commands for interacting with and abusing the
  * dump                     Extract TGTs and service tickets.
  * triage                   List current user tickets.
  * tgtdeleg                 Retrieve a usable TGT without elevation via Kerberos GSS-API abuse.
- * kerberoast               Perform Kerberoasting.
- * asreproast               Perform AS-REP roasting.
+ * kerbeus-kerberoast       Perform Kerberoasting.
+ * kerbeus-asreproast       Perform AS-REP roasting.
  * hash                     Calculate rc4_hmac, aes128 and aes256 hashes from a password.
  * changepw                 Reset a user's password from a supplied TGT.
 ```
@@ -242,12 +242,12 @@ Optional flags:
   /target:<SPN>             STRING     Target SPN to request delegation for.
 ```
 
-### kerberoast
+### kerbeus-kerberoast
 Perform Kerberoasting by requesting service tickets for accounts with SPNs and outputting them in a crackable format.
 
 ```
-Usage  : kerberoast /spn:<SPN> [flags]
-Example: kerberoast /spn:MSSQLSvc/sql01.conquest.local:1433
+Usage  : kerbeus-kerberoast /spn:<SPN> [flags]
+Example: kerbeus-kerberoast /spn:MSSQLSvc/sql01.conquest.local:1433
 
 Required flags:
   /spn:<SPN>                STRING     Target service principal name.
@@ -259,12 +259,12 @@ Optional flags:
   /ticket:<BASE64>          STRING     Base64-encoded TGT to use for the request.
 ```
 
-### asreproast
+### kerbeus-asreproast
 Perform AS-REP roasting against accounts that do not require Kerberos pre-authentication.
 
 ```
-Usage  : asreproast /user:<USER> [flags]
-Example: asreproast /user:john /domain:conquest.local
+Usage  : kerbeus-asreproast /user:<USER> [flags]
+Example: kerbeus-asreproast /user:john /domain:conquest.local
 
 Required flags:
   /user:<USER>              STRING     Target username.

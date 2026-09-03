@@ -263,8 +263,8 @@ Optional flags:
 
 cmd_kerberoast = (
     conquest.createCommand(
-        name="kerberoast", description="Perform Kerberoasting.", 
-        example="""kerberoast /spn:<SPN> [/nopreauth:<USER>] [/dc:<DC>] [/domain:<DOMAIN>]
+        name="kerbeus-kerberoast", description="Perform Kerberoasting.", 
+        example="""kerbeus-kerberoast /spn:<SPN> [/nopreauth:<USER>] [/dc:<DC>] [/domain:<DOMAIN>]
 kerberoast /spn:<SPN> /ticket:<BASE64> [/dc:<DC>]
 
 Required flags:
@@ -284,8 +284,8 @@ Optional flags:
 
 cmd_asreproast = (
     conquest.createCommand(
-        name="asreproast", description="Perform AS-REP roasting.", 
-        example="""asreproast /user:<USER> [/dc:<DC>] [/domain:<DOMAIN>]
+        name="kerbeus-asreproast", description="Perform AS-REP roasting.", 
+        example="""kerbeus-asreproast /user:<USER> [/dc:<DC>] [/domain:<DOMAIN>]
 
 Required flags:
   /user:<USER>              STRING     Target username.

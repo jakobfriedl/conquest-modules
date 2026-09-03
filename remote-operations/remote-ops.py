@@ -3,57 +3,6 @@ import os.path
 
 SCRIPT_DIR = os.path.dirname(__file__)
 
-cmd_maq = (
-    conquest.createCommand(name="get-machineaccountquota", description="Retrieve MachineAccountQuota in the current domain.", example="get-machineaccountquota",
-                           message="Tasked agent to retrieve MachineAccountQuota.", mitre=[])
-            .setHandler(lambda agentId, cmdline, args: (
-                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/GetMachineAccountQuota.{conquest.arch(agentId)}.o"),
-                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
-            ))
-).registerToGroup("situational awareness")
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
-cmd_addComputer = (
-    conquest.createCommand(name="add-machineaccount", description="Add computer account to the Active Directory domain.", example="add-machineaccount FAKE01 Password123!",
-                           message="Tasked agent to add a computer account.", mitre=["T1136"])
-            .addArgString("name", "Name of the computer account to add.", True)
-            .addArgString("password", "Password of the new computer account.", True)
-            .setHandler(lambda agentId, cmdline, args: (
-                name := conquest.get_string(args, 0).rstrip("$"),   # Remove trailing '$' from computer name
-                password := conquest.get_string(args, 1),
-
-                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/AddMachineAccount.{conquest.arch(agentId)}.o"),
-                params := conquest.bof_pack("ZZ", [
-                    name,              # Z: Computer name
-                    password           # Z: Password
-                ]),
-
-                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
-            ))
-).registerToGroup("remote operations")
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
-cmd_delComputer = (
-    conquest.createCommand(name="remove-machineaccount", description="Delete computer account from the Active Directory domain.", example="remove-machineaccount FAKE01",
-                           message="Tasked agent to delete a computer account.", mitre=[])
-            .addArgString("name", "Name of the computer account to delete.", True)
-            .setHandler(lambda agentId, cmdline, args: (
-                name := conquest.get_string(args, 0).rstrip("$"),   # Remove trailing '$' from computer name
-
-                bof := os.path.join(SCRIPT_DIR, f"AddMachineAccount/DelMachineAccount.{conquest.arch(agentId)}.o"),
-                params := conquest.bof_pack("Z", [
-                    name,              # Z: Computer name
-                ]),
-
-                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
-                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
-            ))
-).registerToGroup("remote operations")
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 cmd_addUser = ( 

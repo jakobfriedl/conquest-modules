@@ -37,3 +37,6 @@
 [submodule "remote-ops/ldap-bof-collection"]
 	path = remote-operations/ldap-bof-collection
 	url = https://github.com/jakobfriedl/ldap-bof-collection.git
+[submodule "remote-operations/outflank-c2-tool-collection"]
+	path = remote-operations/outflank-c2-tool-collection
+	url = https://github.com/jakobfriedl/outflank-c2-tool-collection
