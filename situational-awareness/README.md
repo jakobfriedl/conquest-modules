@@ -32,6 +32,9 @@
   - [sc-query](#sc-query)
   - [schtasks-enum](#schtasks-enum)
   - [reg-query](#reg-query)
+  - [adcs-enum](#adcs-enum)
+  - [adcs-enum-com](#adcs-enum-com)
+  - [adcs-enum-com2](#adcs-enum-com2)
 
 ## Dependencies
 
@@ -430,4 +433,31 @@ Optional arguments:
                                        If not provided, enumerates all subkeys and values.
   --server server           STRING     Target server for remote registry (default: local computer).
   --recursive               BOOL       Recursively enumerate all subkeys.
+```
+
+### adcs-enum
+Enumerate CAs and certificate templates using Win32 API functions.
+
+```
+Usage: adcs-enum [--domain domain]
+Example: adcs-enum --domain conquest.local
+
+Optional arguments:
+  --domain domain           STRING     Target domain (default: current domain).
+```
+
+### adcs-enum-com
+Enumerate CAs and certificate templates using ICertConfig COM object.
+
+```
+Usage: adcs-enum-com 
+Example: adcs-enum-com
+```
+
+### adcs-enum-com2
+Enumerate CAs and certificate templates using IX509PolicyServerListManager COM object.
+
+```
+Usage: adcs-enum-com2 
+Example: adcs-enum-com2
 ```

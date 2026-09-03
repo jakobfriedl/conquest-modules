@@ -961,3 +961,46 @@ cmd_wmiQuery = (
                 else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
             ))
 ).registerToGroup("situational awareness")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_adcsEnum = ( 
+    conquest.createCommand(name="adcs-enum", description="Enumerate CAs and certificate templates using Win32 API functions.", example="adcs-enum --domain conquest.local",
+                           message="Tasked agent to enumerate CAs and certificate templates using Win32 API functions.", mitre=["T1087"])
+            .addFlagString("--domain", "domain", "Target domain (default: current domain).", False)
+            .setHandler(lambda agentId, cmdline, args: (
+                domain := conquest.get_string(args, 0),
+
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/adcs_enum/adcs_enum.{conquest.arch(agentId)}.o"),
+                params := conquest.bof_pack("Z", [
+                    domain,     # Z: Target domain
+                ]),
+
+                conquest.execute_alias(agentId, cmdline, f"bof {bof} {params}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+            ))
+).registerToGroup("adcs")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+cmd_adcsEnumCom = ( 
+    conquest.createCommand(name="adcs-enum-com", description="Enumerate CAs and certificate templates using ICertConfig COM object.", example="adcs-enum-com",
+                           message="Tasked agent to enumerate CAs and certificate templates using ICertConfig COM object.", mitre=["T1087"])
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/adcs_enum_com/adcs_enum_com.{conquest.arch(agentId)}.o"),
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+            ))
+).registerToGroup("adcs")
+
+cmd_adcsEnumCom2 = ( 
+    conquest.createCommand(name="adcs-enum-com2", description="Enumerate CAs and certificate templates using IX509PolicyServerListManager COM object.", example="adcs-enum-com2",
+                           message="Tasked agent to enumerate CAs and certificate templates using IX509PolicyServerListManager COM object.", mitre=["T1087"])
+            .setHandler(lambda agentId, cmdline, args: (
+                bof := os.path.join(SCRIPT_DIR, f"CS-Situational-Awareness-BOF/SA/adcs_enum_com2/adcs_enum_com2.{conquest.arch(agentId)}.o"),
+                conquest.execute_alias(agentId, cmdline, f"bof {bof}") if os.path.exists(bof)
+                else conquest.error(agentId, f"Failed to open object file: {bof}", cmdline)
+            ))
+).registerToGroup("adcs")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
